@@ -1,10 +1,15 @@
 """
 Governance Engine for Extension Analysis
 
-This module implements the Governance Decisioning Pipeline (Stages 2-8)
-that transforms security scan results into policy-based decisions.
+This module implements the Governance Decisioning Pipeline with the new
+3-Layer Scoring Architecture.
 
-Pipeline Stages:
+3-Layer Architecture:
+    Layer 0: Signal Extraction      → SignalPack (normalized signals + evidence)
+    Layer 1: Risk Scoring           → Deterministic scoring from signals
+    Layer 2: Decision               → Final governance verdict
+
+Legacy Pipeline Stages (being refactored):
     Stage 2: Facts Builder          → facts.json
     Stage 3: Evidence Index Builder → evidence_index.json
     Stage 4: Signal Extractor       → signals.json
@@ -42,6 +47,51 @@ from .schemas import (
     GovernanceDecision,
     GovernanceReport,
 )
+
+# Layer 0: Signal Pack and Tool Adapters
+from .signal_pack import (
+    SignalPack,
+    ToolEvidence,
+    SastSignalPack,
+    SastFindingNormalized,
+    VirusTotalSignalPack,
+    VendorHit,
+    EntropySignalPack,
+    EntropyFileResult,
+    WebstoreStatsSignalPack,
+    WebstoreReviewsSignalPack,
+    ReviewSample,
+    ComplaintCluster,
+    PermissionsSignalPack,
+    PermissionAnalysisResult,
+    ChromeStatsSignalPack,
+)
+from .tool_adapters import (
+    SignalPackBuilder,
+    SastAdapter,
+    VirusTotalAdapter,
+    EntropyAdapter,
+    WebstoreStatsAdapter,
+    WebstoreReviewsAdapter,
+    PermissionsAdapter,
+    ChromeStatsAdapter,
+)
+
+# Layer 1: Security Scorecards
+from .scorecard import (
+    FactorResult,
+    SecurityScorecard,
+    GovernanceScorecard,
+    ScorecardBuilder,
+    SastSemgrepFactor,
+    VirusTotalConsensusFactor,
+    EntropyObfuscationFactor,
+    ManifestSecurityFactor,
+    NetworkBehaviorLiteFactor,
+    WebstoreReputationBehaviorFactor,
+    ChromeStatsBehaviorFactor,
+)
+
 from .facts_builder import FactsBuilder
 from .signal_extractor import SignalExtractor, SignalType
 from .evidence_index_builder import EvidenceIndexBuilder, EvidenceSource, link_evidence_to_signals
@@ -51,6 +101,42 @@ from .rules_engine import RulesEngine, ConditionEvaluator
 from .report_generator import ReportGenerator, generate_governance_report, aggregate_verdict
 
 __all__ = [
+    # Layer 0: Signal Pack (3-Layer Architecture)
+    "SignalPack",
+    "ToolEvidence",
+    "SastSignalPack",
+    "SastFindingNormalized",
+    "VirusTotalSignalPack",
+    "VendorHit",
+    "EntropySignalPack",
+    "EntropyFileResult",
+    "WebstoreStatsSignalPack",
+    "WebstoreReviewsSignalPack",
+    "ReviewSample",
+    "ComplaintCluster",
+    "PermissionsSignalPack",
+    "PermissionAnalysisResult",
+    "ChromeStatsSignalPack",
+    "SignalPackBuilder",
+    "SastAdapter",
+    "VirusTotalAdapter",
+    "EntropyAdapter",
+    "WebstoreStatsAdapter",
+    "WebstoreReviewsAdapter",
+    "PermissionsAdapter",
+    "ChromeStatsAdapter",
+    # Layer 1: Security Scorecards
+    "FactorResult",
+    "SecurityScorecard",
+    "GovernanceScorecard",
+    "ScorecardBuilder",
+    "SastSemgrepFactor",
+    "VirusTotalConsensusFactor",
+    "EntropyObfuscationFactor",
+    "ManifestSecurityFactor",
+    "NetworkBehaviorLiteFactor",
+    "WebstoreReputationBehaviorFactor",
+    "ChromeStatsBehaviorFactor",
     # Stage 2
     "Facts",
     "ManifestFacts",

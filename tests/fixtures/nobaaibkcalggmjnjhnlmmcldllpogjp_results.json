@@ -1,0 +1,1222 @@
+{
+  "extension_id": "nobaaibkcalggmjnjhnlmmcldllpogjp",
+  "extension_name": "Tab Slider",
+  "url": "https://chromewebstore.google.com/detail/tab-slider/nobaaibkcalggmjnjhnlmmcldllpogjp",
+  "timestamp": "2026-02-02T17:22:19.186896",
+  "status": "completed",
+  "metadata": {
+    "title": "Tab Slider",
+    "user_count": 879,
+    "rating": 4.5,
+    "ratings_count": 14,
+    "last_updated": "July 9, 2025",
+    "version": "2.1",
+    "size": "17.75KiB",
+    "developer_name": "WebsiteEmailme@nikitaeverywhere.com",
+    "developer_email": "me@nikitaeverywhere.com",
+    "developer_website": "https://nikitaeverywhere.com",
+    "privacy_policy": "The developer has disclosed that it will not collect or use your data.\nThis developer declares that your data is\nNot being sold to third parties, outside of the\napproved use cases\nNot being used or transferred for purposes that are unrelated to the item's core functionality\nNot being used or transferred to determine creditworthiness or for lending purposes",
+    "follows_best_practices": true,
+    "is_featured": true,
+    "category": "Extension > Accessibility"
+  },
+  "manifest": {
+    "name": "Tab Slider",
+    "version": "2.1",
+    "manifest_version": 3,
+    "description": "Keep your tabs ordered by their most recent usage.",
+    "permissions": [
+      "storage"
+    ],
+    "host_permissions": [],
+    "optional_permissions": [],
+    "content_scripts": [],
+    "background": {
+      "type": "service_worker",
+      "service_worker": "background.js",
+      "type_module": true
+    },
+    "action": null,
+    "options_page": "options.html",
+    "web_accessible_resources": [],
+    "externally_connectable": null,
+    "content_security_policy": null,
+    "update_url": "https://clients2.google.com/service/update2/crx",
+    "icons": {
+      "16": "img/logo-16.png",
+      "48": "img/logo-48.png",
+      "96": "img/logo-96.png",
+      "128": "img/logo-128.png"
+    },
+    "homepage_url": null,
+    "author": "Nikita Savchenko"
+  },
+  "permissions_analysis": {
+    "permissions_analysis": "The extension requests the following permissions:\n- storage\n\n\u2705 All permissions appear to be reasonable.",
+    "permissions_details": {
+      "storage": {
+        "permission_name": "storage",
+        "justification_reasoning": "The storage permission is justified because the extension needs to store data about tab usage locally to keep them ordered by their most recent usage. Additionally, syncing data across devices and persisting settings and preferences are consistent with the extension's functionality.",
+        "is_reasonable": true
+      }
+    },
+    "host_permissions_analysis": "\u2705 No critical host permissions detected.",
+    "screenshot_capture_analysis": {
+      "detected": false,
+      "detection_method": "Not detected",
+      "evidence": [],
+      "risk_score": 0,
+      "description": "No screenshot capture capability detected"
+    }
+  },
+  "sast_results": {
+    "sast_analysis": "[RISK: LOW] No security findings detected in SAST analysis.",
+    "sast_findings": {
+      "background.js": []
+    }
+  },
+  "webstore_analysis": {
+    "webstore_analysis": "Chrome extension risk assessment based on WebStore reputation analysis:\n - Overall Risk Level: medium\n - Summary: The extension 'Tab Slider' has a low user count and few ratings, which could indicate limited adoption or niche appeal. However, it follows best practices, is featured, and provides developer contact information and a privacy policy, which are positive indicators. These factors suggest a medium reputation risk level.\n"
+  },
+  "virustotal_analysis": {
+    "enabled": true,
+    "files_analyzed": 5,
+    "files_with_detections": 0,
+    "total_malicious": 0,
+    "total_suspicious": 0,
+    "file_results": [
+      {
+        "file_name": "background.js",
+        "file_path": "/background.js",
+        "priority_file": true,
+        "hashes": {
+          "sha256": "f6d8354010bddacdeecd73302e85f8595535331eb54dd0e45bdd63b07c5c672c",
+          "sha1": "e8b01e3fb9ef5d8319e93037a4123d5b66afb06b",
+          "md5": "7e2d563d3f1842b129515fad223145f2"
+        },
+        "virustotal": {
+          "found": false,
+          "message": "Hash not found in VirusTotal database"
+        }
+      },
+      {
+        "file_name": "options.html",
+        "file_path": "/options.html",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "57f9b88b125bb33bfaae56479542dfcaced7eebab7061d01ce28c996831d2a90",
+          "sha1": "1721ee992619c48778c31f87a0c92edde47fd6a8",
+          "md5": "df29cfc6161b8ef26be148b34061e5e0"
+        },
+        "virustotal": {
+          "found": false,
+          "message": "Hash not found in VirusTotal database"
+        }
+      },
+      {
+        "file_name": "options.js",
+        "file_path": "/options.js",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "34de2c4aff2def94bd60e3889885f1ab1419550d536432d1def5373885dd4c80",
+          "sha1": "3fb8e36059a2e6d2b3baceada8833c2ceaca2b42",
+          "md5": "82cd8bd7179ae5e4a9e798e478ca9a7f"
+        },
+        "virustotal": {
+          "found": false,
+          "message": "Hash not found in VirusTotal database"
+        }
+      },
+      {
+        "file_name": "manifest.json",
+        "file_path": "/manifest.json",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "48e2422deb84a026ca017b3b85c6b9335be256a2b6a25ca10c56641a1955ed15",
+          "sha1": "76afc172d585d4b3ac54d43deb53d964dd17dc96",
+          "md5": "ded1231d75875e435c7275927b7d5752"
+        },
+        "virustotal": {
+          "found": false,
+          "message": "Hash not found in VirusTotal database"
+        }
+      },
+      {
+        "file_name": "verified_contents.json",
+        "file_path": "/_metadata/verified_contents.json",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "3d2dbf09553d2d98b2909f949a611d6323764db918d090757bd2529d67d532e7",
+          "sha1": "9dd7e73b39b5c834da2be1e5a861b35df0cbee52",
+          "md5": "0cf1cee57e786e6411d0fa225f9e8245"
+        },
+        "virustotal": {
+          "found": false,
+          "message": "Hash not found in VirusTotal database"
+        }
+      }
+    ],
+    "summary": {
+      "threat_level": "clean",
+      "detected_families": [],
+      "recommendation": "No known threats detected in VirusTotal database. Note: This does not guarantee the extension is safe."
+    }
+  },
+  "entropy_analysis": {
+    "files_analyzed": 2,
+    "files_skipped": 0,
+    "obfuscated_files": 0,
+    "suspicious_files": 0,
+    "file_results": [
+      {
+        "file_name": "background.js",
+        "file_path": "background.js",
+        "file_size_bytes": 3831,
+        "entropy": {
+          "byte_entropy": 4.98,
+          "char_entropy": 4.98,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "options.js",
+        "file_path": "options.js",
+        "file_size_bytes": 2445,
+        "entropy": {
+          "byte_entropy": 5.12,
+          "char_entropy": 5.12,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      }
+    ],
+    "summary": {
+      "overall_risk": "low",
+      "obfuscation_detected": false,
+      "high_entropy_files": [],
+      "pattern_summary": {},
+      "recommendation": "No significant obfuscation detected. Code appears to be in readable form."
+    }
+  },
+  "summary": {
+    "summary": "The 'Tab Slider' extension presents a medium risk level due to its low user count and limited ratings, despite having reasonable permissions and a privacy policy. Users should be cautious due to its moderate reputation risk, although no technical security issues were found.",
+    "overall_risk_level": "medium",
+    "key_findings": [
+      "Low user count and few ratings suggest limited adoption, which may indicate potential risks.",
+      "The extension has a privacy policy and developer contact information, which are positive indicators.",
+      "No critical permissions or security issues were detected in the technical analysis."
+    ],
+    "recommendations": [
+      "Only install this extension if you trust the developer and are comfortable with its limited reputation.",
+      "Regularly review the extension's permissions and privacy policy for any changes.",
+      "Consider alternatives with a higher user base and more reviews if concerned about reputation."
+    ]
+  },
+  "extracted_path": "extensions_storage/extracted_nobaaibkcalggmjnjhnlmmcldllpogjp.crx_5184",
+  "extracted_files": [
+    "background.js",
+    "options.js",
+    "manifest.json",
+    "options.html",
+    "options.css",
+    "_metadata/verified_contents.json",
+    "img/logo-128.png",
+    "img/logo-16.png",
+    "img/logo-48.png",
+    "img/logo-96.png"
+  ],
+  "overall_security_score": 90,
+  "total_findings": 0,
+  "risk_distribution": {
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "overall_risk": "low",
+  "total_risk_score": 0,
+  "governance_verdict": "NEEDS_REVIEW",
+  "governance_bundle": {
+    "facts": {
+      "scan_id": "nobaaibkcalggmjnjhnlmmcldllpogjp",
+      "extension_id": "nobaaibkcalggmjnjhnlmmcldllpogjp",
+      "artifact_hash": null,
+      "created_at": "2026-02-02T23:22:19.175978",
+      "manifest": {
+        "name": "Tab Slider",
+        "version": "2.1",
+        "manifest_version": 3,
+        "description": "Keep your tabs ordered by their most recent usage.",
+        "permissions": [
+          "storage"
+        ],
+        "host_permissions": [],
+        "optional_permissions": [],
+        "content_scripts": [],
+        "background": {
+          "type": "service_worker",
+          "service_worker": "background.js",
+          "scripts": [],
+          "page": null,
+          "persistent": true,
+          "type_module": true
+        },
+        "externally_connectable": null,
+        "web_accessible_resources": [],
+        "content_security_policy": null,
+        "update_url": "https://clients2.google.com/service/update2/crx"
+      },
+      "host_access_patterns": [],
+      "file_inventory": [],
+      "security_findings": {
+        "permission_findings": [
+          {
+            "permission_name": "storage",
+            "is_reasonable": true,
+            "justification_reasoning": "The storage permission is justified because the extension needs to store data about tab usage locally to keep them ordered by their most recent usage. Additionally, syncing data across devices and persisting settings and preferences are consistent with the extension's functionality."
+          }
+        ],
+        "dangerous_permissions": [],
+        "sast_findings": [],
+        "sast_risk_level": "low",
+        "virustotal_findings": [],
+        "virustotal_threat_level": "clean",
+        "virustotal_malicious_count": 0,
+        "entropy_findings": [
+          {
+            "file_name": "background.js",
+            "file_path": "background.js",
+            "byte_entropy": 4.98,
+            "char_entropy": 4.98,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "options.js",
+            "file_path": "options.js",
+            "byte_entropy": 5.12,
+            "char_entropy": 5.12,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          }
+        ],
+        "entropy_risk_level": "low",
+        "obfuscation_detected": false,
+        "webstore_risk_level": "medium",
+        "webstore_analysis": "Chrome extension risk assessment based on WebStore reputation analysis:\n - Overall Risk Level: medium\n - Summary: The extension 'Tab Slider' has a low user count and few ratings, which could indicate limited adoption or niche appeal. However, it follows best practices, is featured, and provides developer contact information and a privacy policy, which are positive indicators. These factors suggest a medium reputation risk level.\n",
+        "overall_risk_level": "medium",
+        "overall_security_score": 0,
+        "total_findings": 0
+      },
+      "metadata": {
+        "title": "Tab Slider",
+        "user_count": 879,
+        "rating": 4.5,
+        "ratings_count": 14,
+        "last_updated": "July 9, 2025",
+        "developer_name": "WebsiteEmailme@nikitaeverywhere.com",
+        "developer_email": "me@nikitaeverywhere.com",
+        "developer_website": "https://nikitaeverywhere.com",
+        "category": "Extension > Accessibility",
+        "is_featured": true,
+        "follows_best_practices": true
+      }
+    },
+    "evidence_index": {
+      "scan_id": "nobaaibkcalggmjnjhnlmmcldllpogjp",
+      "evidence": {}
+    },
+    "signals": {
+      "scan_id": "nobaaibkcalggmjnjhnlmmcldllpogjp",
+      "signals": []
+    },
+    "store_listing": {
+      "extraction": {
+        "status": "ok",
+        "reason": "Successfully extracted from Chrome Web Store",
+        "extracted_at": "2026-02-02T23:22:19.176115"
+      },
+      "declared_data_categories": [],
+      "declared_purposes": [
+        "functionality"
+      ],
+      "declared_third_parties": [],
+      "privacy_policy_url": null,
+      "privacy_policy_hash": "sha256:f32052704a4d21d9905b19d8aa43168c38925a9d192f29e5e7b103567896c9fe"
+    },
+    "context": {
+      "regions_in_scope": [
+        "GLOBAL"
+      ],
+      "rulepacks": [
+        "ENTERPRISE_GOV_BASELINE",
+        "CWS_LIMITED_USE"
+      ],
+      "domain_categories": [
+        "general"
+      ],
+      "cross_border_risk": false
+    },
+    "rule_results": {
+      "scan_id": "nobaaibkcalggmjnjhnlmmcldllpogjp",
+      "rule_results": [
+        {
+          "rule_id": "CWS_LIMITED_USE::R1",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.9,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_1"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require developer justification or reduce scope to specific domains",
+          "triggered_at": "2026-02-02T23:22:19.185008"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R2",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block \u2014 Limited Use policy requires explicit PII declaration",
+          "triggered_at": "2026-02-02T23:22:19.185054"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R3",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.75,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_3"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Manual review required to confirm data handling practices",
+          "triggered_at": "2026-02-02T23:22:19.185083"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R4",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_4"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block \u2014 Limited Use requires explicit third-party data sharing declaration",
+          "triggered_at": "2026-02-02T23:22:19.185110"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R5",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Verify clipboard access is limited to user-initiated copy/paste operations",
+          "triggered_at": "2026-02-02T23:22:19.185131"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R6",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_6"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require justification for unlimited storage use",
+          "triggered_at": "2026-02-02T23:22:19.185142"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R7",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_7"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Manual security review required for sensitive domain access",
+          "triggered_at": "2026-02-02T23:22:19.185209"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R8",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_8"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require developer to disclose all external endpoints in store listing",
+          "triggered_at": "2026-02-02T23:22:19.185237"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R9",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_9"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require disclosure of network interception capabilities",
+          "triggered_at": "2026-02-02T23:22:19.185264"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R10",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_10"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block immediately \u2014 malware/adware detected",
+          "triggered_at": "2026-02-02T23:22:19.185293"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R1",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_1",
+            "NIST-SP-800-53::AC-3"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require explicit business justification from developer before allowing org-wide",
+          "triggered_at": "2026-02-02T23:22:19.185313"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R2",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_1"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Verify extension purpose aligns with sensitive domain access",
+          "triggered_at": "2026-02-02T23:22:19.185343"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R3",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.9,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2",
+            "CWS_LIMITED_USE::SECTION_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block installation \u2014 undisclosed data exfiltration risk",
+          "triggered_at": "2026-02-02T23:22:19.185370"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R4",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require manual verification of store listing or source code review",
+          "triggered_at": "2026-02-02T23:22:19.185387"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R5",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.75,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_3"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require security review of API usage and network behavior",
+          "triggered_at": "2026-02-02T23:22:19.185396"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R6",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Review external endpoints and require declaration on Chrome Web Store",
+          "triggered_at": "2026-02-02T23:22:19.185414"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R7",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_4"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require source code transparency or additional dynamic analysis",
+          "triggered_at": "2026-02-02T23:22:19.185464"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R8",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block immediately \u2014 known malware signature detected",
+          "triggered_at": "2026-02-02T23:22:19.185489"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R9",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_6"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Verify justification for each dangerous permission",
+          "triggered_at": "2026-02-02T23:22:19.185507"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R10",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_7"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require developer to publish privacy policy",
+          "triggered_at": "2026-02-02T23:22:19.185525"
+        }
+      ]
+    },
+    "report": {
+      "scan_id": "nobaaibkcalggmjnjhnlmmcldllpogjp",
+      "extension_id": "nobaaibkcalggmjnjhnlmmcldllpogjp",
+      "extension_name": "Tab Slider",
+      "created_at": "2026-02-02T23:22:19.185584",
+      "decision": {
+        "verdict": "NEEDS_REVIEW",
+        "rationale": "1. [ENTERPRISE_GOV_BASELINE::R9] Condition matched. Verdict: NEEDS_REVIEW\n2. [ENTERPRISE_GOV_BASELINE::R10] Condition matched. Verdict: NEEDS_REVIEW",
+        "action_required": "Verify justification for each dangerous permission",
+        "triggered_rules": [
+          "ENTERPRISE_GOV_BASELINE::R9",
+          "ENTERPRISE_GOV_BASELINE::R10"
+        ],
+        "block_rules": [],
+        "review_rules": [
+          "ENTERPRISE_GOV_BASELINE::R9",
+          "ENTERPRISE_GOV_BASELINE::R10"
+        ]
+      },
+      "rule_results": [
+        {
+          "rule_id": "CWS_LIMITED_USE::R1",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.9,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_1"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require developer justification or reduce scope to specific domains",
+          "triggered_at": "2026-02-02T23:22:19.185008"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R2",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block \u2014 Limited Use policy requires explicit PII declaration",
+          "triggered_at": "2026-02-02T23:22:19.185054"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R3",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.75,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_3"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Manual review required to confirm data handling practices",
+          "triggered_at": "2026-02-02T23:22:19.185083"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R4",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_4"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block \u2014 Limited Use requires explicit third-party data sharing declaration",
+          "triggered_at": "2026-02-02T23:22:19.185110"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R5",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Verify clipboard access is limited to user-initiated copy/paste operations",
+          "triggered_at": "2026-02-02T23:22:19.185131"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R6",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_6"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require justification for unlimited storage use",
+          "triggered_at": "2026-02-02T23:22:19.185142"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R7",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_7"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Manual security review required for sensitive domain access",
+          "triggered_at": "2026-02-02T23:22:19.185209"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R8",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_8"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require developer to disclose all external endpoints in store listing",
+          "triggered_at": "2026-02-02T23:22:19.185237"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R9",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_9"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require disclosure of network interception capabilities",
+          "triggered_at": "2026-02-02T23:22:19.185264"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R10",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_10"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block immediately \u2014 malware/adware detected",
+          "triggered_at": "2026-02-02T23:22:19.185293"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R1",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_1",
+            "NIST-SP-800-53::AC-3"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require explicit business justification from developer before allowing org-wide",
+          "triggered_at": "2026-02-02T23:22:19.185313"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R2",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_1"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Verify extension purpose aligns with sensitive domain access",
+          "triggered_at": "2026-02-02T23:22:19.185343"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R3",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.9,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2",
+            "CWS_LIMITED_USE::SECTION_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block installation \u2014 undisclosed data exfiltration risk",
+          "triggered_at": "2026-02-02T23:22:19.185370"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R4",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require manual verification of store listing or source code review",
+          "triggered_at": "2026-02-02T23:22:19.185387"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R5",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.75,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_3"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require security review of API usage and network behavior",
+          "triggered_at": "2026-02-02T23:22:19.185396"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R6",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Review external endpoints and require declaration on Chrome Web Store",
+          "triggered_at": "2026-02-02T23:22:19.185414"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R7",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_4"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require source code transparency or additional dynamic analysis",
+          "triggered_at": "2026-02-02T23:22:19.185464"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R8",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block immediately \u2014 known malware signature detected",
+          "triggered_at": "2026-02-02T23:22:19.185489"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R9",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_6"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Verify justification for each dangerous permission",
+          "triggered_at": "2026-02-02T23:22:19.185507"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R10",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_7"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require developer to publish privacy policy",
+          "triggered_at": "2026-02-02T23:22:19.185525"
+        }
+      ],
+      "total_rules_evaluated": 20,
+      "rules_triggered": 2,
+      "block_count": 0,
+      "review_count": 2,
+      "allow_count": 18
+    },
+    "decision": {
+      "verdict": "NEEDS_REVIEW",
+      "rationale": "1. [ENTERPRISE_GOV_BASELINE::R9] Condition matched. Verdict: NEEDS_REVIEW\n2. [ENTERPRISE_GOV_BASELINE::R10] Condition matched. Verdict: NEEDS_REVIEW",
+      "action_required": "Verify justification for each dangerous permission"
+    }
+  },
+  "governance_report": {
+    "scan_id": "nobaaibkcalggmjnjhnlmmcldllpogjp",
+    "extension_id": "nobaaibkcalggmjnjhnlmmcldllpogjp",
+    "extension_name": "Tab Slider",
+    "created_at": "2026-02-02T23:22:19.185584",
+    "decision": {
+      "verdict": "NEEDS_REVIEW",
+      "rationale": "1. [ENTERPRISE_GOV_BASELINE::R9] Condition matched. Verdict: NEEDS_REVIEW\n2. [ENTERPRISE_GOV_BASELINE::R10] Condition matched. Verdict: NEEDS_REVIEW",
+      "action_required": "Verify justification for each dangerous permission",
+      "triggered_rules": [
+        "ENTERPRISE_GOV_BASELINE::R9",
+        "ENTERPRISE_GOV_BASELINE::R10"
+      ],
+      "block_rules": [],
+      "review_rules": [
+        "ENTERPRISE_GOV_BASELINE::R9",
+        "ENTERPRISE_GOV_BASELINE::R10"
+      ]
+    },
+    "rule_results": [
+      {
+        "rule_id": "CWS_LIMITED_USE::R1",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.9,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_1"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require developer justification or reduce scope to specific domains",
+        "triggered_at": "2026-02-02T23:22:19.185008"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R2",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.85,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_2"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Block \u2014 Limited Use policy requires explicit PII declaration",
+        "triggered_at": "2026-02-02T23:22:19.185054"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R3",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.75,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_3"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Manual review required to confirm data handling practices",
+        "triggered_at": "2026-02-02T23:22:19.185083"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R4",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_4"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Block \u2014 Limited Use requires explicit third-party data sharing declaration",
+        "triggered_at": "2026-02-02T23:22:19.185110"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R5",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.7,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_5"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Verify clipboard access is limited to user-initiated copy/paste operations",
+        "triggered_at": "2026-02-02T23:22:19.185131"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R6",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.7,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_6"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require justification for unlimited storage use",
+        "triggered_at": "2026-02-02T23:22:19.185142"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R7",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.85,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_7"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Manual security review required for sensitive domain access",
+        "triggered_at": "2026-02-02T23:22:19.185209"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R8",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_8"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require developer to disclose all external endpoints in store listing",
+        "triggered_at": "2026-02-02T23:22:19.185237"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R9",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_9"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require disclosure of network interception capabilities",
+        "triggered_at": "2026-02-02T23:22:19.185264"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R10",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.95,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_10"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Block immediately \u2014 malware/adware detected",
+        "triggered_at": "2026-02-02T23:22:19.185293"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R1",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.95,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_1",
+          "NIST-SP-800-53::AC-3"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require explicit business justification from developer before allowing org-wide",
+        "triggered_at": "2026-02-02T23:22:19.185313"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R2",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.85,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_1"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Verify extension purpose aligns with sensitive domain access",
+        "triggered_at": "2026-02-02T23:22:19.185343"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R3",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.9,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_2",
+          "CWS_LIMITED_USE::SECTION_5"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Block installation \u2014 undisclosed data exfiltration risk",
+        "triggered_at": "2026-02-02T23:22:19.185370"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R4",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require manual verification of store listing or source code review",
+        "triggered_at": "2026-02-02T23:22:19.185387"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R5",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.75,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_3"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require security review of API usage and network behavior",
+        "triggered_at": "2026-02-02T23:22:19.185396"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R6",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Review external endpoints and require declaration on Chrome Web Store",
+        "triggered_at": "2026-02-02T23:22:19.185414"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R7",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.7,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_4"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require source code transparency or additional dynamic analysis",
+        "triggered_at": "2026-02-02T23:22:19.185464"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R8",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.95,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_5"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Block immediately \u2014 known malware signature detected",
+        "triggered_at": "2026-02-02T23:22:19.185489"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R9",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "NEEDS_REVIEW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_6"
+        ],
+        "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+        "recommended_action": "Verify justification for each dangerous permission",
+        "triggered_at": "2026-02-02T23:22:19.185507"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R10",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "NEEDS_REVIEW",
+        "confidence": 0.7,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_7"
+        ],
+        "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+        "recommended_action": "Require developer to publish privacy policy",
+        "triggered_at": "2026-02-02T23:22:19.185525"
+      }
+    ],
+    "total_rules_evaluated": 20,
+    "rules_triggered": 2,
+    "block_count": 0,
+    "review_count": 2,
+    "allow_count": 18
+  },
+  "governance_error": null
+}

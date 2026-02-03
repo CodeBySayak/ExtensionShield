@@ -23,6 +23,8 @@ from extension_shield.core.report_generator import ReportGenerator
 from extension_shield.workflow.graph import build_graph
 from extension_shield.workflow.state import WorkflowState, WorkflowStatus
 from extension_shield.api.database import db
+from extension_shield.scoring.engine import ScoringEngine
+from extension_shield.governance.tool_adapters import SignalPackBuilder
 
 
 # Pydantic models for request/response
@@ -167,6 +169,48 @@ async def run_analysis_workflow(url: str, extension_id: str):
             if extracted_files is None:
                 extracted_files = []
 
+            # =================================================================
+            # V2 SCORING: Build SignalPack and compute scores via ScoringEngine
+            # =================================================================
+            signal_pack_builder = SignalPackBuilder()
+            signal_pack = signal_pack_builder.build(
+                scan_id=extension_id,
+                analysis_results=analysis_results,
+                metadata=metadata,
+                manifest=manifest,
+                extension_id=extension_id,
+            )
+            
+            # Determine user count for context-aware scoring
+            user_count = signal_pack.webstore_stats.installs
+            if user_count is None:
+                # Fallback to metadata if available
+                user_count = metadata.get("users") or metadata.get("user_count")
+            
+            # Compute v2 scores
+            scoring_engine = ScoringEngine(weights_version="v1")
+            scoring_result = scoring_engine.calculate_scores(
+                signal_pack=signal_pack,
+                manifest=manifest,
+                user_count=user_count,
+            )
+            
+            # Build scoring_v2 payload for API response
+            scoring_v2_payload = {
+                "scoring_version": "v2",
+                "weights_version": "v1",
+                "security_score": scoring_result.security_score,
+                "privacy_score": scoring_result.privacy_score,
+                "governance_score": scoring_result.governance_score,
+                "overall_score": scoring_result.overall_score,
+                "overall_confidence": scoring_result.overall_confidence,
+                "decision": scoring_result.decision.value,
+                "decision_reasons": scoring_result.reasons,
+                "hard_gates_triggered": scoring_result.hard_gates_triggered,
+                "risk_level": scoring_result.risk_level.value,
+                "explanation": scoring_result.explanation,
+            }
+
             scan_results[extension_id] = {
                 "extension_id": extension_id,
                 "extension_name": extension_name,
@@ -183,21 +227,22 @@ async def run_analysis_workflow(url: str, extension_id: str):
                 "summary": final_state.get("executive_summary") or {},
                 "extracted_path": final_state.get("extension_dir"),
                 "extracted_files": extracted_files,
-                "overall_security_score": calculate_security_score(
-                    final_state
-                ),  # This helper also needs update or a wrapper
-                "total_findings": count_total_findings(
-                    final_state
-                ),  # This helper also needs update or a wrapper
-                "risk_distribution": calculate_risk_distribution(
-                    final_state
-                ),  # This helper also needs update or a wrapper
-                "overall_risk": determine_overall_risk(
-                    final_state
-                ),  # This helper also needs update or a wrapper
-                "total_risk_score": calculate_total_risk_score(
-                    final_state
-                ),  # This helper also needs update or a wrapper
+                # V2 scoring - overall_security_score for backward compatibility
+                "overall_security_score": scoring_result.overall_score,
+                # Explicit v2 keys for new consumers
+                "security_score": scoring_result.security_score,
+                "privacy_score": scoring_result.privacy_score,
+                "governance_score": scoring_result.governance_score,
+                "overall_confidence": scoring_result.overall_confidence,
+                "decision_v2": scoring_result.decision.value,
+                "decision_reasons_v2": scoring_result.reasons,
+                # Full v2 scoring payload
+                "scoring_v2": scoring_v2_payload,
+                # Legacy helper outputs (kept for backward compatibility)
+                "total_findings": count_total_findings(final_state),
+                "risk_distribution": calculate_risk_distribution(final_state),
+                "overall_risk": scoring_result.risk_level.value,  # Use v2 risk level
+                "total_risk_score": calculate_total_risk_score(final_state),
                 # Governance data (Pipeline B: Stages 2-8)
                 "governance_verdict": final_state.get("governance_verdict"),
                 "governance_bundle": final_state.get("governance_bundle"),
@@ -246,6 +291,187 @@ def get_extracted_files(extracted_path: Optional[str]) -> list[str]:
             files.append(rel_path)
 
     return files
+
+
+def _calculate_permission_alignment_penalty(
+    manifest: Dict,
+    permissions_details: Dict,
+    permissions_analysis: Dict,
+    analysis_results: Dict
+) -> int:
+    """
+    Calculate penalty based on permission-purpose alignment.
+    
+    This is the CONTEXT-AWARE mathematical model that differentiates:
+    - Vimium: Needs <all_urls> for keyboard navigation → LEGITIMATE (low penalty)
+    - Honey: Had permissions but used them covertly → ABUSIVE (high penalty)
+    - Visa extension: Screenshot without consent → ABUSIVE (high penalty)
+    
+    The model evaluates:
+    1. TRANSPARENCY: Is sensitive behavior disclosed in name/description?
+    2. JUSTIFICATION: Do permissions match stated purpose?
+    3. CONSENT: Are there popup/notification patterns in code?
+    4. COVERT BEHAVIOR: Silent data collection without user awareness?
+    
+    Formula:
+        penalty = base_risk × (1 - transparency_score) × covert_multiplier
+    
+    Returns:
+        int: Penalty points (0-20)
+    """
+    penalty = 0
+    
+    # Extract extension metadata
+    name = manifest.get("name", "").lower()
+    description = manifest.get("description", "").lower()
+    permissions = list(permissions_details.keys()) if permissions_details else []
+    
+    # === STEP 1: Identify Sensitive Permission Combinations ===
+    
+    # High-risk permission groups that require justification
+    has_all_urls = any(
+        p in permissions or p in str(permissions_analysis.get("host_permissions_analysis", ""))
+        for p in ["<all_urls>", "*://*/*"]
+    )
+    has_cookies = "cookies" in permissions
+    has_web_request = any(p in permissions for p in ["webRequest", "webRequestBlocking"])
+    has_history = "history" in permissions
+    has_clipboard = any(p in permissions for p in ["clipboardRead", "clipboardWrite"])
+    has_tabs = "tabs" in permissions
+    has_screenshot = any(p in permissions for p in ["desktopCapture", "tabCapture"])
+    
+    # Check for screenshot libraries (from screenshot_capture_analysis)
+    screenshot_analysis = permissions_analysis.get("screenshot_capture_analysis", {})
+    has_screenshot_lib = screenshot_analysis.get("detected", False) if isinstance(screenshot_analysis, dict) else False
+    
+    # === STEP 2: Check Transparency (Is behavior disclosed?) ===
+    
+    # Keywords that indicate transparent disclosure of sensitive features
+    transparency_keywords = {
+        "all_urls": ["browser", "navigation", "keyboard", "shortcut", "accessibility", "reader", "dark mode", "style"],
+        "cookies": ["login", "session", "authentication", "sync", "password", "manager"],
+        "webRequest": ["block", "filter", "ad", "privacy", "tracker", "vpn", "proxy"],
+        "history": ["history", "bookmark", "search", "session", "backup"],
+        "clipboard": ["clipboard", "copy", "paste", "text", "snippet"],
+        "screenshot": ["screenshot", "capture", "image", "pdf", "print", "screen"],
+    }
+    
+    transparency_score = 1.0  # 1.0 = fully transparent, 0.0 = opaque
+    
+    # Check if high-risk permissions are justified by description
+    if has_all_urls:
+        all_urls_justified = any(kw in name or kw in description for kw in transparency_keywords["all_urls"])
+        if not all_urls_justified:
+            transparency_score *= 0.5  # 50% reduction if not disclosed
+    
+    if has_cookies:
+        cookies_justified = any(kw in name or kw in description for kw in transparency_keywords["cookies"])
+        if not cookies_justified:
+            transparency_score *= 0.7
+    
+    if has_web_request:
+        web_request_justified = any(kw in name or kw in description for kw in transparency_keywords["webRequest"])
+        if not web_request_justified:
+            transparency_score *= 0.6
+    
+    if has_screenshot or has_screenshot_lib:
+        screenshot_justified = any(kw in name or kw in description for kw in transparency_keywords["screenshot"])
+        if not screenshot_justified:
+            transparency_score *= 0.3  # Screenshot without disclosure = very suspicious
+    
+    # === STEP 3: Check for Covert Behavior Patterns ===
+    
+    covert_multiplier = 1.0
+    
+    # Pattern 1: Data Collection + Network (can exfiltrate)
+    # This is the Honey pattern: collect data silently and send to server
+    js_analysis = analysis_results.get("javascript_analysis", {})
+    has_third_party_api = False
+    if js_analysis and isinstance(js_analysis, dict):
+        sast_findings = js_analysis.get("sast_findings", {})
+        for findings_list in sast_findings.values():
+            for finding in findings_list:
+                check_id = finding.get("check_id", "")
+                if "third_party" in check_id.lower() or "external_api" in check_id.lower():
+                    has_third_party_api = True
+                    break
+    
+    # Covert data collection pattern: sensitive permission + network + no disclosure
+    if has_third_party_api:
+        if has_cookies or has_history or has_clipboard:
+            covert_multiplier = 2.0  # Double penalty for data exfiltration capability
+        if has_screenshot or has_screenshot_lib:
+            covert_multiplier = 2.5  # Higher penalty for screenshot exfiltration
+    
+    # Pattern 2: Silent operation (no popup/notification keywords)
+    # Legitimate extensions often mention "popup", "toolbar", "notification"
+    ui_keywords = ["popup", "toolbar", "icon", "badge", "notification", "alert", "confirm", "dialog"]
+    has_ui_indication = any(kw in description for kw in ui_keywords)
+    
+    if not has_ui_indication and (has_screenshot or has_screenshot_lib):
+        # Screenshot capability with no UI indication = likely covert
+        covert_multiplier *= 1.5
+    
+    # === STEP 4: Check Extension Category Alignment ===
+    
+    # Some categories naturally need broad permissions
+    legitimate_broad_permission_categories = [
+        # Productivity tools that legitimately need all-site access
+        ("vimium", "keyboard"),
+        ("surfingkeys", "keyboard"),
+        ("dark reader", "dark mode"),
+        ("stylus", "style"),
+        ("ublock", "ad blocker"),
+        ("adblock", "ad blocker"),
+        ("privacy badger", "privacy"),
+        ("https everywhere", "https"),
+        ("grammarly", "grammar"),
+        ("lastpass", "password"),
+        ("bitwarden", "password"),
+        ("1password", "password"),
+    ]
+    
+    is_legitimate_broad_tool = any(
+        cat_name in name or cat_keyword in name
+        for cat_name, cat_keyword in legitimate_broad_permission_categories
+    )
+    
+    if is_legitimate_broad_tool:
+        # Reduce penalty for known legitimate tool patterns
+        covert_multiplier *= 0.3
+    
+    # === STEP 5: Calculate Final Penalty ===
+    
+    # Base risk from sensitive permission combinations
+    base_risk = 0
+    
+    if has_all_urls and has_cookies:
+        base_risk += 8  # Can track across all sites
+    elif has_all_urls:
+        base_risk += 4  # Broad access but no cookie tracking
+    
+    if has_web_request and has_cookies:
+        base_risk += 6  # Can intercept and modify requests with tracking
+    
+    if (has_screenshot or has_screenshot_lib) and has_third_party_api:
+        base_risk += 10  # Screenshot + network = exfiltration
+    
+    if has_history and has_third_party_api:
+        base_risk += 5  # Browsing history exfiltration
+    
+    if has_clipboard and has_third_party_api:
+        base_risk += 7  # Clipboard data exfiltration
+    
+    # Apply transparency and covert modifiers
+    # Formula: penalty = base_risk × (2 - transparency_score) × covert_multiplier
+    # When transparency = 1.0 (fully transparent): multiplier = 1.0
+    # When transparency = 0.0 (opaque): multiplier = 2.0
+    transparency_multiplier = 2.0 - transparency_score
+    
+    penalty = int(base_risk * transparency_multiplier * covert_multiplier)
+    
+    # Cap at 20 points
+    return min(20, penalty)
 
 
 def calculate_security_score(state: WorkflowState) -> int:
@@ -397,21 +623,128 @@ def calculate_security_score(state: WorkflowState) -> int:
         if third_party_detected:
             third_party_api_score = 1  # Add only once, not per finding
 
-    # Component 6: Screenshot Capture Detection (+1 point if detected, only once)
+    # Component 6: Screenshot Capture Detection (context-aware: 0-15 pts)
+    # Different from binary +1: considers consent, transparency, and purpose alignment
     screenshot_score = 0
     if permissions_analysis and isinstance(permissions_analysis, dict):
         screenshot_analysis = permissions_analysis.get("screenshot_capture_analysis", {})
         if isinstance(screenshot_analysis, dict) and screenshot_analysis.get("detected", False):
-            screenshot_score = 1  # Add only once, not per evidence item
+            # Base detection score
+            screenshot_score = 3
+            
+            # Context modifiers: Check if screenshot is justified by purpose
+            extension_name = manifest.get("name", "").lower()
+            extension_desc = manifest.get("description", "").lower()
+            
+            # Legitimate screenshot tools get reduced penalty
+            screenshot_keywords = ["screenshot", "capture", "snap", "screen", "image", "pdf", "print"]
+            is_screenshot_tool = any(kw in extension_name or kw in extension_desc for kw in screenshot_keywords)
+            
+            if is_screenshot_tool:
+                screenshot_score = 1  # Expected behavior for screenshot tools
+            else:
+                # Check for covert behavior indicators (no consent patterns)
+                # If extension has screenshot + network + no popup indication = higher risk
+                has_network = any(
+                    perm in permissions_details
+                    for perm in ["webRequest", "webRequestBlocking", "<all_urls>"]
+                )
+                if has_network:
+                    screenshot_score = 10  # Can capture and exfiltrate
+                
+                # Check for clipboard/download (can save screenshots)
+                has_storage = any(
+                    perm in permissions_details
+                    for perm in ["clipboardWrite", "downloads"]
+                )
+                if has_storage and has_network:
+                    screenshot_score = 15  # Full exfiltration capability
+
+    # Component 7: VirusTotal Analysis (0-50 pts)
+    # Critical: This was MISSING from scoring!
+    virustotal_score = 0
+    virustotal_analysis = analysis_results.get("virustotal_analysis", {})
+    if virustotal_analysis and isinstance(virustotal_analysis, dict):
+        if virustotal_analysis.get("enabled"):
+            total_malicious = virustotal_analysis.get("total_malicious", 0)
+            total_suspicious = virustotal_analysis.get("total_suspicious", 0)
+            
+            if total_malicious > 0:
+                # Consensus-based scoring (not binary)
+                if total_malicious >= 10:
+                    virustotal_score = 50  # Strong malware consensus
+                elif total_malicious >= 5:
+                    virustotal_score = 40  # Multiple detections
+                elif total_malicious >= 2:
+                    virustotal_score = 30  # Some detections
+                else:
+                    virustotal_score = 15  # Single detection (could be false positive)
+            elif total_suspicious > 0:
+                virustotal_score = min(20, total_suspicious * 5)
+
+    # Component 8: Entropy/Obfuscation Analysis (0-30 pts)
+    # Critical: This was MISSING from scoring!
+    entropy_score = 0
+    entropy_analysis = analysis_results.get("entropy_analysis", {})
+    if entropy_analysis and isinstance(entropy_analysis, dict):
+        obfuscated_files = entropy_analysis.get("obfuscated_files", 0)
+        suspicious_files = entropy_analysis.get("suspicious_files", 0)
+        
+        # Context-aware: Check if obfuscation is legitimate minification
+        # Large popular extensions often use minified code
+        user_count = 0
+        try:
+            users = state.get("extension_metadata", {}).get("users", "0")
+            user_count = int(str(users).replace(",", "").replace("+", ""))
+        except (ValueError, TypeError):
+            pass
+        
+        # Popular extensions (>100K users) get reduced obfuscation penalty
+        # (likely using legitimate minification/bundlers)
+        popularity_modifier = 0.5 if user_count >= 100000 else 1.0
+        
+        if obfuscated_files > 0:
+            base_obfuscation_risk = min(20, obfuscated_files * 8)
+            entropy_score += int(base_obfuscation_risk * popularity_modifier)
+        
+        if suspicious_files > 0:
+            entropy_score += min(10, suspicious_files * 4)
+        
+        entropy_score = min(30, entropy_score)
+
+    # Component 9: ChromeStats Behavioral Analysis (0-28 pts)
+    # Critical: This was MISSING from scoring!
+    chromestats_score = 0
+    chromestats_analysis = analysis_results.get("chromestats_analysis", {})
+    if chromestats_analysis and isinstance(chromestats_analysis, dict):
+        if chromestats_analysis.get("enabled") and not chromestats_analysis.get("error"):
+            chromestats_score = min(28, chromestats_analysis.get("total_risk_score", 0))
+
+    # Component 10: Permission-Purpose Alignment (Context-Aware Model)
+    # This addresses the Vimium vs Honey problem:
+    # - Vimium needs <all_urls> for keyboard navigation = LEGITIMATE
+    # - Honey had permissions but used them covertly = ABUSIVE
+    alignment_penalty = 0
+    alignment_penalty = _calculate_permission_alignment_penalty(
+        manifest=manifest,
+        permissions_details=permissions_details,
+        permissions_analysis=permissions_analysis,
+        analysis_results=analysis_results
+    )
 
     # Calculate final weighted score (risk points)
+    # NEW TOTAL MAX: 40 + 30 + 20 + 10 + 1 + 15 + 50 + 30 + 28 + 20 = 244 pts
     final_score = (
-        sast_score
-        + permissions_score
-        + webstore_score
-        + manifest_score
-        + third_party_api_score
-        + screenshot_score
+        sast_score              # 40 max
+        + permissions_score     # 30 max
+        + webstore_score        # 20 max
+        + manifest_score        # 10 max
+        + third_party_api_score # 1 max
+        + screenshot_score      # 15 max (was 1)
+        + virustotal_score      # 50 max (NEW)
+        + entropy_score         # 30 max (NEW)
+        + chromestats_score     # 28 max (NEW)
+        + alignment_penalty     # 20 max (NEW - context-aware)
     )
 
     # Invert to security score: 100 = secure, 0 = risky

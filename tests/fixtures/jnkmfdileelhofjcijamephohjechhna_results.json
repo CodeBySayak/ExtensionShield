@@ -1,0 +1,1319 @@
+{
+  "extension_id": "jnkmfdileelhofjcijamephohjechhna",
+  "extension_name": "Google Analytics Debugger",
+  "url": "https://chromewebstore.google.com/detail/google-analytics-debugger/jnkmfdileelhofjcijamephohjechhna",
+  "timestamp": "2026-02-02T17:19:58.932870",
+  "status": "completed",
+  "metadata": {
+    "title": "Google Analytics Debugger",
+    "user_count": 600000,
+    "rating": 4.2,
+    "ratings_count": 536,
+    "last_updated": "December 30, 2024",
+    "version": "3.0",
+    "size": "28.41KiB",
+    "developer_name": "Google Analytics",
+    "developer_email": "analytics-extensions@google.com",
+    "developer_website": null,
+    "privacy_policy": "The developer has disclosed that it will not collect or use your data. To learn more, see the developer\u2019s\nprivacy policy\n.\nThis developer declares that your data is\nNot being sold to third parties, outside of the\napproved use cases\nNot being used or transferred for purposes that are unrelated to the item's core functionality\nNot being used or transferred to determine creditworthiness or for lending purposes",
+    "follows_best_practices": false,
+    "is_featured": false,
+    "category": "Extension > Developer Tools"
+  },
+  "manifest": {
+    "name": "Google Analytics Debugger",
+    "version": "3.0",
+    "manifest_version": 3,
+    "description": "Prints useful information to the JavaScript console by enabling the debug version of the Google Analytics Javascript.",
+    "permissions": [
+      "tabs",
+      "declarativeNetRequest",
+      "storage"
+    ],
+    "host_permissions": [
+      "<all_urls>"
+    ],
+    "optional_permissions": [],
+    "content_scripts": [],
+    "background": {
+      "type": "service_worker",
+      "service_worker": "background.js",
+      "type_module": false
+    },
+    "action": {
+      "default_title": "GA Debug: OFF",
+      "default_icon": {
+        "16": "icon-off-16.png",
+        "32": "icon-off-32.png"
+      }
+    },
+    "options_page": null,
+    "web_accessible_resources": [],
+    "externally_connectable": null,
+    "content_security_policy": null,
+    "update_url": "https://clients2.google.com/service/update2/crx",
+    "icons": {
+      "16": "icon-16.png",
+      "48": "icon-48.png",
+      "128": "icon-128.png"
+    },
+    "homepage_url": null,
+    "author": null
+  },
+  "permissions_analysis": {
+    "permissions_analysis": "The extension requests the following permissions:\n- tabs\n- declarativeNetRequest\n- storage\n\n\u26a0\ufe0f Suspicious permissions detected:\n- tabs: The 'tabs' permission is not justified for the Google Analytics Debugger extension because its primary function is to print debug information to the JavaScript console for Google Analytics. Access to tab URLs, titles, and favicon URLs is not necessary for this functionality.\n- declarativeNetRequest: The Google Analytics Debugger extension is designed to provide detailed information about Google Analytics requests by enabling the debug version of the JavaScript. The declarativeNetRequest permission could be justified if the extension needs to modify or inspect network requests to provide accurate debugging information. However, the description does not explicitly state the need to block, redirect, or modify requests, which are the primary capabilities of this permission. Without clear evidence that these capabilities are necessary for its core functionality, the permission request may not be fully justified.\n",
+    "permissions_details": {
+      "tabs": {
+        "permission_name": "tabs",
+        "justification_reasoning": "The 'tabs' permission is not justified for the Google Analytics Debugger extension because its primary function is to print debug information to the JavaScript console for Google Analytics. Access to tab URLs, titles, and favicon URLs is not necessary for this functionality.",
+        "is_reasonable": false
+      },
+      "declarativeNetRequest": {
+        "permission_name": "declarativeNetRequest",
+        "justification_reasoning": "The Google Analytics Debugger extension is designed to provide detailed information about Google Analytics requests by enabling the debug version of the JavaScript. The declarativeNetRequest permission could be justified if the extension needs to modify or inspect network requests to provide accurate debugging information. However, the description does not explicitly state the need to block, redirect, or modify requests, which are the primary capabilities of this permission. Without clear evidence that these capabilities are necessary for its core functionality, the permission request may not be fully justified.",
+        "is_reasonable": false
+      },
+      "storage": {
+        "permission_name": "storage",
+        "justification_reasoning": "The storage permission is justified as it allows the extension to store user preferences and settings locally, which is necessary for persisting configurations related to debugging Google Analytics across sessions.",
+        "is_reasonable": true
+      }
+    },
+    "host_permissions_analysis": "\u26a0\ufe0f Critical host permission detected: <all_urls> (Access to ALL websites and local files)",
+    "screenshot_capture_analysis": {
+      "detected": false,
+      "detection_method": "Not detected",
+      "evidence": [],
+      "risk_score": 0,
+      "description": "No screenshot capture capability detected"
+    }
+  },
+  "sast_results": {
+    "sast_analysis": "[RISK: LOW] No security findings detected in SAST analysis.",
+    "sast_findings": {
+      "background.js": []
+    }
+  },
+  "webstore_analysis": {
+    "webstore_analysis": "Chrome extension risk assessment based on WebStore reputation analysis:\n - Overall Risk Level: high\n - Summary: The Google Analytics Debugger extension shows several red flags, including a low review ratio, lack of a developer website, and not following best practices. Additionally, it has not been updated for over a year, suggesting it may be abandoned. Despite having a high user count and a decent rating, these issues collectively indicate a higher reputation risk.\n"
+  },
+  "virustotal_analysis": {
+    "enabled": true,
+    "files_analyzed": 3,
+    "files_with_detections": 0,
+    "total_malicious": 0,
+    "total_suspicious": 0,
+    "file_results": [
+      {
+        "file_name": "background.js",
+        "file_path": "/background.js",
+        "priority_file": true,
+        "hashes": {
+          "sha256": "a0bdd61bda4cc07def9037e685df5ff53296be2ad88a219be4208d7d91910876",
+          "sha1": "629c5c8cc40a0646cf9866639b926ac11d35730f",
+          "md5": "dc9e35d371900a2831ac169f2048990e"
+        },
+        "virustotal": {
+          "found": true,
+          "sha256": "a0bdd61bda4cc07def9037e685df5ff53296be2ad88a219be4208d7d91910876",
+          "sha1": "629c5c8cc40a0646cf9866639b926ac11d35730f",
+          "md5": "dc9e35d371900a2831ac169f2048990e",
+          "detection_stats": {
+            "malicious": 0,
+            "suspicious": 0,
+            "undetected": 62,
+            "harmless": 0,
+            "total_engines": 76
+          },
+          "reputation": 0,
+          "times_submitted": 1,
+          "first_submission_date": "2025-05-10 17:02:33+00:00",
+          "last_analysis_date": "2025-12-05 20:44:55+00:00",
+          "type_description": "JavaScript",
+          "tags": [
+            "javascript"
+          ],
+          "malware_families": []
+        }
+      },
+      {
+        "file_name": "rules.json",
+        "file_path": "/rules.json",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "ab822522f0c84153b781194d8f75c2d2b1082d2ac41906e3693dbc984c04feeb",
+          "sha1": "5a2d437f0d0e3bd45e6d6d605d1d446c4f485be0",
+          "md5": "05a4e84449b53b1291f7485d79e88d80"
+        },
+        "virustotal": {
+          "found": false,
+          "message": "Hash not found in VirusTotal database"
+        }
+      },
+      {
+        "file_name": "manifest.json",
+        "file_path": "/manifest.json",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "fa59a6bb319fb1077e307d9246f44318f10cffcdb8f178274e2c627262293aba",
+          "sha1": "525dd14dd10497ca50a1695520d61716744e3150",
+          "md5": "261bc65e2fb1d84d1d8c224c9c717649"
+        },
+        "virustotal": {
+          "found": false,
+          "message": "Hash not found in VirusTotal database"
+        }
+      }
+    ],
+    "summary": {
+      "threat_level": "clean",
+      "detected_families": [],
+      "recommendation": "No known threats detected in VirusTotal database. Note: This does not guarantee the extension is safe."
+    }
+  },
+  "entropy_analysis": {
+    "files_analyzed": 1,
+    "files_skipped": 0,
+    "obfuscated_files": 0,
+    "suspicious_files": 0,
+    "file_results": [
+      {
+        "file_name": "background.js",
+        "file_path": "background.js",
+        "file_size_bytes": 2018,
+        "entropy": {
+          "byte_entropy": 4.91,
+          "char_entropy": 4.91,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      }
+    ],
+    "summary": {
+      "overall_risk": "low",
+      "obfuscation_detected": false,
+      "high_entropy_files": [],
+      "pattern_summary": {},
+      "recommendation": "No significant obfuscation detected. Code appears to be in readable form."
+    }
+  },
+  "summary": {
+    "summary": "The Google Analytics Debugger extension poses a high risk due to its request for critical permissions like access to all websites and tabs, combined with reputational concerns such as lack of developer transparency and outdated updates. These factors collectively raise significant privacy and security concerns for users.",
+    "overall_risk_level": "high",
+    "key_findings": [
+      "Access to all websites via <all_urls> permission, which can expose sensitive data across all browsing activities.",
+      "Request for 'tabs' permission is unjustified, potentially allowing access to browsing history and activity.",
+      "Reputational concerns due to lack of developer transparency, low review ratio, and no updates for over a year."
+    ],
+    "recommendations": [
+      "Avoid using this extension with sensitive accounts or information.",
+      "Only install if you have a high level of trust in the developer.",
+      "Regularly review and manage extension permissions to ensure they align with your privacy expectations."
+    ]
+  },
+  "extracted_path": "extensions_storage/extracted_jnkmfdileelhofjcijamephohjechhna.crx_5184",
+  "extracted_files": [
+    "icon-on-32.png",
+    "icon-16.png",
+    "background.js",
+    "icon-off-16.png",
+    "icon-48.png",
+    "rules.json",
+    "manifest.json",
+    "icon-off-32.png",
+    "icon-128.png",
+    "icon-on-16.png"
+  ],
+  "overall_security_score": 80,
+  "total_findings": 2,
+  "risk_distribution": {
+    "high": 0,
+    "medium": 2,
+    "low": 0
+  },
+  "overall_risk": "low",
+  "total_risk_score": 0,
+  "governance_verdict": "BLOCK",
+  "governance_bundle": {
+    "facts": {
+      "scan_id": "jnkmfdileelhofjcijamephohjechhna",
+      "extension_id": "jnkmfdileelhofjcijamephohjechhna",
+      "artifact_hash": null,
+      "created_at": "2026-02-02T23:19:58.919449",
+      "manifest": {
+        "name": "Google Analytics Debugger",
+        "version": "3.0",
+        "manifest_version": 3,
+        "description": "Prints useful information to the JavaScript console by enabling the debug version of the Google Analytics Javascript.",
+        "permissions": [
+          "tabs",
+          "declarativeNetRequest",
+          "storage"
+        ],
+        "host_permissions": [
+          "<all_urls>"
+        ],
+        "optional_permissions": [],
+        "content_scripts": [],
+        "background": {
+          "type": "service_worker",
+          "service_worker": "background.js",
+          "scripts": [],
+          "page": null,
+          "persistent": true,
+          "type_module": false
+        },
+        "externally_connectable": null,
+        "web_accessible_resources": [],
+        "content_security_policy": null,
+        "update_url": "https://clients2.google.com/service/update2/crx"
+      },
+      "host_access_patterns": [
+        "<all_urls>"
+      ],
+      "file_inventory": [],
+      "security_findings": {
+        "permission_findings": [
+          {
+            "permission_name": "tabs",
+            "is_reasonable": false,
+            "justification_reasoning": "The 'tabs' permission is not justified for the Google Analytics Debugger extension because its primary function is to print debug information to the JavaScript console for Google Analytics. Access to tab URLs, titles, and favicon URLs is not necessary for this functionality."
+          },
+          {
+            "permission_name": "declarativeNetRequest",
+            "is_reasonable": false,
+            "justification_reasoning": "The Google Analytics Debugger extension is designed to provide detailed information about Google Analytics requests by enabling the debug version of the JavaScript. The declarativeNetRequest permission could be justified if the extension needs to modify or inspect network requests to provide accurate debugging information. However, the description does not explicitly state the need to block, redirect, or modify requests, which are the primary capabilities of this permission. Without clear evidence that these capabilities are necessary for its core functionality, the permission request may not be fully justified."
+          },
+          {
+            "permission_name": "storage",
+            "is_reasonable": true,
+            "justification_reasoning": "The storage permission is justified as it allows the extension to store user preferences and settings locally, which is necessary for persisting configurations related to debugging Google Analytics across sessions."
+          }
+        ],
+        "dangerous_permissions": [
+          "tabs",
+          "declarativeNetRequest"
+        ],
+        "sast_findings": [],
+        "sast_risk_level": "low",
+        "virustotal_findings": [
+          {
+            "file_name": "background.js",
+            "file_path": "/background.js",
+            "sha256": "a0bdd61bda4cc07def9037e685df5ff53296be2ad88a219be4208d7d91910876",
+            "detection_stats": {
+              "malicious": 0,
+              "suspicious": 0,
+              "undetected": 62,
+              "harmless": 0,
+              "total_engines": 76
+            },
+            "threat_level": "clean",
+            "malware_families": []
+          }
+        ],
+        "virustotal_threat_level": "clean",
+        "virustotal_malicious_count": 0,
+        "entropy_findings": [
+          {
+            "file_name": "background.js",
+            "file_path": "background.js",
+            "byte_entropy": 4.91,
+            "char_entropy": 4.91,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          }
+        ],
+        "entropy_risk_level": "low",
+        "obfuscation_detected": false,
+        "webstore_risk_level": "high",
+        "webstore_analysis": "Chrome extension risk assessment based on WebStore reputation analysis:\n - Overall Risk Level: high\n - Summary: The Google Analytics Debugger extension shows several red flags, including a low review ratio, lack of a developer website, and not following best practices. Additionally, it has not been updated for over a year, suggesting it may be abandoned. Despite having a high user count and a decent rating, these issues collectively indicate a higher reputation risk.\n",
+        "overall_risk_level": "medium",
+        "overall_security_score": 0,
+        "total_findings": 0
+      },
+      "metadata": {
+        "title": "Google Analytics Debugger",
+        "user_count": 600000,
+        "rating": 4.2,
+        "ratings_count": 536,
+        "last_updated": "December 30, 2024",
+        "developer_name": "Google Analytics",
+        "developer_email": "analytics-extensions@google.com",
+        "developer_website": null,
+        "category": "Extension > Developer Tools",
+        "is_featured": false,
+        "follows_best_practices": false
+      }
+    },
+    "evidence_index": {
+      "scan_id": "jnkmfdileelhofjcijamephohjechhna",
+      "evidence": {
+        "ev_001": {
+          "evidence_id": "ev_001",
+          "file_path": "manifest.json",
+          "file_hash": "sha256:path_ffa5b716b5a57837",
+          "line_start": null,
+          "line_end": null,
+          "snippet": "\"permissions\": [\"tabs\"]",
+          "provenance": "Permission: tabs - The 'tabs' permission is not justified for the Google Analytics Debugger extension because its primary function is to print debug information to the JavaScript console for Google Analytics. Access to tab URLs, titles, and favicon URLs is not necessary for this functionality.",
+          "version": 1,
+          "created_at": "2026-02-02T23:19:58.919540"
+        },
+        "ev_002": {
+          "evidence_id": "ev_002",
+          "file_path": "manifest.json",
+          "file_hash": "sha256:path_ffa5b716b5a57837",
+          "line_start": null,
+          "line_end": null,
+          "snippet": "\"permissions\": [\"declarativeNetRequest\"]",
+          "provenance": "Permission: declarativeNetRequest - The Google Analytics Debugger extension is designed to provide detailed information about Google Analytics requests by enabling the debug version of the JavaScript. The declarativeNetRequest permission could be justified if the extension needs to modify or inspect network requests to provide accurate debugging information. However, the description does not explicitly state the need to block, redirect, or modify requests, which are the primary capabilities of this permission. Without clear evidence that these capabilities are necessary for its core functionality, the permission request may not be fully justified.",
+          "version": 1,
+          "created_at": "2026-02-02T23:19:58.919557"
+        },
+        "ev_003": {
+          "evidence_id": "ev_003",
+          "file_path": "manifest.json",
+          "file_hash": "sha256:path_ffa5b716b5a57837",
+          "line_start": null,
+          "line_end": null,
+          "snippet": "\"host_permissions\": [\"<all_urls>\"]",
+          "provenance": "Manifest: Broad host access patterns detected",
+          "version": 1,
+          "created_at": "2026-02-02T23:19:58.919569"
+        }
+      }
+    },
+    "signals": {
+      "scan_id": "jnkmfdileelhofjcijamephohjechhna",
+      "signals": [
+        {
+          "signal_id": "sig_001",
+          "type": "HOST_PERMS_BROAD",
+          "confidence": 0.95,
+          "evidence_refs": [
+            "ev_003"
+          ],
+          "description": "Broad host permissions detected: <all_urls>",
+          "severity": "high"
+        },
+        {
+          "signal_id": "sig_002",
+          "type": "SENSITIVE_API",
+          "confidence": 0.9,
+          "evidence_refs": [
+            "ev_001",
+            "ev_002"
+          ],
+          "description": "Sensitive APIs detected: declarativeNetRequest",
+          "severity": "high"
+        }
+      ]
+    },
+    "store_listing": {
+      "extraction": {
+        "status": "ok",
+        "reason": "Successfully extracted from Chrome Web Store",
+        "extracted_at": "2026-02-02T23:19:58.920234"
+      },
+      "declared_data_categories": [],
+      "declared_purposes": [
+        "functionality"
+      ],
+      "declared_third_parties": [],
+      "privacy_policy_url": null,
+      "privacy_policy_hash": "sha256:72dc4bdf4a80ab12e28f3ce3f732c2145905cd95a303d60888395bc35d67c1d1"
+    },
+    "context": {
+      "regions_in_scope": [
+        "GLOBAL"
+      ],
+      "rulepacks": [
+        "ENTERPRISE_GOV_BASELINE",
+        "CWS_LIMITED_USE"
+      ],
+      "domain_categories": [
+        "general"
+      ],
+      "cross_border_risk": false
+    },
+    "rule_results": {
+      "scan_id": "jnkmfdileelhofjcijamephohjechhna",
+      "rule_results": [
+        {
+          "rule_id": "CWS_LIMITED_USE::R1",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.9,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_1"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require developer justification or reduce scope to specific domains",
+          "triggered_at": "2026-02-02T23:19:58.928273"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R2",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "BLOCK",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_2"
+          ],
+          "explanation": "Condition matched. Verdict: BLOCK",
+          "recommended_action": "Block \u2014 Limited Use policy requires explicit PII declaration",
+          "triggered_at": "2026-02-02T23:19:58.928408"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R3",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.75,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_3"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Manual review required to confirm data handling practices",
+          "triggered_at": "2026-02-02T23:19:58.928445"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R4",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_4"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block \u2014 Limited Use requires explicit third-party data sharing declaration",
+          "triggered_at": "2026-02-02T23:19:58.928476"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R5",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Verify clipboard access is limited to user-initiated copy/paste operations",
+          "triggered_at": "2026-02-02T23:19:58.928500"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R6",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_6"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require justification for unlimited storage use",
+          "triggered_at": "2026-02-02T23:19:58.928511"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R7",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_7"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Manual security review required for sensitive domain access",
+          "triggered_at": "2026-02-02T23:19:58.928582"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R8",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_8"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require developer to disclose all external endpoints in store listing",
+          "triggered_at": "2026-02-02T23:19:58.928614"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R9",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_9"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require disclosure of network interception capabilities",
+          "triggered_at": "2026-02-02T23:19:58.928645"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R10",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_10"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block immediately \u2014 malware/adware detected",
+          "triggered_at": "2026-02-02T23:19:58.928675"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R1",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_1",
+            "NIST-SP-800-53::AC-3"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require explicit business justification from developer before allowing org-wide",
+          "triggered_at": "2026-02-02T23:19:58.928692"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R2",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_1"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Verify extension purpose aligns with sensitive domain access",
+          "triggered_at": "2026-02-02T23:19:58.928723"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R3",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.9,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2",
+            "CWS_LIMITED_USE::SECTION_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block installation \u2014 undisclosed data exfiltration risk",
+          "triggered_at": "2026-02-02T23:19:58.928752"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R4",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require manual verification of store listing or source code review",
+          "triggered_at": "2026-02-02T23:19:58.928770"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R5",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.75,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_3"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require security review of API usage and network behavior",
+          "triggered_at": "2026-02-02T23:19:58.928779"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R6",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Review external endpoints and require declaration on Chrome Web Store",
+          "triggered_at": "2026-02-02T23:19:58.928798"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R7",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_4"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require source code transparency or additional dynamic analysis",
+          "triggered_at": "2026-02-02T23:19:58.928849"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R8",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block immediately \u2014 known malware signature detected",
+          "triggered_at": "2026-02-02T23:19:58.928875"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R9",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_6"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Verify justification for each dangerous permission",
+          "triggered_at": "2026-02-02T23:19:58.928893"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R10",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_7"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require developer to publish privacy policy",
+          "triggered_at": "2026-02-02T23:19:58.928912"
+        }
+      ]
+    },
+    "report": {
+      "scan_id": "jnkmfdileelhofjcijamephohjechhna",
+      "extension_id": "jnkmfdileelhofjcijamephohjechhna",
+      "extension_name": "Google Analytics Debugger",
+      "created_at": "2026-02-02T23:19:58.928977",
+      "decision": {
+        "verdict": "BLOCK",
+        "rationale": "Condition matched. Verdict: BLOCK",
+        "action_required": "Block \u2014 Limited Use policy requires explicit PII declaration",
+        "triggered_rules": [
+          "CWS_LIMITED_USE::R1",
+          "CWS_LIMITED_USE::R2",
+          "CWS_LIMITED_USE::R9",
+          "ENTERPRISE_GOV_BASELINE::R1",
+          "ENTERPRISE_GOV_BASELINE::R5",
+          "ENTERPRISE_GOV_BASELINE::R9",
+          "ENTERPRISE_GOV_BASELINE::R10"
+        ],
+        "block_rules": [
+          "CWS_LIMITED_USE::R2"
+        ],
+        "review_rules": [
+          "CWS_LIMITED_USE::R1",
+          "CWS_LIMITED_USE::R9",
+          "ENTERPRISE_GOV_BASELINE::R1",
+          "ENTERPRISE_GOV_BASELINE::R5",
+          "ENTERPRISE_GOV_BASELINE::R9",
+          "ENTERPRISE_GOV_BASELINE::R10"
+        ]
+      },
+      "rule_results": [
+        {
+          "rule_id": "CWS_LIMITED_USE::R1",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.9,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_1"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require developer justification or reduce scope to specific domains",
+          "triggered_at": "2026-02-02T23:19:58.928273"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R2",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "BLOCK",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_2"
+          ],
+          "explanation": "Condition matched. Verdict: BLOCK",
+          "recommended_action": "Block \u2014 Limited Use policy requires explicit PII declaration",
+          "triggered_at": "2026-02-02T23:19:58.928408"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R3",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.75,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_3"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Manual review required to confirm data handling practices",
+          "triggered_at": "2026-02-02T23:19:58.928445"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R4",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_4"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block \u2014 Limited Use requires explicit third-party data sharing declaration",
+          "triggered_at": "2026-02-02T23:19:58.928476"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R5",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Verify clipboard access is limited to user-initiated copy/paste operations",
+          "triggered_at": "2026-02-02T23:19:58.928500"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R6",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_6"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require justification for unlimited storage use",
+          "triggered_at": "2026-02-02T23:19:58.928511"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R7",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_7"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Manual security review required for sensitive domain access",
+          "triggered_at": "2026-02-02T23:19:58.928582"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R8",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_8"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require developer to disclose all external endpoints in store listing",
+          "triggered_at": "2026-02-02T23:19:58.928614"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R9",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_9"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require disclosure of network interception capabilities",
+          "triggered_at": "2026-02-02T23:19:58.928645"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R10",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_10"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block immediately \u2014 malware/adware detected",
+          "triggered_at": "2026-02-02T23:19:58.928675"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R1",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_1",
+            "NIST-SP-800-53::AC-3"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require explicit business justification from developer before allowing org-wide",
+          "triggered_at": "2026-02-02T23:19:58.928692"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R2",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_1"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Verify extension purpose aligns with sensitive domain access",
+          "triggered_at": "2026-02-02T23:19:58.928723"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R3",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.9,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2",
+            "CWS_LIMITED_USE::SECTION_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block installation \u2014 undisclosed data exfiltration risk",
+          "triggered_at": "2026-02-02T23:19:58.928752"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R4",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require manual verification of store listing or source code review",
+          "triggered_at": "2026-02-02T23:19:58.928770"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R5",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.75,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_3"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require security review of API usage and network behavior",
+          "triggered_at": "2026-02-02T23:19:58.928779"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R6",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Review external endpoints and require declaration on Chrome Web Store",
+          "triggered_at": "2026-02-02T23:19:58.928798"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R7",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_4"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require source code transparency or additional dynamic analysis",
+          "triggered_at": "2026-02-02T23:19:58.928849"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R8",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block immediately \u2014 known malware signature detected",
+          "triggered_at": "2026-02-02T23:19:58.928875"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R9",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_6"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Verify justification for each dangerous permission",
+          "triggered_at": "2026-02-02T23:19:58.928893"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R10",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_7"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require developer to publish privacy policy",
+          "triggered_at": "2026-02-02T23:19:58.928912"
+        }
+      ],
+      "total_rules_evaluated": 20,
+      "rules_triggered": 7,
+      "block_count": 1,
+      "review_count": 6,
+      "allow_count": 13
+    },
+    "decision": {
+      "verdict": "BLOCK",
+      "rationale": "Condition matched. Verdict: BLOCK",
+      "action_required": "Block \u2014 Limited Use policy requires explicit PII declaration"
+    }
+  },
+  "governance_report": {
+    "scan_id": "jnkmfdileelhofjcijamephohjechhna",
+    "extension_id": "jnkmfdileelhofjcijamephohjechhna",
+    "extension_name": "Google Analytics Debugger",
+    "created_at": "2026-02-02T23:19:58.928977",
+    "decision": {
+      "verdict": "BLOCK",
+      "rationale": "Condition matched. Verdict: BLOCK",
+      "action_required": "Block \u2014 Limited Use policy requires explicit PII declaration",
+      "triggered_rules": [
+        "CWS_LIMITED_USE::R1",
+        "CWS_LIMITED_USE::R2",
+        "CWS_LIMITED_USE::R9",
+        "ENTERPRISE_GOV_BASELINE::R1",
+        "ENTERPRISE_GOV_BASELINE::R5",
+        "ENTERPRISE_GOV_BASELINE::R9",
+        "ENTERPRISE_GOV_BASELINE::R10"
+      ],
+      "block_rules": [
+        "CWS_LIMITED_USE::R2"
+      ],
+      "review_rules": [
+        "CWS_LIMITED_USE::R1",
+        "CWS_LIMITED_USE::R9",
+        "ENTERPRISE_GOV_BASELINE::R1",
+        "ENTERPRISE_GOV_BASELINE::R5",
+        "ENTERPRISE_GOV_BASELINE::R9",
+        "ENTERPRISE_GOV_BASELINE::R10"
+      ]
+    },
+    "rule_results": [
+      {
+        "rule_id": "CWS_LIMITED_USE::R1",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "NEEDS_REVIEW",
+        "confidence": 0.9,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_1"
+        ],
+        "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+        "recommended_action": "Require developer justification or reduce scope to specific domains",
+        "triggered_at": "2026-02-02T23:19:58.928273"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R2",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "BLOCK",
+        "confidence": 0.85,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_2"
+        ],
+        "explanation": "Condition matched. Verdict: BLOCK",
+        "recommended_action": "Block \u2014 Limited Use policy requires explicit PII declaration",
+        "triggered_at": "2026-02-02T23:19:58.928408"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R3",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.75,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_3"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Manual review required to confirm data handling practices",
+        "triggered_at": "2026-02-02T23:19:58.928445"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R4",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_4"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Block \u2014 Limited Use requires explicit third-party data sharing declaration",
+        "triggered_at": "2026-02-02T23:19:58.928476"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R5",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.7,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_5"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Verify clipboard access is limited to user-initiated copy/paste operations",
+        "triggered_at": "2026-02-02T23:19:58.928500"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R6",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.7,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_6"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require justification for unlimited storage use",
+        "triggered_at": "2026-02-02T23:19:58.928511"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R7",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.85,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_7"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Manual security review required for sensitive domain access",
+        "triggered_at": "2026-02-02T23:19:58.928582"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R8",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_8"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require developer to disclose all external endpoints in store listing",
+        "triggered_at": "2026-02-02T23:19:58.928614"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R9",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "NEEDS_REVIEW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_9"
+        ],
+        "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+        "recommended_action": "Require disclosure of network interception capabilities",
+        "triggered_at": "2026-02-02T23:19:58.928645"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R10",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.95,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_10"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Block immediately \u2014 malware/adware detected",
+        "triggered_at": "2026-02-02T23:19:58.928675"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R1",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "NEEDS_REVIEW",
+        "confidence": 0.95,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_1",
+          "NIST-SP-800-53::AC-3"
+        ],
+        "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+        "recommended_action": "Require explicit business justification from developer before allowing org-wide",
+        "triggered_at": "2026-02-02T23:19:58.928692"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R2",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.85,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_1"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Verify extension purpose aligns with sensitive domain access",
+        "triggered_at": "2026-02-02T23:19:58.928723"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R3",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.9,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_2",
+          "CWS_LIMITED_USE::SECTION_5"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Block installation \u2014 undisclosed data exfiltration risk",
+        "triggered_at": "2026-02-02T23:19:58.928752"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R4",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require manual verification of store listing or source code review",
+        "triggered_at": "2026-02-02T23:19:58.928770"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R5",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "NEEDS_REVIEW",
+        "confidence": 0.75,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_3"
+        ],
+        "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+        "recommended_action": "Require security review of API usage and network behavior",
+        "triggered_at": "2026-02-02T23:19:58.928779"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R6",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Review external endpoints and require declaration on Chrome Web Store",
+        "triggered_at": "2026-02-02T23:19:58.928798"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R7",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.7,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_4"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require source code transparency or additional dynamic analysis",
+        "triggered_at": "2026-02-02T23:19:58.928849"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R8",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.95,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_5"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Block immediately \u2014 known malware signature detected",
+        "triggered_at": "2026-02-02T23:19:58.928875"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R9",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "NEEDS_REVIEW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_6"
+        ],
+        "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+        "recommended_action": "Verify justification for each dangerous permission",
+        "triggered_at": "2026-02-02T23:19:58.928893"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R10",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "NEEDS_REVIEW",
+        "confidence": 0.7,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_7"
+        ],
+        "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+        "recommended_action": "Require developer to publish privacy policy",
+        "triggered_at": "2026-02-02T23:19:58.928912"
+      }
+    ],
+    "total_rules_evaluated": 20,
+    "rules_triggered": 7,
+    "block_count": 1,
+    "review_count": 6,
+    "allow_count": 13
+  },
+  "governance_error": null
+}

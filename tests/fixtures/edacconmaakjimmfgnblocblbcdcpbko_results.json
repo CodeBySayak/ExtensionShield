@@ -1,0 +1,1735 @@
+{
+  "extension_id": "edacconmaakjimmfgnblocblbcdcpbko",
+  "extension_name": "Session Buddy - Tab & Bookmark Manager",
+  "url": "https://chromewebstore.google.com/detail/session-buddy-tab-bookmar/edacconmaakjimmfgnblocblbcdcpbko",
+  "timestamp": "2026-02-02T13:30:51.204004",
+  "status": "completed",
+  "metadata": {
+    "title": "Session Buddy - Tab & Bookmark Manager",
+    "user_count": 1000000,
+    "rating": 4.7,
+    "ratings_count": 25100,
+    "last_updated": "October 26, 2025",
+    "version": "4.1.0",
+    "size": "505KiB",
+    "developer_name": "WebsiteEmailsupport@sessionbuddy.com",
+    "developer_email": "support@sessionbuddy.com",
+    "developer_website": "https://sessionbuddy.com",
+    "privacy_policy": "Session Buddy - Tab & Bookmark Manager has disclosed the following information regarding the collection and usage of your data. More detailed information can be found in the developer's\nprivacy policy\n.\nSession Buddy - Tab & Bookmark Manager handles the following:\nPersonally identifiable information\nFinancial and payment information\nAuthentication information\nWeb history\nSee details\nThis developer declares that your data is\nNot being sold to third parties, outside of the\napproved use cases\nNot being used or transferred for purposes that are unrelated to the item's core functionality\nNot being used or transferred to determine creditworthiness or for lending purposes",
+    "follows_best_practices": true,
+    "is_featured": true,
+    "category": "Extension > Workflow & Planning"
+  },
+  "manifest": {
+    "name": "Session Buddy - Tab & Bookmark Manager",
+    "version": "4.1.0",
+    "manifest_version": 3,
+    "description": "Keep Tabs",
+    "permissions": [
+      "tabs",
+      "unlimitedStorage",
+      "storage",
+      "alarms"
+    ],
+    "host_permissions": [],
+    "optional_permissions": [],
+    "content_scripts": [],
+    "background": {
+      "type": "service_worker",
+      "service_worker": "background.bundle.js",
+      "type_module": true
+    },
+    "action": {
+      "default_icon": {
+        "19": "assets/logo-19.png",
+        "38": "assets/logo-38.png"
+      }
+    },
+    "options_page": null,
+    "web_accessible_resources": [],
+    "externally_connectable": null,
+    "content_security_policy": "script-src 'self'; object-src 'self'",
+    "update_url": "https://clients2.google.com/service/update2/crx",
+    "icons": {
+      "16": "assets/logo-16.png",
+      "32": "assets/logo-32.png",
+      "48": "assets/logo-48.png",
+      "128": "assets/logo-128.png"
+    },
+    "homepage_url": null,
+    "author": null
+  },
+  "permissions_analysis": {
+    "permissions_analysis": "The extension requests the following permissions:\n- tabs\n- unlimitedStorage\n- storage\n- alarms\n\n\u2705 All permissions appear to be reasonable.",
+    "permissions_details": {
+      "tabs": {
+        "permission_name": "tabs",
+        "justification_reasoning": "The 'tabs' permission is justified for Session Buddy as it is a tab and bookmark manager. It needs access to tab URLs, titles, and favicon URLs to effectively manage and organize tabs, track tab navigation, and monitor tab creation/closure.",
+        "is_reasonable": true
+      },
+      "unlimitedStorage": {
+        "permission_name": "unlimitedStorage",
+        "justification_reasoning": "The 'unlimitedStorage' permission is justified for Session Buddy as it is a tab and bookmark manager that needs to store potentially large amounts of session data, bookmarks, and user preferences locally without being constrained by the default storage limits.",
+        "is_reasonable": true
+      },
+      "storage": {
+        "permission_name": "storage",
+        "justification_reasoning": "The storage permission is justified because the extension needs to store session data, bookmarks, and user preferences locally and potentially sync them across devices, which aligns with its functionality as a tab and bookmark manager.",
+        "is_reasonable": true
+      },
+      "alarms": {
+        "permission_name": "alarms",
+        "justification_reasoning": "The 'alarms' permission is justified for Session Buddy as it may need to periodically save session data, manage tab sessions, or perform regular cleanup tasks in the background to ensure data integrity and improve user experience.",
+        "is_reasonable": true
+      }
+    },
+    "host_permissions_analysis": "\u2705 No critical host permissions detected.",
+    "screenshot_capture_analysis": {
+      "detected": false,
+      "detection_method": "Not detected",
+      "evidence": [],
+      "risk_score": 0,
+      "description": "No screenshot capture capability detected"
+    }
+  },
+  "sast_results": {
+    "sast_findings": {}
+  },
+  "webstore_analysis": {
+    "webstore_analysis": "Chrome extension risk assessment based on WebStore reputation analysis:\n - Overall Risk Level: low\n - Summary: The Session Buddy extension shows a strong reputation with over 1,000,000 users and a high rating of 4.7 from 25,100 reviews. It follows best practices, is featured, and has a privacy policy, with no detected red flags. The developer information is complete and transparent, further reducing any potential risk concerns.\n"
+  },
+  "virustotal_analysis": {
+    "enabled": true,
+    "files_analyzed": 9,
+    "files_with_detections": 0,
+    "total_malicious": 0,
+    "total_suspicious": 0,
+    "file_results": [
+      {
+        "file_name": "manifest.json",
+        "file_path": "/manifest.json",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "879c561368aa107ccc04f9ea3768cfc90a3acb63e4f43bd10c10e42b4194f026",
+          "sha1": "6e5f49023bab4469e0921e13c10ee46963282a82",
+          "md5": "6762dcb020146bcbdff2ec185697160c"
+        },
+        "virustotal": {
+          "found": false,
+          "message": "Hash not found in VirusTotal database"
+        }
+      },
+      {
+        "file_name": "verified_contents.json",
+        "file_path": "/_metadata/verified_contents.json",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "faeb93d301ce4b7a71db994080d33e997257827201bbafa87a8b8c2b8588d984",
+          "sha1": "ae2f067aa1d59d1a64430efd99acb862bceb70c4",
+          "md5": "5ad75c829e553317794306c766294442"
+        },
+        "virustotal": {
+          "found": false,
+          "message": "Hash not found in VirusTotal database"
+        }
+      },
+      {
+        "file_name": "messages.json",
+        "file_path": "/_locales/en/messages.json",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "c129468c757aab7aa1d36ca8e22e8e6b363d1024848a349dd6194c40156f2107",
+          "sha1": "ae0af72f8341ef8b0f9519880055e5eb8af24a0a",
+          "md5": "b36d6bbef44f4edf003d97dfddb0c284"
+        },
+        "virustotal": {
+          "found": true,
+          "sha256": "c129468c757aab7aa1d36ca8e22e8e6b363d1024848a349dd6194c40156f2107",
+          "sha1": "ae0af72f8341ef8b0f9519880055e5eb8af24a0a",
+          "md5": "b36d6bbef44f4edf003d97dfddb0c284",
+          "detection_stats": {
+            "malicious": 0,
+            "suspicious": 0,
+            "undetected": 65,
+            "harmless": 0,
+            "total_engines": 79
+          },
+          "reputation": 0,
+          "times_submitted": 1,
+          "first_submission_date": "2024-07-25 19:28:37+00:00",
+          "last_analysis_date": "2024-07-25 19:28:37+00:00",
+          "type_description": "JSON",
+          "tags": [
+            "json"
+          ],
+          "malware_families": []
+        }
+      },
+      {
+        "file_name": "session-buddy.html",
+        "file_path": "/session-buddy.html",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "36715e46f1b40889d598108470687b9b1c2536a0d4f8502beb226d33cf5a9232",
+          "sha1": "4f6769c8703d1f49ef9739a547a0f0c7db32fc12",
+          "md5": "2a5395f28cecee92d5a61a5aa16e8d0d"
+        },
+        "virustotal": {
+          "found": false,
+          "message": "Hash not found in VirusTotal database"
+        }
+      },
+      {
+        "file_name": "main.html",
+        "file_path": "/main.html",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "e1b915d2eb8a90a0d49b9879ab077fa67345d9fe9981d77bd6ccba1dda5c7b7c",
+          "sha1": "e5e77ed64f8f3c65c0ce8912cf58177c709005d3",
+          "md5": "a7558e2a317277f4565b64ba70e1b775"
+        },
+        "virustotal": {
+          "found": false,
+          "message": "Hash not found in VirusTotal database"
+        }
+      },
+      {
+        "file_name": "redirect.js",
+        "file_path": "/redirect.js",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "3cfdfc2530d7e7356cc94b8066b33ed800d87ba21b6fff6adbfc0e62f110134a",
+          "sha1": "a07e5bf6c74f8e1eea923c7269c40983e0c3be9b",
+          "md5": "937c7bcf4159cbef612bf5f2fd06b4d3"
+        },
+        "virustotal": {
+          "found": true,
+          "sha256": "3cfdfc2530d7e7356cc94b8066b33ed800d87ba21b6fff6adbfc0e62f110134a",
+          "sha1": "a07e5bf6c74f8e1eea923c7269c40983e0c3be9b",
+          "md5": "937c7bcf4159cbef612bf5f2fd06b4d3",
+          "detection_stats": {
+            "malicious": 0,
+            "suspicious": 0,
+            "undetected": 62,
+            "harmless": 0,
+            "total_engines": 76
+          },
+          "reputation": 0,
+          "times_submitted": 2,
+          "first_submission_date": "2024-05-05 00:17:01+00:00",
+          "last_analysis_date": "2025-12-13 07:47:06+00:00",
+          "type_description": "JavaScript",
+          "tags": [
+            "javascript"
+          ],
+          "malware_families": []
+        }
+      },
+      {
+        "file_name": "background.bundle.js",
+        "file_path": "/background.bundle.js",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "b78345d68cbc8b950ea155de83b6b05cbc07d4e50d5fc31996dae65b8aa01213",
+          "sha1": "9c8346a7db27274de3994bda420028f4f293933c",
+          "md5": "3b313ae636056a697e8b6648affb0dcf"
+        },
+        "virustotal": {
+          "found": true,
+          "sha256": "b78345d68cbc8b950ea155de83b6b05cbc07d4e50d5fc31996dae65b8aa01213",
+          "sha1": "9c8346a7db27274de3994bda420028f4f293933c",
+          "md5": "3b313ae636056a697e8b6648affb0dcf",
+          "detection_stats": {
+            "malicious": 0,
+            "suspicious": 0,
+            "undetected": 62,
+            "harmless": 0,
+            "total_engines": 76
+          },
+          "reputation": 0,
+          "times_submitted": 1,
+          "first_submission_date": "2025-10-28 18:39:12+00:00",
+          "last_analysis_date": "2025-12-13 13:45:27+00:00",
+          "type_description": "JavaScript",
+          "tags": [
+            "javascript"
+          ],
+          "malware_families": []
+        }
+      },
+      {
+        "file_name": "set-background-color.js",
+        "file_path": "/set-background-color.js",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "6a8308156d0d5d5094d2e8147f0748b56704fd3af56bfb26229868c2a38e9f65",
+          "sha1": "4c5e3dbaf2bb810882915ccf1f3351febe2309ce",
+          "md5": "c9542f4f336e36c3ca540bdd089c41ba"
+        },
+        "virustotal": {
+          "found": true,
+          "sha256": "6a8308156d0d5d5094d2e8147f0748b56704fd3af56bfb26229868c2a38e9f65",
+          "sha1": "4c5e3dbaf2bb810882915ccf1f3351febe2309ce",
+          "md5": "c9542f4f336e36c3ca540bdd089c41ba",
+          "detection_stats": {
+            "malicious": 0,
+            "suspicious": 0,
+            "undetected": 62,
+            "harmless": 0,
+            "total_engines": 76
+          },
+          "reputation": 0,
+          "times_submitted": 1,
+          "first_submission_date": "2025-10-28 18:39:14+00:00",
+          "last_analysis_date": "2025-12-13 20:18:53+00:00",
+          "type_description": "JavaScript",
+          "tags": [
+            "javascript"
+          ],
+          "malware_families": []
+        }
+      },
+      {
+        "file_name": "main.bundle.js",
+        "file_path": "/main.bundle.js",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "813bf41ee9873bfcb9b94e705e792f14e9bcee3a011af89ae41594fa3b045c6c",
+          "sha1": "9d35794c50ac587fab62896b2adeb58aeaf5e989",
+          "md5": "6bc365d8a9cc4b1d6a83635efbf724a9"
+        },
+        "virustotal": {
+          "found": true,
+          "sha256": "813bf41ee9873bfcb9b94e705e792f14e9bcee3a011af89ae41594fa3b045c6c",
+          "sha1": "9d35794c50ac587fab62896b2adeb58aeaf5e989",
+          "md5": "6bc365d8a9cc4b1d6a83635efbf724a9",
+          "detection_stats": {
+            "malicious": 0,
+            "suspicious": 0,
+            "undetected": 62,
+            "harmless": 0,
+            "total_engines": 76
+          },
+          "reputation": 0,
+          "times_submitted": 1,
+          "first_submission_date": "2025-10-28 18:39:12+00:00",
+          "last_analysis_date": "2025-12-13 16:17:35+00:00",
+          "type_description": "JavaScript",
+          "tags": [
+            "javascript"
+          ],
+          "malware_families": []
+        }
+      }
+    ],
+    "summary": {
+      "threat_level": "clean",
+      "detected_families": [],
+      "recommendation": "No known threats detected in VirusTotal database. Note: This does not guarantee the extension is safe."
+    }
+  },
+  "entropy_analysis": {
+    "files_analyzed": 4,
+    "files_skipped": 0,
+    "obfuscated_files": 0,
+    "suspicious_files": 2,
+    "file_results": [
+      {
+        "file_name": "redirect.js",
+        "file_path": "redirect.js",
+        "file_size_bytes": 96,
+        "entropy": {
+          "byte_entropy": 4.59,
+          "char_entropy": 4.59,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "background.bundle.js",
+        "file_path": "background.bundle.js",
+        "file_size_bytes": 486532,
+        "entropy": {
+          "byte_entropy": 5.16,
+          "char_entropy": 5.16,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [
+          {
+            "pattern_name": "function_constructor",
+            "description": "Dynamic function creation",
+            "risk": "high",
+            "match_count": 1,
+            "sample_match": "new Function("
+          },
+          {
+            "pattern_name": "unicode_escapes",
+            "description": "Unicode escape sequences",
+            "risk": "low",
+            "match_count": 32,
+            "sample_match": "\\ufeff"
+          },
+          {
+            "pattern_name": "base64_blob",
+            "description": "Large Base64-encoded data",
+            "risk": "medium",
+            "match_count": 1,
+            "sample_match": "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+          },
+          {
+            "pattern_name": "string_array",
+            "description": "Large string array (common in obfuscators)",
+            "risk": "medium",
+            "match_count": 7,
+            "sample_match": ",\"DataClone\""
+          }
+        ],
+        "pattern_count": 4,
+        "high_risk_pattern_count": 1,
+        "overall_risk": "medium",
+        "is_likely_obfuscated": true
+      },
+      {
+        "file_name": "set-background-color.js",
+        "file_path": "set-background-color.js",
+        "file_size_bytes": 239,
+        "entropy": {
+          "byte_entropy": 4.88,
+          "char_entropy": 4.88,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "main.bundle.js",
+        "file_path": "main.bundle.js",
+        "file_size_bytes": 1573021,
+        "entropy": {
+          "byte_entropy": 5.27,
+          "char_entropy": 5.27,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [
+          {
+            "pattern_name": "function_constructor",
+            "description": "Dynamic function creation",
+            "risk": "high",
+            "match_count": 1,
+            "sample_match": "new Function("
+          },
+          {
+            "pattern_name": "hex_strings",
+            "description": "Hex-encoded strings",
+            "risk": "medium",
+            "match_count": 1,
+            "sample_match": "\\xa0"
+          },
+          {
+            "pattern_name": "unicode_escapes",
+            "description": "Unicode escape sequences",
+            "risk": "low",
+            "match_count": 92,
+            "sample_match": "\\ufeff"
+          },
+          {
+            "pattern_name": "base64_blob",
+            "description": "Large Base64-encoded data",
+            "risk": "medium",
+            "match_count": 1,
+            "sample_match": "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+          },
+          {
+            "pattern_name": "string_array",
+            "description": "Large string array (common in obfuscators)",
+            "risk": "medium",
+            "match_count": 43,
+            "sample_match": ",\"DataClone\""
+          },
+          {
+            "pattern_name": "char_code_array",
+            "description": "String building from char codes",
+            "risk": "medium",
+            "match_count": 1,
+            "sample_match": "String.fromCharCode(this.highSurrogate,a)"
+          }
+        ],
+        "pattern_count": 6,
+        "high_risk_pattern_count": 1,
+        "overall_risk": "medium",
+        "is_likely_obfuscated": true
+      }
+    ],
+    "summary": {
+      "overall_risk": "medium",
+      "obfuscation_detected": true,
+      "high_entropy_files": [],
+      "pattern_summary": {
+        "function_constructor": {
+          "description": "Dynamic function creation",
+          "risk": "high",
+          "total_occurrences": 2,
+          "files_affected": 2
+        },
+        "unicode_escapes": {
+          "description": "Unicode escape sequences",
+          "risk": "low",
+          "total_occurrences": 124,
+          "files_affected": 2
+        },
+        "base64_blob": {
+          "description": "Large Base64-encoded data",
+          "risk": "medium",
+          "total_occurrences": 2,
+          "files_affected": 2
+        },
+        "string_array": {
+          "description": "Large string array (common in obfuscators)",
+          "risk": "medium",
+          "total_occurrences": 50,
+          "files_affected": 2
+        },
+        "hex_strings": {
+          "description": "Hex-encoded strings",
+          "risk": "medium",
+          "total_occurrences": 1,
+          "files_affected": 1
+        },
+        "char_code_array": {
+          "description": "String building from char codes",
+          "risk": "medium",
+          "total_occurrences": 1,
+          "files_affected": 1
+        }
+      },
+      "recommendation": "CAUTION: 2 file(s) show suspicious patterns. While this could be legitimate minification, review is recommended."
+    }
+  },
+  "summary": {
+    "summary": "Session Buddy - Tab & Bookmark Manager is a low-risk extension with reasonable permissions and a strong reputation. It has a high user rating and transparent developer information, with no significant security or privacy concerns detected.",
+    "overall_risk_level": "low",
+    "key_findings": [
+      "Permissions such as 'tabs' and 'unlimitedStorage' are necessary for functionality and are not excessive.",
+      "The extension has a strong reputation with over 1,000,000 users and a 4.7 rating from 25,100 reviews.",
+      "The developer provides complete and transparent information, including a privacy policy."
+    ],
+    "recommendations": [
+      "Install this extension if you need its functionality and trust the developer.",
+      "Regularly review the permissions to ensure they align with your privacy expectations.",
+      "Keep the extension updated to benefit from the latest security improvements."
+    ]
+  },
+  "extracted_path": "extensions_storage/extracted_edacconmaakjimmfgnblocblbcdcpbko.crx_19019",
+  "extracted_files": [
+    "redirect.js",
+    "favicon.ico",
+    "background.bundle.js",
+    "session-buddy.html",
+    "background.bundle.js.LICENSE.txt",
+    "main.html",
+    "set-background-color.js",
+    "manifest.json",
+    "main.bundle.js.LICENSE.txt",
+    "main.bundle.js",
+    "_metadata/verified_contents.json",
+    "static/media/file-good.01633e3f.svg",
+    "static/media/defaultFavIcon.fe38ca90.svg",
+    "static/media/settings.d9a609ac.svg",
+    "static/media/camera.47c0f519.svg",
+    "static/media/unify.8b333273.svg",
+    "static/media/unpin.ec846b8d.svg",
+    "static/media/heart.92121ab8.svg",
+    "static/media/incognito.93e05646.svg",
+    "static/media/sort-a-z.1a426966.svg",
+    "static/media/pin.c5d766dc.svg",
+    "static/media/copy.fb8e9e29.svg",
+    "static/media/this-window.06beb4e4.svg",
+    "static/media/browser.05a7d92b.svg",
+    "static/media/paste.6b47d7c7.svg",
+    "static/media/audible.88e86ca0.svg",
+    "static/media/file.1b29a43b.svg",
+    "static/media/tip.db7b4400.svg",
+    "static/media/history.8e2161ee.svg",
+    "static/media/trash.3ac91024.svg",
+    "static/media/collection.cef5c22f.svg",
+    "static/media/backup.7cae9415.svg",
+    "static/media/windows.566dfa67.svg",
+    "static/media/folder.8e4f19a9.svg",
+    "static/media/sort.040e0bd4.svg",
+    "static/media/export.e1ca2ea5.svg",
+    "static/media/search.aded04d4.svg",
+    "static/media/window.6876e8c0.svg",
+    "static/media/import.bcf00459.svg",
+    "static/media/markdown.a44a5214.svg",
+    "static/media/file-bad.b6cfda1d.svg",
+    "_locales/en/messages.json",
+    "assets/logo-38.png",
+    "assets/logo-128.png",
+    "assets/logo-16.png",
+    "assets/logo-19-gray.png",
+    "assets/logo-48.png",
+    "assets/logo-38-gray.png",
+    "assets/logo-32.png",
+    "assets/logo-19.png"
+  ],
+  "overall_security_score": 92,
+  "total_findings": 0,
+  "risk_distribution": {
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "overall_risk": "low",
+  "total_risk_score": 0,
+  "governance_verdict": "NEEDS_REVIEW",
+  "governance_bundle": {
+    "facts": {
+      "scan_id": "edacconmaakjimmfgnblocblbcdcpbko",
+      "extension_id": "edacconmaakjimmfgnblocblbcdcpbko",
+      "artifact_hash": null,
+      "created_at": "2026-02-02T19:30:51.189285",
+      "manifest": {
+        "name": "Session Buddy - Tab & Bookmark Manager",
+        "version": "4.1.0",
+        "manifest_version": 3,
+        "description": "Keep Tabs",
+        "permissions": [
+          "tabs",
+          "unlimitedStorage",
+          "storage",
+          "alarms"
+        ],
+        "host_permissions": [],
+        "optional_permissions": [],
+        "content_scripts": [],
+        "background": {
+          "type": "service_worker",
+          "service_worker": "background.bundle.js",
+          "scripts": [],
+          "page": null,
+          "persistent": true,
+          "type_module": true
+        },
+        "externally_connectable": null,
+        "web_accessible_resources": [],
+        "content_security_policy": "script-src 'self'; object-src 'self'",
+        "update_url": "https://clients2.google.com/service/update2/crx"
+      },
+      "host_access_patterns": [],
+      "file_inventory": [],
+      "security_findings": {
+        "permission_findings": [
+          {
+            "permission_name": "tabs",
+            "is_reasonable": true,
+            "justification_reasoning": "The 'tabs' permission is justified for Session Buddy as it is a tab and bookmark manager. It needs access to tab URLs, titles, and favicon URLs to effectively manage and organize tabs, track tab navigation, and monitor tab creation/closure."
+          },
+          {
+            "permission_name": "unlimitedStorage",
+            "is_reasonable": true,
+            "justification_reasoning": "The 'unlimitedStorage' permission is justified for Session Buddy as it is a tab and bookmark manager that needs to store potentially large amounts of session data, bookmarks, and user preferences locally without being constrained by the default storage limits."
+          },
+          {
+            "permission_name": "storage",
+            "is_reasonable": true,
+            "justification_reasoning": "The storage permission is justified because the extension needs to store session data, bookmarks, and user preferences locally and potentially sync them across devices, which aligns with its functionality as a tab and bookmark manager."
+          },
+          {
+            "permission_name": "alarms",
+            "is_reasonable": true,
+            "justification_reasoning": "The 'alarms' permission is justified for Session Buddy as it may need to periodically save session data, manage tab sessions, or perform regular cleanup tasks in the background to ensure data integrity and improve user experience."
+          }
+        ],
+        "dangerous_permissions": [],
+        "sast_findings": [],
+        "sast_risk_level": "low",
+        "virustotal_findings": [
+          {
+            "file_name": "messages.json",
+            "file_path": "/_locales/en/messages.json",
+            "sha256": "c129468c757aab7aa1d36ca8e22e8e6b363d1024848a349dd6194c40156f2107",
+            "detection_stats": {
+              "malicious": 0,
+              "suspicious": 0,
+              "undetected": 65,
+              "harmless": 0,
+              "total_engines": 79
+            },
+            "threat_level": "clean",
+            "malware_families": []
+          },
+          {
+            "file_name": "redirect.js",
+            "file_path": "/redirect.js",
+            "sha256": "3cfdfc2530d7e7356cc94b8066b33ed800d87ba21b6fff6adbfc0e62f110134a",
+            "detection_stats": {
+              "malicious": 0,
+              "suspicious": 0,
+              "undetected": 62,
+              "harmless": 0,
+              "total_engines": 76
+            },
+            "threat_level": "clean",
+            "malware_families": []
+          },
+          {
+            "file_name": "background.bundle.js",
+            "file_path": "/background.bundle.js",
+            "sha256": "b78345d68cbc8b950ea155de83b6b05cbc07d4e50d5fc31996dae65b8aa01213",
+            "detection_stats": {
+              "malicious": 0,
+              "suspicious": 0,
+              "undetected": 62,
+              "harmless": 0,
+              "total_engines": 76
+            },
+            "threat_level": "clean",
+            "malware_families": []
+          },
+          {
+            "file_name": "set-background-color.js",
+            "file_path": "/set-background-color.js",
+            "sha256": "6a8308156d0d5d5094d2e8147f0748b56704fd3af56bfb26229868c2a38e9f65",
+            "detection_stats": {
+              "malicious": 0,
+              "suspicious": 0,
+              "undetected": 62,
+              "harmless": 0,
+              "total_engines": 76
+            },
+            "threat_level": "clean",
+            "malware_families": []
+          },
+          {
+            "file_name": "main.bundle.js",
+            "file_path": "/main.bundle.js",
+            "sha256": "813bf41ee9873bfcb9b94e705e792f14e9bcee3a011af89ae41594fa3b045c6c",
+            "detection_stats": {
+              "malicious": 0,
+              "suspicious": 0,
+              "undetected": 62,
+              "harmless": 0,
+              "total_engines": 76
+            },
+            "threat_level": "clean",
+            "malware_families": []
+          }
+        ],
+        "virustotal_threat_level": "clean",
+        "virustotal_malicious_count": 0,
+        "entropy_findings": [
+          {
+            "file_name": "redirect.js",
+            "file_path": "redirect.js",
+            "byte_entropy": 4.59,
+            "char_entropy": 4.59,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "background.bundle.js",
+            "file_path": "background.bundle.js",
+            "byte_entropy": 5.16,
+            "char_entropy": 5.16,
+            "risk_level": "normal",
+            "is_likely_obfuscated": true,
+            "obfuscation_patterns": [
+              "function_constructor",
+              "unicode_escapes",
+              "base64_blob",
+              "string_array"
+            ]
+          },
+          {
+            "file_name": "set-background-color.js",
+            "file_path": "set-background-color.js",
+            "byte_entropy": 4.88,
+            "char_entropy": 4.88,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "main.bundle.js",
+            "file_path": "main.bundle.js",
+            "byte_entropy": 5.27,
+            "char_entropy": 5.27,
+            "risk_level": "normal",
+            "is_likely_obfuscated": true,
+            "obfuscation_patterns": [
+              "function_constructor",
+              "hex_strings",
+              "unicode_escapes",
+              "base64_blob",
+              "string_array",
+              "char_code_array"
+            ]
+          }
+        ],
+        "entropy_risk_level": "medium",
+        "obfuscation_detected": true,
+        "webstore_risk_level": "high",
+        "webstore_analysis": "Chrome extension risk assessment based on WebStore reputation analysis:\n - Overall Risk Level: low\n - Summary: The Session Buddy extension shows a strong reputation with over 1,000,000 users and a high rating of 4.7 from 25,100 reviews. It follows best practices, is featured, and has a privacy policy, with no detected red flags. The developer information is complete and transparent, further reducing any potential risk concerns.\n",
+        "overall_risk_level": "medium",
+        "overall_security_score": 0,
+        "total_findings": 0
+      },
+      "metadata": {
+        "title": "Session Buddy - Tab & Bookmark Manager",
+        "user_count": 1000000,
+        "rating": 4.7,
+        "ratings_count": 25100,
+        "last_updated": "October 26, 2025",
+        "developer_name": "WebsiteEmailsupport@sessionbuddy.com",
+        "developer_email": "support@sessionbuddy.com",
+        "developer_website": "https://sessionbuddy.com",
+        "category": "Extension > Workflow & Planning",
+        "is_featured": true,
+        "follows_best_practices": true
+      }
+    },
+    "evidence_index": {
+      "scan_id": "edacconmaakjimmfgnblocblbcdcpbko",
+      "evidence": {
+        "ev_001": {
+          "evidence_id": "ev_001",
+          "file_path": "background.bundle.js",
+          "file_hash": "sha256:path_74d0f442028ea192",
+          "line_start": null,
+          "line_end": null,
+          "snippet": null,
+          "provenance": "Entropy: byte_entropy=5.16, char_entropy=5.16 - Patterns: function_constructor, unicode_escapes, base64_blob",
+          "version": 1,
+          "created_at": "2026-02-02T19:30:51.189384"
+        },
+        "ev_002": {
+          "evidence_id": "ev_002",
+          "file_path": "main.bundle.js",
+          "file_hash": "sha256:path_829fb06591016275",
+          "line_start": null,
+          "line_end": null,
+          "snippet": null,
+          "provenance": "Entropy: byte_entropy=5.27, char_entropy=5.27 - Patterns: function_constructor, hex_strings, unicode_escapes",
+          "version": 1,
+          "created_at": "2026-02-02T19:30:51.189403"
+        }
+      }
+    },
+    "signals": {
+      "scan_id": "edacconmaakjimmfgnblocblbcdcpbko",
+      "signals": [
+        {
+          "signal_id": "sig_001",
+          "type": "OBFUSCATION",
+          "confidence": 0.8,
+          "evidence_refs": [
+            "ev_001",
+            "ev_002"
+          ],
+          "description": "Code obfuscation detected in 2 file(s): background.bundle.js, main.bundle.js",
+          "severity": "medium"
+        }
+      ]
+    },
+    "store_listing": {
+      "extraction": {
+        "status": "ok",
+        "reason": "Successfully extracted from Chrome Web Store",
+        "extracted_at": "2026-02-02T19:30:51.190795"
+      },
+      "declared_data_categories": [
+        "auth_info",
+        "financial_info",
+        "payment_info",
+        "pii",
+        "web_history"
+      ],
+      "declared_purposes": [
+        "functionality"
+      ],
+      "declared_third_parties": [],
+      "privacy_policy_url": null,
+      "privacy_policy_hash": "sha256:0450cde48f5030687dbe7e658c782ad67232d33da9e48ab413845d2214667aed"
+    },
+    "context": {
+      "regions_in_scope": [
+        "GLOBAL"
+      ],
+      "rulepacks": [
+        "ENTERPRISE_GOV_BASELINE",
+        "CWS_LIMITED_USE"
+      ],
+      "domain_categories": [
+        "general"
+      ],
+      "cross_border_risk": false
+    },
+    "rule_results": {
+      "scan_id": "edacconmaakjimmfgnblocblbcdcpbko",
+      "rule_results": [
+        {
+          "rule_id": "CWS_LIMITED_USE::R1",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.9,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_1"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require developer justification or reduce scope to specific domains",
+          "triggered_at": "2026-02-02T19:30:51.201041"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R2",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block \u2014 Limited Use policy requires explicit PII declaration",
+          "triggered_at": "2026-02-02T19:30:51.201202"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R3",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.75,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_3"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Manual review required to confirm data handling practices",
+          "triggered_at": "2026-02-02T19:30:51.201244"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R4",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_4"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block \u2014 Limited Use requires explicit third-party data sharing declaration",
+          "triggered_at": "2026-02-02T19:30:51.201280"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R5",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Verify clipboard access is limited to user-initiated copy/paste operations",
+          "triggered_at": "2026-02-02T19:30:51.201310"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R6",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_6"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require justification for unlimited storage use",
+          "triggered_at": "2026-02-02T19:30:51.201325"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R7",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_7"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Manual security review required for sensitive domain access",
+          "triggered_at": "2026-02-02T19:30:51.201406"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R8",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_8"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require developer to disclose all external endpoints in store listing",
+          "triggered_at": "2026-02-02T19:30:51.201444"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R9",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_9"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require disclosure of network interception capabilities",
+          "triggered_at": "2026-02-02T19:30:51.201479"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R10",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_10"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block immediately \u2014 malware/adware detected",
+          "triggered_at": "2026-02-02T19:30:51.201513"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R1",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_1",
+            "NIST-SP-800-53::AC-3"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require explicit business justification from developer before allowing org-wide",
+          "triggered_at": "2026-02-02T19:30:51.201537"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R2",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_1"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Verify extension purpose aligns with sensitive domain access",
+          "triggered_at": "2026-02-02T19:30:51.201573"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R3",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.9,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2",
+            "CWS_LIMITED_USE::SECTION_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block installation \u2014 undisclosed data exfiltration risk",
+          "triggered_at": "2026-02-02T19:30:51.201607"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R4",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require manual verification of store listing or source code review",
+          "triggered_at": "2026-02-02T19:30:51.201627"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R5",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.75,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_3"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require security review of API usage and network behavior",
+          "triggered_at": "2026-02-02T19:30:51.201637"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R6",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Review external endpoints and require declaration on Chrome Web Store",
+          "triggered_at": "2026-02-02T19:30:51.201660"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R7",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_4"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require source code transparency or additional dynamic analysis",
+          "triggered_at": "2026-02-02T19:30:51.201679"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R8",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block immediately \u2014 known malware signature detected",
+          "triggered_at": "2026-02-02T19:30:51.201708"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R9",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_6"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Verify justification for each dangerous permission",
+          "triggered_at": "2026-02-02T19:30:51.201729"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R10",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_7"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require developer to publish privacy policy",
+          "triggered_at": "2026-02-02T19:30:51.201752"
+        }
+      ]
+    },
+    "report": {
+      "scan_id": "edacconmaakjimmfgnblocblbcdcpbko",
+      "extension_id": "edacconmaakjimmfgnblocblbcdcpbko",
+      "extension_name": "Session Buddy - Tab & Bookmark Manager",
+      "created_at": "2026-02-02T19:30:51.201823",
+      "decision": {
+        "verdict": "NEEDS_REVIEW",
+        "rationale": "1. [CWS_LIMITED_USE::R6] Condition matched. Verdict: NEEDS_REVIEW\n2. [ENTERPRISE_GOV_BASELINE::R7] Condition matched. Verdict: NEEDS_REVIEW\n3. [ENTERPRISE_GOV_BASELINE::R9] Condition matched. Verdict: NEEDS_REVIEW\n... and 1 more rule(s) triggered.",
+        "action_required": "Require justification for unlimited storage use",
+        "triggered_rules": [
+          "CWS_LIMITED_USE::R6",
+          "ENTERPRISE_GOV_BASELINE::R7",
+          "ENTERPRISE_GOV_BASELINE::R9",
+          "ENTERPRISE_GOV_BASELINE::R10"
+        ],
+        "block_rules": [],
+        "review_rules": [
+          "CWS_LIMITED_USE::R6",
+          "ENTERPRISE_GOV_BASELINE::R7",
+          "ENTERPRISE_GOV_BASELINE::R9",
+          "ENTERPRISE_GOV_BASELINE::R10"
+        ]
+      },
+      "rule_results": [
+        {
+          "rule_id": "CWS_LIMITED_USE::R1",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.9,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_1"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require developer justification or reduce scope to specific domains",
+          "triggered_at": "2026-02-02T19:30:51.201041"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R2",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block \u2014 Limited Use policy requires explicit PII declaration",
+          "triggered_at": "2026-02-02T19:30:51.201202"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R3",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.75,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_3"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Manual review required to confirm data handling practices",
+          "triggered_at": "2026-02-02T19:30:51.201244"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R4",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_4"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block \u2014 Limited Use requires explicit third-party data sharing declaration",
+          "triggered_at": "2026-02-02T19:30:51.201280"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R5",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Verify clipboard access is limited to user-initiated copy/paste operations",
+          "triggered_at": "2026-02-02T19:30:51.201310"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R6",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_6"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require justification for unlimited storage use",
+          "triggered_at": "2026-02-02T19:30:51.201325"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R7",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_7"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Manual security review required for sensitive domain access",
+          "triggered_at": "2026-02-02T19:30:51.201406"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R8",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_8"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require developer to disclose all external endpoints in store listing",
+          "triggered_at": "2026-02-02T19:30:51.201444"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R9",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_9"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require disclosure of network interception capabilities",
+          "triggered_at": "2026-02-02T19:30:51.201479"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R10",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_10"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block immediately \u2014 malware/adware detected",
+          "triggered_at": "2026-02-02T19:30:51.201513"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R1",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_1",
+            "NIST-SP-800-53::AC-3"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require explicit business justification from developer before allowing org-wide",
+          "triggered_at": "2026-02-02T19:30:51.201537"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R2",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_1"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Verify extension purpose aligns with sensitive domain access",
+          "triggered_at": "2026-02-02T19:30:51.201573"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R3",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.9,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2",
+            "CWS_LIMITED_USE::SECTION_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block installation \u2014 undisclosed data exfiltration risk",
+          "triggered_at": "2026-02-02T19:30:51.201607"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R4",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require manual verification of store listing or source code review",
+          "triggered_at": "2026-02-02T19:30:51.201627"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R5",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.75,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_3"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require security review of API usage and network behavior",
+          "triggered_at": "2026-02-02T19:30:51.201637"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R6",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Review external endpoints and require declaration on Chrome Web Store",
+          "triggered_at": "2026-02-02T19:30:51.201660"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R7",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_4"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require source code transparency or additional dynamic analysis",
+          "triggered_at": "2026-02-02T19:30:51.201679"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R8",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block immediately \u2014 known malware signature detected",
+          "triggered_at": "2026-02-02T19:30:51.201708"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R9",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_6"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Verify justification for each dangerous permission",
+          "triggered_at": "2026-02-02T19:30:51.201729"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R10",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_7"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require developer to publish privacy policy",
+          "triggered_at": "2026-02-02T19:30:51.201752"
+        }
+      ],
+      "total_rules_evaluated": 20,
+      "rules_triggered": 4,
+      "block_count": 0,
+      "review_count": 4,
+      "allow_count": 16
+    },
+    "decision": {
+      "verdict": "NEEDS_REVIEW",
+      "rationale": "1. [CWS_LIMITED_USE::R6] Condition matched. Verdict: NEEDS_REVIEW\n2. [ENTERPRISE_GOV_BASELINE::R7] Condition matched. Verdict: NEEDS_REVIEW\n3. [ENTERPRISE_GOV_BASELINE::R9] Condition matched. Verdict: NEEDS_REVIEW\n... and 1 more rule(s) triggered.",
+      "action_required": "Require justification for unlimited storage use"
+    }
+  },
+  "governance_report": {
+    "scan_id": "edacconmaakjimmfgnblocblbcdcpbko",
+    "extension_id": "edacconmaakjimmfgnblocblbcdcpbko",
+    "extension_name": "Session Buddy - Tab & Bookmark Manager",
+    "created_at": "2026-02-02T19:30:51.201823",
+    "decision": {
+      "verdict": "NEEDS_REVIEW",
+      "rationale": "1. [CWS_LIMITED_USE::R6] Condition matched. Verdict: NEEDS_REVIEW\n2. [ENTERPRISE_GOV_BASELINE::R7] Condition matched. Verdict: NEEDS_REVIEW\n3. [ENTERPRISE_GOV_BASELINE::R9] Condition matched. Verdict: NEEDS_REVIEW\n... and 1 more rule(s) triggered.",
+      "action_required": "Require justification for unlimited storage use",
+      "triggered_rules": [
+        "CWS_LIMITED_USE::R6",
+        "ENTERPRISE_GOV_BASELINE::R7",
+        "ENTERPRISE_GOV_BASELINE::R9",
+        "ENTERPRISE_GOV_BASELINE::R10"
+      ],
+      "block_rules": [],
+      "review_rules": [
+        "CWS_LIMITED_USE::R6",
+        "ENTERPRISE_GOV_BASELINE::R7",
+        "ENTERPRISE_GOV_BASELINE::R9",
+        "ENTERPRISE_GOV_BASELINE::R10"
+      ]
+    },
+    "rule_results": [
+      {
+        "rule_id": "CWS_LIMITED_USE::R1",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.9,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_1"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require developer justification or reduce scope to specific domains",
+        "triggered_at": "2026-02-02T19:30:51.201041"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R2",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.85,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_2"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Block \u2014 Limited Use policy requires explicit PII declaration",
+        "triggered_at": "2026-02-02T19:30:51.201202"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R3",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.75,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_3"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Manual review required to confirm data handling practices",
+        "triggered_at": "2026-02-02T19:30:51.201244"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R4",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_4"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Block \u2014 Limited Use requires explicit third-party data sharing declaration",
+        "triggered_at": "2026-02-02T19:30:51.201280"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R5",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.7,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_5"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Verify clipboard access is limited to user-initiated copy/paste operations",
+        "triggered_at": "2026-02-02T19:30:51.201310"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R6",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "NEEDS_REVIEW",
+        "confidence": 0.7,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_6"
+        ],
+        "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+        "recommended_action": "Require justification for unlimited storage use",
+        "triggered_at": "2026-02-02T19:30:51.201325"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R7",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.85,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_7"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Manual security review required for sensitive domain access",
+        "triggered_at": "2026-02-02T19:30:51.201406"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R8",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_8"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require developer to disclose all external endpoints in store listing",
+        "triggered_at": "2026-02-02T19:30:51.201444"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R9",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_9"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require disclosure of network interception capabilities",
+        "triggered_at": "2026-02-02T19:30:51.201479"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R10",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.95,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_10"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Block immediately \u2014 malware/adware detected",
+        "triggered_at": "2026-02-02T19:30:51.201513"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R1",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.95,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_1",
+          "NIST-SP-800-53::AC-3"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require explicit business justification from developer before allowing org-wide",
+        "triggered_at": "2026-02-02T19:30:51.201537"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R2",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.85,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_1"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Verify extension purpose aligns with sensitive domain access",
+        "triggered_at": "2026-02-02T19:30:51.201573"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R3",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.9,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_2",
+          "CWS_LIMITED_USE::SECTION_5"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Block installation \u2014 undisclosed data exfiltration risk",
+        "triggered_at": "2026-02-02T19:30:51.201607"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R4",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require manual verification of store listing or source code review",
+        "triggered_at": "2026-02-02T19:30:51.201627"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R5",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.75,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_3"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require security review of API usage and network behavior",
+        "triggered_at": "2026-02-02T19:30:51.201637"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R6",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Review external endpoints and require declaration on Chrome Web Store",
+        "triggered_at": "2026-02-02T19:30:51.201660"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R7",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "NEEDS_REVIEW",
+        "confidence": 0.7,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_4"
+        ],
+        "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+        "recommended_action": "Require source code transparency or additional dynamic analysis",
+        "triggered_at": "2026-02-02T19:30:51.201679"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R8",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.95,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_5"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Block immediately \u2014 known malware signature detected",
+        "triggered_at": "2026-02-02T19:30:51.201708"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R9",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "NEEDS_REVIEW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_6"
+        ],
+        "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+        "recommended_action": "Verify justification for each dangerous permission",
+        "triggered_at": "2026-02-02T19:30:51.201729"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R10",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "NEEDS_REVIEW",
+        "confidence": 0.7,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_7"
+        ],
+        "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+        "recommended_action": "Require developer to publish privacy policy",
+        "triggered_at": "2026-02-02T19:30:51.201752"
+      }
+    ],
+    "total_rules_evaluated": 20,
+    "rules_triggered": 4,
+    "block_count": 0,
+    "review_count": 4,
+    "allow_count": 16
+  },
+  "governance_error": null
+}

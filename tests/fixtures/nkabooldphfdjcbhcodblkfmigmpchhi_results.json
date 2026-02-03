@@ -1,0 +1,3328 @@
+{
+  "extension_id": "nkabooldphfdjcbhcodblkfmigmpchhi",
+  "extension_name": "Pinterest Love: Pinterest Screenshot Saver++",
+  "url": "https://chromewebstore.google.com/detail/pinterest-love-pinterest/nkabooldphfdjcbhcodblkfmigmpchhi",
+  "timestamp": "2026-01-31T14:26:42.908563",
+  "status": "completed",
+  "metadata": {
+    "title": "Pinterest Love: Pinterest Screenshot Saver++",
+    "user_count": 10000,
+    "rating": 4.3,
+    "ratings_count": 51,
+    "last_updated": "September 30, 2025",
+    "version": "1.48",
+    "size": "1.54MiB",
+    "developer_name": "Vitaminiser",
+    "developer_email": "jeunesserift@gmail.com",
+    "developer_website": null,
+    "privacy_policy": "The developer has disclosed that it will not collect or use your data. To learn more, see the developer\u2019s\nprivacy policy\n.\nThis developer declares that your data is\nNot being sold to third parties, outside of the\napproved use cases\nNot being used or transferred for purposes that are unrelated to the item's core functionality\nNot being used or transferred to determine creditworthiness or for lending purposes",
+    "follows_best_practices": true,
+    "is_featured": true,
+    "category": "Extension > Social Networking"
+  },
+  "manifest": {
+    "name": "Pinterest Love: Pinterest Screenshot Saver++",
+    "version": "1.48",
+    "manifest_version": 3,
+    "description": "Save screenshots and other images to Pinterest, visually search pins and list pinnable images on a page.",
+    "permissions": [
+      "tabs",
+      "contextMenus",
+      "storage",
+      "cookies",
+      "scripting"
+    ],
+    "host_permissions": [
+      "<all_urls>",
+      "*://*/*",
+      "*://*.pinterest.com/"
+    ],
+    "optional_permissions": [],
+    "content_scripts": [
+      {
+        "matches": [
+          "http://*/*",
+          "https://*/*"
+        ],
+        "exclude_matches": [],
+        "js": [
+          "common.js",
+          "libs/dom.js",
+          "libs/onyx.js",
+          "localisation.js",
+          "page/hoverbutton.js",
+          "page/page.js",
+          "page/messages.js"
+        ],
+        "css": [
+          "page/page.css",
+          "page/hoverbutton.css"
+        ],
+        "run_at": "document_start",
+        "all_frames": false,
+        "match_about_blank": false
+      },
+      {
+        "matches": [
+          "http://*/*",
+          "https://*/*"
+        ],
+        "exclude_matches": [],
+        "js": [
+          "page/inject.js"
+        ],
+        "css": [],
+        "run_at": "document_end",
+        "all_frames": true,
+        "match_about_blank": false
+      }
+    ],
+    "background": {
+      "type": "service_worker",
+      "service_worker": "background.js",
+      "type_module": false
+    },
+    "action": {
+      "default_popup": "popup/popup.html",
+      "default_icon": {
+        "16": "icons/icon16x16.png",
+        "24": "icons/icon24x24.png"
+      }
+    },
+    "options_page": "options/options.html",
+    "web_accessible_resources": [
+      {
+        "resources": [
+          "icons/*.png",
+          "css/darkmode.css",
+          "options/news.json",
+          "options/options.html",
+          "create/create2.html",
+          "grid/grid.html",
+          "search/search.html",
+          "screenshotTab/screenshotTab.html",
+          "darkmode/pinterest.css"
+        ],
+        "matches": [
+          "*://*/*"
+        ]
+      }
+    ],
+    "externally_connectable": null,
+    "content_security_policy": null,
+    "update_url": "https://clients2.google.com/service/update2/crx",
+    "icons": {
+      "128": "icons/icon128x128.png",
+      "16": "icons/icon16x16.png",
+      "48": "icons/icon48x48.png",
+      "32": "icons/icon32x32.png",
+      "24": "icons/icon24x24.png"
+    },
+    "homepage_url": "https://twitter.com/vitaminiser",
+    "author": "@vitaminiser"
+  },
+  "permissions_analysis": {
+    "permissions_analysis": "The extension requests the following permissions:\n- tabs\n- contextMenus\n- storage\n- cookies\n- scripting\n\n\u26a0\ufe0f Suspicious permissions detected:\n- tabs: The 'tabs' permission is not justified for the described functionality of saving screenshots and images to Pinterest. Access to tab URLs, titles, and favicon URLs is not necessary for capturing screenshots or listing images on a page. Monitoring tab creation/closure and tracking tab navigation also exceed the stated purpose of the extension.\n- cookies: The permission to read, modify, and delete cookies is not justified for the functionality described. Saving screenshots and images to Pinterest, visually searching pins, and listing pinnable images do not inherently require access to cookies, which are typically used for session management and user tracking.\n",
+    "permissions_details": {
+      "tabs": {
+        "permission_name": "tabs",
+        "justification_reasoning": "The 'tabs' permission is not justified for the described functionality of saving screenshots and images to Pinterest. Access to tab URLs, titles, and favicon URLs is not necessary for capturing screenshots or listing images on a page. Monitoring tab creation/closure and tracking tab navigation also exceed the stated purpose of the extension.",
+        "is_reasonable": false
+      },
+      "contextMenus": {
+        "permission_name": "contextMenus",
+        "justification_reasoning": "The permission to add items to the browser context menu is justified because the extension's functionality involves saving images and screenshots to Pinterest, which can be facilitated by providing users with a convenient right-click menu option to perform these actions directly from the webpage.",
+        "is_reasonable": true
+      },
+      "storage": {
+        "permission_name": "storage",
+        "justification_reasoning": "The storage permission is justified as the extension needs to store user preferences, settings, and possibly cached images locally. This allows for a better user experience by persisting user data across sessions and syncing it across devices.",
+        "is_reasonable": true
+      },
+      "cookies": {
+        "permission_name": "cookies",
+        "justification_reasoning": "The permission to read, modify, and delete cookies is not justified for the functionality described. Saving screenshots and images to Pinterest, visually searching pins, and listing pinnable images do not inherently require access to cookies, which are typically used for session management and user tracking.",
+        "is_reasonable": false
+      },
+      "scripting": {
+        "permission_name": "scripting",
+        "justification_reasoning": "The extension's functionality to save screenshots and images to Pinterest and visually search pins may require injecting JavaScript to interact with the page content and modify page behavior to capture and manipulate images. Therefore, the scripting permission is justified.",
+        "is_reasonable": true
+      }
+    },
+    "host_permissions_analysis": "\u26a0\ufe0f Critical host permission detected: <all_urls> (Access to ALL websites and local files)"
+  },
+  "sast_results": {
+    "sast_analysis": "[RISK: LOW] The security analysis of the Chrome extension's JavaScript files revealed only an INFO-level finding, indicating a low risk. The finding pertains to the use of `importScripts()` in `background.js`, which is a common method for loading additional JavaScript files in a Chrome extension. While this does not pose an immediate security threat, developers should ensure that all imported scripts are from trusted sources to prevent potential security issues in the future.",
+    "sast_findings": {
+      "background.js": [
+        {
+          "check_id": "src.extension_shield.config.test.import_scripts",
+          "path": "extensions_storage/extracted_nkabooldphfdjcbhcodblkfmigmpchhi.crx_27630/background.js",
+          "start": {
+            "line": 13,
+            "col": 1,
+            "offset": 445
+          },
+          "end": {
+            "line": 24,
+            "col": 35,
+            "offset": 766
+          },
+          "extra": {
+            "message": "[TEST] importScripts() detected - used to load additional JS files",
+            "metadata": {
+              "category": "test",
+              "description": "Detects importScripts() calls to verify custom rules work"
+            },
+            "severity": "INFO",
+            "fingerprint": "requires login",
+            "lines": "requires login",
+            "validation_state": "NO_VALIDATOR",
+            "engine_kind": "OSS"
+          }
+        }
+      ],
+      "page/hoverbutton.js": [],
+      "common.js": [],
+      "localisation.js": [],
+      "page/inject.js": [],
+      "page/messages.js": [],
+      "page/page.js": []
+    }
+  },
+  "webstore_analysis": {
+    "webstore_analysis": "Chrome extension risk assessment based on WebStore reputation analysis:\n - Overall Risk Level: medium\n - Summary: The extension has a low review ratio and lacks a developer website, which raises concerns about transparency and user engagement. Additionally, the use of a personal email domain instead of a professional one suggests a lack of professional infrastructure. However, the extension follows best practices, is featured, and has a decent user count and rating, which mitigates some risk factors.\n"
+  },
+  "virustotal_analysis": {
+    "enabled": true,
+    "files_analyzed": 10,
+    "files_with_detections": 0,
+    "total_malicious": 0,
+    "total_suspicious": 0,
+    "file_results": [
+      {
+        "file_name": "background.js",
+        "file_path": "/background.js",
+        "priority_file": true,
+        "hashes": {
+          "sha256": "0a1aef40cf5d40b60d5a3aa2ee34a88158938324dfe65023da1b436ac692a24b",
+          "sha1": "f6321fe6b5c69253d8652f36c1e4bb334d8f7a30",
+          "md5": "7ad2c0b5dfd456a3e254bd49f9977a57"
+        },
+        "virustotal": {
+          "found": true,
+          "sha256": "0a1aef40cf5d40b60d5a3aa2ee34a88158938324dfe65023da1b436ac692a24b",
+          "sha1": "f6321fe6b5c69253d8652f36c1e4bb334d8f7a30",
+          "md5": "7ad2c0b5dfd456a3e254bd49f9977a57",
+          "detection_stats": {
+            "malicious": 0,
+            "suspicious": 0,
+            "undetected": 62,
+            "harmless": 0,
+            "total_engines": 76
+          },
+          "reputation": 0,
+          "times_submitted": 1,
+          "first_submission_date": "2025-10-29 22:12:25+00:00",
+          "last_analysis_date": "2025-12-13 16:22:02+00:00",
+          "type_description": "JavaScript",
+          "tags": [
+            "javascript"
+          ],
+          "malware_families": []
+        }
+      },
+      {
+        "file_name": "inject.js",
+        "file_path": "/page/inject.js",
+        "priority_file": true,
+        "hashes": {
+          "sha256": "6b33817e027a9fce577536f0532da51af7e5dea4cf5fa3c9aa45d9e504c0813b",
+          "sha1": "6102055f13ce691f0bbe439c202bfcabb02ec8a4",
+          "md5": "51a8d2df55a21e06d751e393bff67395"
+        },
+        "virustotal": {
+          "found": true,
+          "sha256": "6b33817e027a9fce577536f0532da51af7e5dea4cf5fa3c9aa45d9e504c0813b",
+          "sha1": "6102055f13ce691f0bbe439c202bfcabb02ec8a4",
+          "md5": "51a8d2df55a21e06d751e393bff67395",
+          "detection_stats": {
+            "malicious": 0,
+            "suspicious": 0,
+            "undetected": 62,
+            "harmless": 0,
+            "total_engines": 76
+          },
+          "reputation": 0,
+          "times_submitted": 1,
+          "first_submission_date": "2025-10-29 22:12:34+00:00",
+          "last_analysis_date": "2025-12-13 15:32:32+00:00",
+          "type_description": "JavaScript",
+          "tags": [
+            "javascript"
+          ],
+          "malware_families": []
+        }
+      },
+      {
+        "file_name": "popup.js",
+        "file_path": "/popup/popup.js",
+        "priority_file": true,
+        "hashes": {
+          "sha256": "26d7c2df882420893e649580528d694a80563dafa7adbfa8d1e90fa6338bbd67",
+          "sha1": "855115b5ba99ef254e44ea857181374398790653",
+          "md5": "a8f1f90b0a0300fe333cfd42ba7af809"
+        },
+        "virustotal": {
+          "found": true,
+          "sha256": "26d7c2df882420893e649580528d694a80563dafa7adbfa8d1e90fa6338bbd67",
+          "sha1": "855115b5ba99ef254e44ea857181374398790653",
+          "md5": "a8f1f90b0a0300fe333cfd42ba7af809",
+          "detection_stats": {
+            "malicious": 0,
+            "suspicious": 0,
+            "undetected": 62,
+            "harmless": 0,
+            "total_engines": 76
+          },
+          "reputation": 0,
+          "times_submitted": 1,
+          "first_submission_date": "2025-10-29 22:12:29+00:00",
+          "last_analysis_date": "2025-12-13 16:45:34+00:00",
+          "type_description": "JavaScript",
+          "tags": [
+            "javascript"
+          ],
+          "malware_families": []
+        }
+      },
+      {
+        "file_name": "contextmenu.js",
+        "file_path": "/contextmenu.js",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "1794fd5896db797247615d9af4589074ddf6266330a9d8de27a392dd1112f73b",
+          "sha1": "748f746f4812c7c0749c01c196b1240509e6cad7",
+          "md5": "eb85f593eb5206b0d5bdfd0efb692b87"
+        },
+        "virustotal": {
+          "found": false,
+          "message": "Hash not found in VirusTotal database"
+        }
+      },
+      {
+        "file_name": "common.js",
+        "file_path": "/common.js",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "945fa44bfadc2250b103aae162a7d43e8ee130f570b891582be38d7ff8e4cb37",
+          "sha1": "c192527ef246849884eb6de726e7203531aa9858",
+          "md5": "71d59c7f1a3682e54f04e74aebf74af0"
+        },
+        "virustotal": {
+          "found": true,
+          "sha256": "945fa44bfadc2250b103aae162a7d43e8ee130f570b891582be38d7ff8e4cb37",
+          "sha1": "c192527ef246849884eb6de726e7203531aa9858",
+          "md5": "71d59c7f1a3682e54f04e74aebf74af0",
+          "detection_stats": {
+            "malicious": 0,
+            "suspicious": 0,
+            "undetected": 61,
+            "harmless": 0,
+            "total_engines": 76
+          },
+          "reputation": 0,
+          "times_submitted": 1,
+          "first_submission_date": "2025-10-29 22:12:37+00:00",
+          "last_analysis_date": "2025-12-13 14:22:56+00:00",
+          "type_description": "JavaScript",
+          "tags": [
+            "javascript"
+          ],
+          "malware_families": []
+        }
+      },
+      {
+        "file_name": "localisation.js",
+        "file_path": "/localisation.js",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "c3a8587897a1d5b2b43840ce71a89ce49fda799325c4fcef289de6057dbfe4b4",
+          "sha1": "52b92d8a89931281fb827df5a33699544083501e",
+          "md5": "f456a2afe923ebea8aaf522414368d76"
+        },
+        "virustotal": {
+          "found": true,
+          "sha256": "c3a8587897a1d5b2b43840ce71a89ce49fda799325c4fcef289de6057dbfe4b4",
+          "sha1": "52b92d8a89931281fb827df5a33699544083501e",
+          "md5": "f456a2afe923ebea8aaf522414368d76",
+          "detection_stats": {
+            "malicious": 0,
+            "suspicious": 0,
+            "undetected": 62,
+            "harmless": 0,
+            "total_engines": 76
+          },
+          "reputation": 0,
+          "times_submitted": 1,
+          "first_submission_date": "2025-10-29 22:12:23+00:00",
+          "last_analysis_date": "2025-12-13 18:32:40+00:00",
+          "type_description": "JavaScript",
+          "tags": [
+            "javascript"
+          ],
+          "malware_families": []
+        }
+      },
+      {
+        "file_name": "events.js",
+        "file_path": "/background/events.js",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "ab0fcfb1804478460ad2a8ead7be372c1139b2377834e5f80ed98eff80b118aa",
+          "sha1": "5b1a621857df67144e163293d8479a195f803729",
+          "md5": "e9335813ce99b66ae0b628fc71a037a4"
+        },
+        "virustotal": {
+          "found": true,
+          "sha256": "ab0fcfb1804478460ad2a8ead7be372c1139b2377834e5f80ed98eff80b118aa",
+          "sha1": "5b1a621857df67144e163293d8479a195f803729",
+          "md5": "e9335813ce99b66ae0b628fc71a037a4",
+          "detection_stats": {
+            "malicious": 0,
+            "suspicious": 0,
+            "undetected": 62,
+            "harmless": 0,
+            "total_engines": 76
+          },
+          "reputation": 0,
+          "times_submitted": 1,
+          "first_submission_date": "2025-10-29 22:12:29+00:00",
+          "last_analysis_date": "2025-12-13 14:34:15+00:00",
+          "type_description": "JavaScript",
+          "tags": [
+            "javascript"
+          ],
+          "malware_families": []
+        }
+      },
+      {
+        "file_name": "requestApi.js",
+        "file_path": "/background/requestApi.js",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "416f3fb1e11bef3cfd2289ebd973bf6f5050ceeceb8d9e8eb36c3b4507e12a3a",
+          "sha1": "c5fc79e9e737258a2e53102699db446e9330f61e",
+          "md5": "9dc9a2f5d42977d1300738face560808"
+        },
+        "virustotal": {
+          "found": true,
+          "sha256": "416f3fb1e11bef3cfd2289ebd973bf6f5050ceeceb8d9e8eb36c3b4507e12a3a",
+          "sha1": "c5fc79e9e737258a2e53102699db446e9330f61e",
+          "md5": "9dc9a2f5d42977d1300738face560808",
+          "detection_stats": {
+            "malicious": 0,
+            "suspicious": 0,
+            "undetected": 62,
+            "harmless": 0,
+            "total_engines": 76
+          },
+          "reputation": 0,
+          "times_submitted": 1,
+          "first_submission_date": "2025-10-29 22:12:28+00:00",
+          "last_analysis_date": "2025-12-13 14:59:11+00:00",
+          "type_description": "JavaScript",
+          "tags": [
+            "javascript"
+          ],
+          "malware_families": []
+        }
+      },
+      {
+        "file_name": "screenshotMaker.js",
+        "file_path": "/background/screenshotMaker.js",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "4ca0f6951b14f156d2bc20267e6a42f0ab060f86a46e830cb3cd1dd5243dbf82",
+          "sha1": "3a4733686e064e29cee582ea45fd83e63037523d",
+          "md5": "a86518d6d60895b43e2c4e1b6880afba"
+        },
+        "virustotal": {
+          "found": true,
+          "sha256": "4ca0f6951b14f156d2bc20267e6a42f0ab060f86a46e830cb3cd1dd5243dbf82",
+          "sha1": "3a4733686e064e29cee582ea45fd83e63037523d",
+          "md5": "a86518d6d60895b43e2c4e1b6880afba",
+          "detection_stats": {
+            "malicious": 0,
+            "suspicious": 0,
+            "undetected": 62,
+            "harmless": 0,
+            "total_engines": 76
+          },
+          "reputation": 0,
+          "times_submitted": 1,
+          "first_submission_date": "2025-10-29 22:12:33+00:00",
+          "last_analysis_date": "2025-12-13 17:21:27+00:00",
+          "type_description": "JavaScript",
+          "tags": [
+            "javascript"
+          ],
+          "malware_families": []
+        }
+      },
+      {
+        "file_name": "msgs.js",
+        "file_path": "/background/msgs.js",
+        "priority_file": false,
+        "hashes": {
+          "sha256": "11dded7f55515bf1eabeb3bf33197eacd3f640513c1cf783bc7d17efcbf6352a",
+          "sha1": "2ac3155b43e8dbdcbc0eb2bf92ea8a9539f2ac8a",
+          "md5": "5275f01432520ac9b2922826d7e4f1e2"
+        },
+        "virustotal": {
+          "found": true,
+          "sha256": "11dded7f55515bf1eabeb3bf33197eacd3f640513c1cf783bc7d17efcbf6352a",
+          "sha1": "2ac3155b43e8dbdcbc0eb2bf92ea8a9539f2ac8a",
+          "md5": "5275f01432520ac9b2922826d7e4f1e2",
+          "detection_stats": {
+            "malicious": 0,
+            "suspicious": 0,
+            "undetected": 62,
+            "harmless": 0,
+            "total_engines": 76
+          },
+          "reputation": 0,
+          "times_submitted": 1,
+          "first_submission_date": "2025-10-29 22:12:26+00:00",
+          "last_analysis_date": "2025-12-13 13:55:13+00:00",
+          "type_description": "JavaScript",
+          "tags": [
+            "javascript"
+          ],
+          "malware_families": []
+        }
+      }
+    ],
+    "summary": {
+      "threat_level": "clean",
+      "detected_families": [],
+      "recommendation": "No known threats detected in VirusTotal database. Note: This does not guarantee the extension is safe."
+    }
+  },
+  "entropy_analysis": {
+    "files_analyzed": 53,
+    "files_skipped": 1,
+    "obfuscated_files": 0,
+    "suspicious_files": 0,
+    "file_results": [
+      {
+        "file_name": "background.js",
+        "file_path": "background.js",
+        "file_size_bytes": 3597,
+        "entropy": {
+          "byte_entropy": 5.17,
+          "char_entropy": 5.13,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "contextmenu.js",
+        "file_path": "contextmenu.js",
+        "file_size_bytes": 4235,
+        "entropy": {
+          "byte_entropy": 4.31,
+          "char_entropy": 4.19,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "common.js",
+        "file_path": "common.js",
+        "file_size_bytes": 11094,
+        "entropy": {
+          "byte_entropy": 5.14,
+          "char_entropy": 5.1,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [
+          {
+            "pattern_name": "unicode_escapes",
+            "description": "Unicode escape sequences",
+            "risk": "low",
+            "match_count": 40,
+            "sample_match": "\\u00a1"
+          },
+          {
+            "pattern_name": "atob_usage",
+            "description": "Base64 decoding (atob)",
+            "risk": "low",
+            "match_count": 1,
+            "sample_match": "atob("
+          }
+        ],
+        "pattern_count": 2,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "low",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "localisation.js",
+        "file_path": "localisation.js",
+        "file_size_bytes": 5241,
+        "entropy": {
+          "byte_entropy": 4.68,
+          "char_entropy": 4.63,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "events.js",
+        "file_path": "background/events.js",
+        "file_size_bytes": 3056,
+        "entropy": {
+          "byte_entropy": 4.61,
+          "char_entropy": 4.55,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "requestApi.js",
+        "file_path": "background/requestApi.js",
+        "file_size_bytes": 3598,
+        "entropy": {
+          "byte_entropy": 4.92,
+          "char_entropy": 4.87,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [
+          {
+            "pattern_name": "atob_usage",
+            "description": "Base64 decoding (atob)",
+            "risk": "low",
+            "match_count": 1,
+            "sample_match": "atob("
+          }
+        ],
+        "pattern_count": 1,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "low",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "screenshotMaker.js",
+        "file_path": "background/screenshotMaker.js",
+        "file_size_bytes": 1701,
+        "entropy": {
+          "byte_entropy": 4.96,
+          "char_entropy": 4.92,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "msgs.js",
+        "file_path": "background/msgs.js",
+        "file_size_bytes": 6072,
+        "entropy": {
+          "byte_entropy": 4.57,
+          "char_entropy": 4.51,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [
+          {
+            "pattern_name": "atob_usage",
+            "description": "Base64 decoding (atob)",
+            "risk": "low",
+            "match_count": 1,
+            "sample_match": "atob("
+          }
+        ],
+        "pattern_count": 1,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "low",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "request_types.js",
+        "file_path": "background/request_types.js",
+        "file_size_bytes": 6245,
+        "entropy": {
+          "byte_entropy": 4.63,
+          "char_entropy": 4.57,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "fn.js",
+        "file_path": "background/fn.js",
+        "file_size_bytes": 5879,
+        "entropy": {
+          "byte_entropy": 4.43,
+          "char_entropy": 4.37,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "messages.js",
+        "file_path": "background/messages.js",
+        "file_size_bytes": 4371,
+        "entropy": {
+          "byte_entropy": 4.46,
+          "char_entropy": 4.4,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "sslib.js",
+        "file_path": "options/sslib.js",
+        "file_size_bytes": 1261,
+        "entropy": {
+          "byte_entropy": 4.62,
+          "char_entropy": 4.56,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "options3.js",
+        "file_path": "options/options3.js",
+        "file_size_bytes": 4434,
+        "entropy": {
+          "byte_entropy": 4.85,
+          "char_entropy": 4.8,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "options2.js",
+        "file_path": "options/options2.js",
+        "file_size_bytes": 2366,
+        "entropy": {
+          "byte_entropy": 4.66,
+          "char_entropy": 4.61,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "check-login.js",
+        "file_path": "options/options/check-login.js",
+        "file_size_bytes": 1726,
+        "entropy": {
+          "byte_entropy": 4.95,
+          "char_entropy": 4.9,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "options.js",
+        "file_path": "options/options/options.js",
+        "file_size_bytes": 9282,
+        "entropy": {
+          "byte_entropy": 4.75,
+          "char_entropy": 4.69,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "cookies-table.js",
+        "file_path": "options/options/cookies-table.js",
+        "file_size_bytes": 3008,
+        "entropy": {
+          "byte_entropy": 4.81,
+          "char_entropy": 4.76,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "tutorial.js",
+        "file_path": "options/tutorial/tutorial.js",
+        "file_size_bytes": 217,
+        "entropy": {
+          "byte_entropy": 4.82,
+          "char_entropy": 4.77,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "news.js",
+        "file_path": "options/news/news.js",
+        "file_size_bytes": 1385,
+        "entropy": {
+          "byte_entropy": 4.28,
+          "char_entropy": 4.21,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "iframe.js",
+        "file_path": "page/iframe.js",
+        "file_size_bytes": 1745,
+        "entropy": {
+          "byte_entropy": 4.69,
+          "char_entropy": 4.63,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "page.js",
+        "file_path": "page/page.js",
+        "file_size_bytes": 24563,
+        "entropy": {
+          "byte_entropy": 4.67,
+          "char_entropy": 4.62,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "hoverbutton.js",
+        "file_path": "page/hoverbutton.js",
+        "file_size_bytes": 12398,
+        "entropy": {
+          "byte_entropy": 4.47,
+          "char_entropy": 4.41,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "inject.js",
+        "file_path": "page/inject.js",
+        "file_size_bytes": 633,
+        "entropy": {
+          "byte_entropy": 4.7,
+          "char_entropy": 4.65,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "messages.js",
+        "file_path": "page/messages.js",
+        "file_size_bytes": 11746,
+        "entropy": {
+          "byte_entropy": 4.16,
+          "char_entropy": 4.09,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "popup.js",
+        "file_path": "popup/popup.js",
+        "file_size_bytes": 6775,
+        "entropy": {
+          "byte_entropy": 4.72,
+          "char_entropy": 4.67,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "feed_loader.js",
+        "file_path": "popup/feed_loader.js",
+        "file_size_bytes": 3076,
+        "entropy": {
+          "byte_entropy": 4.37,
+          "char_entropy": 4.3,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "ga.js",
+        "file_path": "ga/ga.js",
+        "file_size_bytes": 3076,
+        "entropy": {
+          "byte_entropy": 5.01,
+          "char_entropy": 4.97,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "test.js",
+        "file_path": "test/test.js",
+        "file_size_bytes": 2583,
+        "entropy": {
+          "byte_entropy": 4.91,
+          "char_entropy": 4.86,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "canvas.js",
+        "file_path": "test/canvas.js",
+        "file_size_bytes": 486,
+        "entropy": {
+          "byte_entropy": 4.95,
+          "char_entropy": 4.91,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "darkmode_inject.js",
+        "file_path": "js/darkmode_inject.js",
+        "file_size_bytes": 496,
+        "entropy": {
+          "byte_entropy": 4.61,
+          "char_entropy": 4.55,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "darkmode.js",
+        "file_path": "js/darkmode.js",
+        "file_size_bytes": 1615,
+        "entropy": {
+          "byte_entropy": 4.73,
+          "char_entropy": 4.68,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "messages.js",
+        "file_path": "js/messages.js",
+        "file_size_bytes": 692,
+        "entropy": {
+          "byte_entropy": 4.58,
+          "char_entropy": 4.52,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "onyx.js",
+        "file_path": "libs/onyx.js",
+        "file_size_bytes": 10264,
+        "entropy": {
+          "byte_entropy": 4.54,
+          "char_entropy": 4.48,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "window.js",
+        "file_path": "libs/window.js",
+        "file_size_bytes": 2477,
+        "entropy": {
+          "byte_entropy": 4.45,
+          "char_entropy": 4.38,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "overlayClass.js",
+        "file_path": "libs/overlayClass.js",
+        "file_size_bytes": 4951,
+        "entropy": {
+          "byte_entropy": 4.42,
+          "char_entropy": 4.35,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "masonry.pkgd.js",
+        "file_path": "libs/masonry.pkgd.js",
+        "file_size_bytes": 63316,
+        "entropy": {
+          "byte_entropy": 4.87,
+          "char_entropy": 4.87,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [
+          {
+            "pattern_name": "string_array",
+            "description": "Large string array (common in obfuscators)",
+            "risk": "medium",
+            "match_count": 1,
+            "sample_match": ",\n  'borderBottomWidth'"
+          }
+        ],
+        "pattern_count": 1,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "low",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "overlayClass2.js",
+        "file_path": "libs/overlayClass2.js",
+        "file_size_bytes": 3028,
+        "entropy": {
+          "byte_entropy": 4.5,
+          "char_entropy": 4.44,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "dom.js",
+        "file_path": "libs/dom.js",
+        "file_size_bytes": 2301,
+        "entropy": {
+          "byte_entropy": 4.66,
+          "char_entropy": 4.6,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "markerjs2.js",
+        "file_path": "libs/markerjs2.js",
+        "file_size_bytes": 108986,
+        "entropy": {
+          "byte_entropy": 5.26,
+          "char_entropy": 5.26,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [
+          {
+            "pattern_name": "hex_strings",
+            "description": "Hex-encoded strings",
+            "risk": "medium",
+            "match_count": 1,
+            "sample_match": "\\x85"
+          },
+          {
+            "pattern_name": "unicode_escapes",
+            "description": "Unicode escape sequences",
+            "risk": "low",
+            "match_count": 2,
+            "sample_match": "\\u2028"
+          }
+        ],
+        "pattern_count": 2,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "low",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "Border.js",
+        "file_path": "libs/Border.js",
+        "file_size_bytes": 11310,
+        "entropy": {
+          "byte_entropy": 4.53,
+          "char_entropy": 4.47,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "ttt.js",
+        "file_path": "libs/ttt.js",
+        "file_size_bytes": 7205,
+        "entropy": {
+          "byte_entropy": 5.14,
+          "char_entropy": 5.1,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [
+          {
+            "pattern_name": "base64_blob",
+            "description": "Large Base64-encoded data",
+            "risk": "medium",
+            "match_count": 1,
+            "sample_match": "ngjs/resource/BoardContentRecommendationResource/get/"
+          }
+        ],
+        "pattern_count": 1,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "low",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "search.js",
+        "file_path": "search/search.js",
+        "file_size_bytes": 78111,
+        "entropy": {
+          "byte_entropy": 4.46,
+          "char_entropy": 4.43,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [
+          {
+            "pattern_name": "base64_blob",
+            "description": "Large Base64-encoded data",
+            "risk": "medium",
+            "match_count": 5,
+            "sample_match": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMzJweCIgd2lkdGg9IjMycHgiIHZpZXdCb3g9"
+          },
+          {
+            "pattern_name": "string_array",
+            "description": "Large string array (common in obfuscators)",
+            "risk": "medium",
+            "match_count": 1,
+            "sample_match": ",\n    '6E0F3C'"
+          }
+        ],
+        "pattern_count": 2,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "low",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "screenshotTab.js",
+        "file_path": "screenshotTab/screenshotTab.js",
+        "file_size_bytes": 8343,
+        "entropy": {
+          "byte_entropy": 4.51,
+          "char_entropy": 4.45,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "_resource.js",
+        "file_path": "resource/_resource.js",
+        "file_size_bytes": 11755,
+        "entropy": {
+          "byte_entropy": 4.46,
+          "char_entropy": 4.4,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "resource.js",
+        "file_path": "resource/resource.js",
+        "file_size_bytes": 15357,
+        "entropy": {
+          "byte_entropy": 4.55,
+          "char_entropy": 4.49,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "request-test.js",
+        "file_path": "resource/request-test.js",
+        "file_size_bytes": 5954,
+        "entropy": {
+          "byte_entropy": 4.77,
+          "char_entropy": 4.72,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "requests.js",
+        "file_path": "resource/requests.js",
+        "file_size_bytes": 14336,
+        "entropy": {
+          "byte_entropy": 4.19,
+          "char_entropy": 4.12,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [
+          {
+            "pattern_name": "base64_blob",
+            "description": "Large Base64-encoded data",
+            "risk": "medium",
+            "match_count": 1,
+            "sample_match": "com/474x/c4/6b/07/c46b07ad60916203694dae29ebd83164"
+          }
+        ],
+        "pattern_count": 1,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "low",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "remote.js",
+        "file_path": "create/remote.js",
+        "file_size_bytes": 975,
+        "entropy": {
+          "byte_entropy": 4.25,
+          "char_entropy": 4.18,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "create2.js",
+        "file_path": "create/create2.js",
+        "file_size_bytes": 33968,
+        "entropy": {
+          "byte_entropy": 4.48,
+          "char_entropy": 4.42,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "create_board.js",
+        "file_path": "create/create_board.js",
+        "file_size_bytes": 10962,
+        "entropy": {
+          "byte_entropy": 4.38,
+          "char_entropy": 4.31,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "create_actions.js",
+        "file_path": "create/create_actions.js",
+        "file_size_bytes": 3340,
+        "entropy": {
+          "byte_entropy": 4.49,
+          "char_entropy": 4.43,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "create_translation.js",
+        "file_path": "create/create_translation.js",
+        "file_size_bytes": 31982,
+        "entropy": {
+          "byte_entropy": 5.28,
+          "char_entropy": 5.03,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      },
+      {
+        "file_name": "grid.js",
+        "file_path": "grid/grid.js",
+        "file_size_bytes": 7570,
+        "entropy": {
+          "byte_entropy": 4.62,
+          "char_entropy": 4.56,
+          "risk_level": "normal"
+        },
+        "obfuscation_patterns": [],
+        "pattern_count": 0,
+        "high_risk_pattern_count": 0,
+        "overall_risk": "normal",
+        "is_likely_obfuscated": false
+      }
+    ],
+    "summary": {
+      "overall_risk": "low",
+      "obfuscation_detected": false,
+      "high_entropy_files": [],
+      "pattern_summary": {
+        "unicode_escapes": {
+          "description": "Unicode escape sequences",
+          "risk": "low",
+          "total_occurrences": 42,
+          "files_affected": 2
+        },
+        "atob_usage": {
+          "description": "Base64 decoding (atob)",
+          "risk": "low",
+          "total_occurrences": 3,
+          "files_affected": 3
+        },
+        "string_array": {
+          "description": "Large string array (common in obfuscators)",
+          "risk": "medium",
+          "total_occurrences": 2,
+          "files_affected": 2
+        },
+        "hex_strings": {
+          "description": "Hex-encoded strings",
+          "risk": "medium",
+          "total_occurrences": 1,
+          "files_affected": 1
+        },
+        "base64_blob": {
+          "description": "Large Base64-encoded data",
+          "risk": "medium",
+          "total_occurrences": 7,
+          "files_affected": 3
+        }
+      },
+      "recommendation": "No significant obfuscation detected. Code appears to be in readable form."
+    }
+  },
+  "summary": {
+    "summary": "The Pinterest Love extension poses a medium risk due to its excessive permissions, including access to all websites and cookies, which are not justified by its functionality. The lack of developer transparency and use of a personal email domain further contribute to potential privacy concerns.",
+    "overall_risk_level": "medium",
+    "key_findings": [
+      "Access to all websites via <all_urls> permission, which is unnecessary for the extension's stated purpose.",
+      "Permission to read, modify, and delete cookies, which is not justified by the extension's functionality.",
+      "Lack of developer transparency, indicated by the absence of a developer website and use of a personal email domain."
+    ],
+    "recommendations": [
+      "Avoid using this extension with sensitive accounts or information.",
+      "Only install if you trust the developer and understand the potential privacy implications.",
+      "Regularly review and manage the permissions granted to this extension."
+    ]
+  },
+  "extracted_path": "extensions_storage/extracted_nkabooldphfdjcbhcodblkfmigmpchhi.crx_27630",
+  "extracted_files": [
+    "background.js",
+    "common.css",
+    "contextmenu.js",
+    "manifest.json",
+    "common.js",
+    "localisation.js",
+    "background/events.js",
+    "background/requestApi.js",
+    "background/screenshotMaker.js",
+    "background/msgs.js",
+    "background/request_types.js",
+    "background/background.html",
+    "background/fn.js",
+    "background/messages.js",
+    "options/stripes.png",
+    "options/main.css",
+    "options/accessories.css",
+    "options/options.html",
+    "options/sslib.js",
+    "options/options3.js",
+    "options/options2.js",
+    "options/options.css",
+    "options/jquery.js",
+    "options/options/check-login.js",
+    "options/options/options.js",
+    "options/options/loading.gif",
+    "options/options/error.png",
+    "options/options/options.html",
+    "options/options/cookies-table.js",
+    "options/tutorial/tutorial.html",
+    "options/tutorial/tutorial.js",
+    "options/tutorial/images/1.png",
+    "options/images/options/popup_feed_default.png",
+    "options/images/options/popup_feed_domain.png",
+    "options/images/options/popup_feed_nothing.png",
+    "options/news/news.html",
+    "options/news/news.json",
+    "options/news/news.js",
+    "options/fonts/fonts.css",
+    "options/fonts/Lobster-Regular.ttf",
+    "page/hoverbutton.css",
+    "page/iframe.js",
+    "page/page.js",
+    "page/hoverbutton.js",
+    "page/page.css",
+    "page/inject.js",
+    "page/messages.js",
+    "popup/popup.js",
+    "popup/popup.html",
+    "popup/popup.css",
+    "popup/feed_loader.js",
+    "popup/simple.css",
+    "ga/ga.js",
+    "test/test.js",
+    "test/test.html",
+    "test/canvas.js",
+    "test/test.css",
+    "test/canvas.html",
+    "css/_selection.css",
+    "css/pinterestButton.css",
+    "css/darkmode.css",
+    "js/darkmode_inject.js",
+    "js/darkmode.js",
+    "js/messages.js",
+    "darkmode/pinterest_old.css",
+    "darkmode/pinterest.css",
+    "_metadata/verified_contents.json",
+    "libs/onyx.js",
+    "libs/window.js",
+    "libs/overlayClass.js",
+    "libs/masonry.pkgd.js",
+    "libs/overlayClass2.js",
+    "libs/dom.js",
+    "libs/markerjs2.js",
+    "libs/Border.js",
+    "libs/ttt.js",
+    "search/search.html",
+    "search/search.js",
+    "icons/icon48x48.png",
+    "icons/icon24x24.png",
+    "icons/three-dots.svg",
+    "icons/icon128x128_.png",
+    "icons/icon32x32.png",
+    "icons/icon100x100.png",
+    "icons/icon16x16.png",
+    "icons/spinner (2).svg",
+    "icons/spinner.svg",
+    "icons/add_a_photo.svg",
+    "icons/Lobster-Regular.ttf",
+    "icons/icon128x128.png",
+    "screenshotTab/screenshotTab.html",
+    "screenshotTab/screenshotTab.css",
+    "screenshotTab/screenshotTab.js",
+    "resource/_resource.js",
+    "resource/resource.js",
+    "resource/request-test.js",
+    "resource/requests.js",
+    "resource/test.html",
+    "fonts/fonts.css",
+    "fonts/Lobster-Regular.ttf",
+    "create/remote.js",
+    "create/create2.js",
+    "create/create_board.js",
+    "create/create_actions.js",
+    "create/create_translation.js",
+    "create/create2.css",
+    "create/create2.html",
+    "create/icons/back.svg",
+    "create/icons/Handwriting.cur",
+    "create/icons/pencil-cursor.svg",
+    "create/icons/pencil.svg",
+    "create/icons/pencil.png",
+    "create/icons/pencil2.png",
+    "create/icons/pencil3.png",
+    "grid/grid.css",
+    "grid/grid.js",
+    "grid/grid.html"
+  ],
+  "overall_security_score": 86,
+  "total_findings": 3,
+  "risk_distribution": {
+    "high": 0,
+    "medium": 2,
+    "low": 1
+  },
+  "overall_risk": "low",
+  "total_risk_score": 0,
+  "governance_verdict": "NEEDS_REVIEW",
+  "governance_bundle": {
+    "facts": {
+      "scan_id": "nkabooldphfdjcbhcodblkfmigmpchhi",
+      "extension_id": "nkabooldphfdjcbhcodblkfmigmpchhi",
+      "artifact_hash": null,
+      "created_at": "2026-01-31T20:26:42.890027",
+      "manifest": {
+        "name": "Pinterest Love: Pinterest Screenshot Saver++",
+        "version": "1.48",
+        "manifest_version": 3,
+        "description": "Save screenshots and other images to Pinterest, visually search pins and list pinnable images on a page.",
+        "permissions": [
+          "tabs",
+          "contextMenus",
+          "storage",
+          "cookies",
+          "scripting"
+        ],
+        "host_permissions": [
+          "<all_urls>",
+          "*://*/*",
+          "*://*.pinterest.com/"
+        ],
+        "optional_permissions": [],
+        "content_scripts": [
+          {
+            "matches": [
+              "http://*/*",
+              "https://*/*"
+            ],
+            "exclude_matches": [],
+            "js": [
+              "common.js",
+              "libs/dom.js",
+              "libs/onyx.js",
+              "localisation.js",
+              "page/hoverbutton.js",
+              "page/page.js",
+              "page/messages.js"
+            ],
+            "css": [
+              "page/page.css",
+              "page/hoverbutton.css"
+            ],
+            "run_at": "document_start",
+            "all_frames": false,
+            "match_about_blank": false
+          },
+          {
+            "matches": [
+              "http://*/*",
+              "https://*/*"
+            ],
+            "exclude_matches": [],
+            "js": [
+              "page/inject.js"
+            ],
+            "css": [],
+            "run_at": "document_end",
+            "all_frames": true,
+            "match_about_blank": false
+          }
+        ],
+        "background": {
+          "type": "service_worker",
+          "service_worker": "background.js",
+          "scripts": [],
+          "page": null,
+          "persistent": true,
+          "type_module": false
+        },
+        "externally_connectable": null,
+        "web_accessible_resources": [
+          {
+            "resources": [
+              "icons/*.png",
+              "css/darkmode.css",
+              "options/news.json",
+              "options/options.html",
+              "create/create2.html",
+              "grid/grid.html",
+              "search/search.html",
+              "screenshotTab/screenshotTab.html",
+              "darkmode/pinterest.css"
+            ],
+            "matches": [
+              "*://*/*"
+            ]
+          }
+        ],
+        "content_security_policy": null,
+        "update_url": "https://clients2.google.com/service/update2/crx"
+      },
+      "host_access_patterns": [
+        "*://*.pinterest.com/",
+        "*://*/*",
+        "<all_urls>",
+        "http://*/*",
+        "https://*/*"
+      ],
+      "file_inventory": [],
+      "security_findings": {
+        "permission_findings": [
+          {
+            "permission_name": "tabs",
+            "is_reasonable": false,
+            "justification_reasoning": "The 'tabs' permission is not justified for the described functionality of saving screenshots and images to Pinterest. Access to tab URLs, titles, and favicon URLs is not necessary for capturing screenshots or listing images on a page. Monitoring tab creation/closure and tracking tab navigation also exceed the stated purpose of the extension."
+          },
+          {
+            "permission_name": "contextMenus",
+            "is_reasonable": true,
+            "justification_reasoning": "The permission to add items to the browser context menu is justified because the extension's functionality involves saving images and screenshots to Pinterest, which can be facilitated by providing users with a convenient right-click menu option to perform these actions directly from the webpage."
+          },
+          {
+            "permission_name": "storage",
+            "is_reasonable": true,
+            "justification_reasoning": "The storage permission is justified as the extension needs to store user preferences, settings, and possibly cached images locally. This allows for a better user experience by persisting user data across sessions and syncing it across devices."
+          },
+          {
+            "permission_name": "cookies",
+            "is_reasonable": false,
+            "justification_reasoning": "The permission to read, modify, and delete cookies is not justified for the functionality described. Saving screenshots and images to Pinterest, visually searching pins, and listing pinnable images do not inherently require access to cookies, which are typically used for session management and user tracking."
+          },
+          {
+            "permission_name": "scripting",
+            "is_reasonable": true,
+            "justification_reasoning": "The extension's functionality to save screenshots and images to Pinterest and visually search pins may require injecting JavaScript to interact with the page content and modify page behavior to capture and manipulate images. Therefore, the scripting permission is justified."
+          }
+        ],
+        "dangerous_permissions": [
+          "tabs",
+          "cookies"
+        ],
+        "sast_findings": [
+          {
+            "file_path": "background.js",
+            "finding_type": "src.extension_shield.config.test.import_scripts",
+            "severity": "info",
+            "description": "[TEST] importScripts() detected - used to load additional JS files",
+            "line_number": 13,
+            "code_snippet": "requires login"
+          }
+        ],
+        "sast_risk_level": "low",
+        "virustotal_findings": [
+          {
+            "file_name": "background.js",
+            "file_path": "/background.js",
+            "sha256": "0a1aef40cf5d40b60d5a3aa2ee34a88158938324dfe65023da1b436ac692a24b",
+            "detection_stats": {
+              "malicious": 0,
+              "suspicious": 0,
+              "undetected": 62,
+              "harmless": 0,
+              "total_engines": 76
+            },
+            "threat_level": "clean",
+            "malware_families": []
+          },
+          {
+            "file_name": "inject.js",
+            "file_path": "/page/inject.js",
+            "sha256": "6b33817e027a9fce577536f0532da51af7e5dea4cf5fa3c9aa45d9e504c0813b",
+            "detection_stats": {
+              "malicious": 0,
+              "suspicious": 0,
+              "undetected": 62,
+              "harmless": 0,
+              "total_engines": 76
+            },
+            "threat_level": "clean",
+            "malware_families": []
+          },
+          {
+            "file_name": "popup.js",
+            "file_path": "/popup/popup.js",
+            "sha256": "26d7c2df882420893e649580528d694a80563dafa7adbfa8d1e90fa6338bbd67",
+            "detection_stats": {
+              "malicious": 0,
+              "suspicious": 0,
+              "undetected": 62,
+              "harmless": 0,
+              "total_engines": 76
+            },
+            "threat_level": "clean",
+            "malware_families": []
+          },
+          {
+            "file_name": "common.js",
+            "file_path": "/common.js",
+            "sha256": "945fa44bfadc2250b103aae162a7d43e8ee130f570b891582be38d7ff8e4cb37",
+            "detection_stats": {
+              "malicious": 0,
+              "suspicious": 0,
+              "undetected": 61,
+              "harmless": 0,
+              "total_engines": 76
+            },
+            "threat_level": "clean",
+            "malware_families": []
+          },
+          {
+            "file_name": "localisation.js",
+            "file_path": "/localisation.js",
+            "sha256": "c3a8587897a1d5b2b43840ce71a89ce49fda799325c4fcef289de6057dbfe4b4",
+            "detection_stats": {
+              "malicious": 0,
+              "suspicious": 0,
+              "undetected": 62,
+              "harmless": 0,
+              "total_engines": 76
+            },
+            "threat_level": "clean",
+            "malware_families": []
+          },
+          {
+            "file_name": "events.js",
+            "file_path": "/background/events.js",
+            "sha256": "ab0fcfb1804478460ad2a8ead7be372c1139b2377834e5f80ed98eff80b118aa",
+            "detection_stats": {
+              "malicious": 0,
+              "suspicious": 0,
+              "undetected": 62,
+              "harmless": 0,
+              "total_engines": 76
+            },
+            "threat_level": "clean",
+            "malware_families": []
+          },
+          {
+            "file_name": "requestApi.js",
+            "file_path": "/background/requestApi.js",
+            "sha256": "416f3fb1e11bef3cfd2289ebd973bf6f5050ceeceb8d9e8eb36c3b4507e12a3a",
+            "detection_stats": {
+              "malicious": 0,
+              "suspicious": 0,
+              "undetected": 62,
+              "harmless": 0,
+              "total_engines": 76
+            },
+            "threat_level": "clean",
+            "malware_families": []
+          },
+          {
+            "file_name": "screenshotMaker.js",
+            "file_path": "/background/screenshotMaker.js",
+            "sha256": "4ca0f6951b14f156d2bc20267e6a42f0ab060f86a46e830cb3cd1dd5243dbf82",
+            "detection_stats": {
+              "malicious": 0,
+              "suspicious": 0,
+              "undetected": 62,
+              "harmless": 0,
+              "total_engines": 76
+            },
+            "threat_level": "clean",
+            "malware_families": []
+          },
+          {
+            "file_name": "msgs.js",
+            "file_path": "/background/msgs.js",
+            "sha256": "11dded7f55515bf1eabeb3bf33197eacd3f640513c1cf783bc7d17efcbf6352a",
+            "detection_stats": {
+              "malicious": 0,
+              "suspicious": 0,
+              "undetected": 62,
+              "harmless": 0,
+              "total_engines": 76
+            },
+            "threat_level": "clean",
+            "malware_families": []
+          }
+        ],
+        "virustotal_threat_level": "clean",
+        "virustotal_malicious_count": 0,
+        "entropy_findings": [
+          {
+            "file_name": "background.js",
+            "file_path": "background.js",
+            "byte_entropy": 5.17,
+            "char_entropy": 5.13,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "contextmenu.js",
+            "file_path": "contextmenu.js",
+            "byte_entropy": 4.31,
+            "char_entropy": 4.19,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "common.js",
+            "file_path": "common.js",
+            "byte_entropy": 5.14,
+            "char_entropy": 5.1,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": [
+              "unicode_escapes",
+              "atob_usage"
+            ]
+          },
+          {
+            "file_name": "localisation.js",
+            "file_path": "localisation.js",
+            "byte_entropy": 4.68,
+            "char_entropy": 4.63,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "events.js",
+            "file_path": "background/events.js",
+            "byte_entropy": 4.61,
+            "char_entropy": 4.55,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "requestApi.js",
+            "file_path": "background/requestApi.js",
+            "byte_entropy": 4.92,
+            "char_entropy": 4.87,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": [
+              "atob_usage"
+            ]
+          },
+          {
+            "file_name": "screenshotMaker.js",
+            "file_path": "background/screenshotMaker.js",
+            "byte_entropy": 4.96,
+            "char_entropy": 4.92,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "msgs.js",
+            "file_path": "background/msgs.js",
+            "byte_entropy": 4.57,
+            "char_entropy": 4.51,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": [
+              "atob_usage"
+            ]
+          },
+          {
+            "file_name": "request_types.js",
+            "file_path": "background/request_types.js",
+            "byte_entropy": 4.63,
+            "char_entropy": 4.57,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "fn.js",
+            "file_path": "background/fn.js",
+            "byte_entropy": 4.43,
+            "char_entropy": 4.37,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "messages.js",
+            "file_path": "background/messages.js",
+            "byte_entropy": 4.46,
+            "char_entropy": 4.4,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "sslib.js",
+            "file_path": "options/sslib.js",
+            "byte_entropy": 4.62,
+            "char_entropy": 4.56,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "options3.js",
+            "file_path": "options/options3.js",
+            "byte_entropy": 4.85,
+            "char_entropy": 4.8,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "options2.js",
+            "file_path": "options/options2.js",
+            "byte_entropy": 4.66,
+            "char_entropy": 4.61,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "check-login.js",
+            "file_path": "options/options/check-login.js",
+            "byte_entropy": 4.95,
+            "char_entropy": 4.9,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "options.js",
+            "file_path": "options/options/options.js",
+            "byte_entropy": 4.75,
+            "char_entropy": 4.69,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "cookies-table.js",
+            "file_path": "options/options/cookies-table.js",
+            "byte_entropy": 4.81,
+            "char_entropy": 4.76,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "tutorial.js",
+            "file_path": "options/tutorial/tutorial.js",
+            "byte_entropy": 4.82,
+            "char_entropy": 4.77,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "news.js",
+            "file_path": "options/news/news.js",
+            "byte_entropy": 4.28,
+            "char_entropy": 4.21,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "iframe.js",
+            "file_path": "page/iframe.js",
+            "byte_entropy": 4.69,
+            "char_entropy": 4.63,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "page.js",
+            "file_path": "page/page.js",
+            "byte_entropy": 4.67,
+            "char_entropy": 4.62,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "hoverbutton.js",
+            "file_path": "page/hoverbutton.js",
+            "byte_entropy": 4.47,
+            "char_entropy": 4.41,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "inject.js",
+            "file_path": "page/inject.js",
+            "byte_entropy": 4.7,
+            "char_entropy": 4.65,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "messages.js",
+            "file_path": "page/messages.js",
+            "byte_entropy": 4.16,
+            "char_entropy": 4.09,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "popup.js",
+            "file_path": "popup/popup.js",
+            "byte_entropy": 4.72,
+            "char_entropy": 4.67,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "feed_loader.js",
+            "file_path": "popup/feed_loader.js",
+            "byte_entropy": 4.37,
+            "char_entropy": 4.3,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "ga.js",
+            "file_path": "ga/ga.js",
+            "byte_entropy": 5.01,
+            "char_entropy": 4.97,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "test.js",
+            "file_path": "test/test.js",
+            "byte_entropy": 4.91,
+            "char_entropy": 4.86,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "canvas.js",
+            "file_path": "test/canvas.js",
+            "byte_entropy": 4.95,
+            "char_entropy": 4.91,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "darkmode_inject.js",
+            "file_path": "js/darkmode_inject.js",
+            "byte_entropy": 4.61,
+            "char_entropy": 4.55,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "darkmode.js",
+            "file_path": "js/darkmode.js",
+            "byte_entropy": 4.73,
+            "char_entropy": 4.68,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "messages.js",
+            "file_path": "js/messages.js",
+            "byte_entropy": 4.58,
+            "char_entropy": 4.52,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "onyx.js",
+            "file_path": "libs/onyx.js",
+            "byte_entropy": 4.54,
+            "char_entropy": 4.48,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "window.js",
+            "file_path": "libs/window.js",
+            "byte_entropy": 4.45,
+            "char_entropy": 4.38,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "overlayClass.js",
+            "file_path": "libs/overlayClass.js",
+            "byte_entropy": 4.42,
+            "char_entropy": 4.35,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "masonry.pkgd.js",
+            "file_path": "libs/masonry.pkgd.js",
+            "byte_entropy": 4.87,
+            "char_entropy": 4.87,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": [
+              "string_array"
+            ]
+          },
+          {
+            "file_name": "overlayClass2.js",
+            "file_path": "libs/overlayClass2.js",
+            "byte_entropy": 4.5,
+            "char_entropy": 4.44,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "dom.js",
+            "file_path": "libs/dom.js",
+            "byte_entropy": 4.66,
+            "char_entropy": 4.6,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "markerjs2.js",
+            "file_path": "libs/markerjs2.js",
+            "byte_entropy": 5.26,
+            "char_entropy": 5.26,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": [
+              "hex_strings",
+              "unicode_escapes"
+            ]
+          },
+          {
+            "file_name": "Border.js",
+            "file_path": "libs/Border.js",
+            "byte_entropy": 4.53,
+            "char_entropy": 4.47,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "ttt.js",
+            "file_path": "libs/ttt.js",
+            "byte_entropy": 5.14,
+            "char_entropy": 5.1,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": [
+              "base64_blob"
+            ]
+          },
+          {
+            "file_name": "search.js",
+            "file_path": "search/search.js",
+            "byte_entropy": 4.46,
+            "char_entropy": 4.43,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": [
+              "base64_blob",
+              "string_array"
+            ]
+          },
+          {
+            "file_name": "screenshotTab.js",
+            "file_path": "screenshotTab/screenshotTab.js",
+            "byte_entropy": 4.51,
+            "char_entropy": 4.45,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "_resource.js",
+            "file_path": "resource/_resource.js",
+            "byte_entropy": 4.46,
+            "char_entropy": 4.4,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "resource.js",
+            "file_path": "resource/resource.js",
+            "byte_entropy": 4.55,
+            "char_entropy": 4.49,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "request-test.js",
+            "file_path": "resource/request-test.js",
+            "byte_entropy": 4.77,
+            "char_entropy": 4.72,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "requests.js",
+            "file_path": "resource/requests.js",
+            "byte_entropy": 4.19,
+            "char_entropy": 4.12,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": [
+              "base64_blob"
+            ]
+          },
+          {
+            "file_name": "remote.js",
+            "file_path": "create/remote.js",
+            "byte_entropy": 4.25,
+            "char_entropy": 4.18,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "create2.js",
+            "file_path": "create/create2.js",
+            "byte_entropy": 4.48,
+            "char_entropy": 4.42,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "create_board.js",
+            "file_path": "create/create_board.js",
+            "byte_entropy": 4.38,
+            "char_entropy": 4.31,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "create_actions.js",
+            "file_path": "create/create_actions.js",
+            "byte_entropy": 4.49,
+            "char_entropy": 4.43,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "create_translation.js",
+            "file_path": "create/create_translation.js",
+            "byte_entropy": 5.28,
+            "char_entropy": 5.03,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          },
+          {
+            "file_name": "grid.js",
+            "file_path": "grid/grid.js",
+            "byte_entropy": 4.62,
+            "char_entropy": 4.56,
+            "risk_level": "normal",
+            "is_likely_obfuscated": false,
+            "obfuscation_patterns": []
+          }
+        ],
+        "entropy_risk_level": "low",
+        "obfuscation_detected": false,
+        "webstore_risk_level": "medium",
+        "webstore_analysis": "Chrome extension risk assessment based on WebStore reputation analysis:\n - Overall Risk Level: medium\n - Summary: The extension has a low review ratio and lacks a developer website, which raises concerns about transparency and user engagement. Additionally, the use of a personal email domain instead of a professional one suggests a lack of professional infrastructure. However, the extension follows best practices, is featured, and has a decent user count and rating, which mitigates some risk factors.\n",
+        "overall_risk_level": "medium",
+        "overall_security_score": 0,
+        "total_findings": 0
+      },
+      "metadata": {
+        "title": "Pinterest Love: Pinterest Screenshot Saver++",
+        "user_count": 10000,
+        "rating": 4.3,
+        "ratings_count": 51,
+        "last_updated": "September 30, 2025",
+        "developer_name": "Vitaminiser",
+        "developer_email": "jeunesserift@gmail.com",
+        "developer_website": null,
+        "category": "Extension > Social Networking",
+        "is_featured": true,
+        "follows_best_practices": true
+      }
+    },
+    "evidence_index": {
+      "scan_id": "nkabooldphfdjcbhcodblkfmigmpchhi",
+      "evidence": {
+        "ev_001": {
+          "evidence_id": "ev_001",
+          "file_path": "background.js",
+          "file_hash": "sha256:path_bb06783fccd762e4",
+          "line_start": 13,
+          "line_end": 13,
+          "snippet": "requires login",
+          "provenance": "SAST: src.extension_shield.config.test.import_scripts [INFO]",
+          "version": 1,
+          "created_at": "2026-01-31T20:26:42.891591"
+        },
+        "ev_002": {
+          "evidence_id": "ev_002",
+          "file_path": "manifest.json",
+          "file_hash": "sha256:path_ffa5b716b5a57837",
+          "line_start": null,
+          "line_end": null,
+          "snippet": "\"permissions\": [\"tabs\"]",
+          "provenance": "Permission: tabs - The 'tabs' permission is not justified for the described functionality of saving screenshots and images to Pinterest. Access to tab URLs, titles, and favicon URLs is not necessary for capturing screenshots or listing images on a page. Monitoring tab creation/closure and tracking tab navigation also exceed the stated purpose of the extension.",
+          "version": 1,
+          "created_at": "2026-01-31T20:26:42.891624"
+        },
+        "ev_003": {
+          "evidence_id": "ev_003",
+          "file_path": "manifest.json",
+          "file_hash": "sha256:path_ffa5b716b5a57837",
+          "line_start": null,
+          "line_end": null,
+          "snippet": "\"permissions\": [\"cookies\"]",
+          "provenance": "Permission: cookies - The permission to read, modify, and delete cookies is not justified for the functionality described. Saving screenshots and images to Pinterest, visually searching pins, and listing pinnable images do not inherently require access to cookies, which are typically used for session management and user tracking.",
+          "version": 1,
+          "created_at": "2026-01-31T20:26:42.891628"
+        },
+        "ev_004": {
+          "evidence_id": "ev_004",
+          "file_path": "manifest.json",
+          "file_hash": "sha256:path_ffa5b716b5a57837",
+          "line_start": null,
+          "line_end": null,
+          "snippet": "\"host_permissions\": [\"*://*/*\", \"<all_urls>\", \"http://*/*\", \"https://*/*\"]",
+          "provenance": "Manifest: Broad host access patterns detected",
+          "version": 1,
+          "created_at": "2026-01-31T20:26:42.891642"
+        }
+      }
+    },
+    "signals": {
+      "scan_id": "nkabooldphfdjcbhcodblkfmigmpchhi",
+      "signals": [
+        {
+          "signal_id": "sig_001",
+          "type": "HOST_PERMS_BROAD",
+          "confidence": 0.95,
+          "evidence_refs": [
+            "ev_004"
+          ],
+          "description": "Broad host permissions detected: *://*/*, <all_urls>, http://*/*, https://*/*",
+          "severity": "high"
+        }
+      ]
+    },
+    "store_listing": {
+      "extraction": {
+        "status": "ok",
+        "reason": "Successfully extracted from Chrome Web Store",
+        "extracted_at": "2026-01-31T20:26:42.893736"
+      },
+      "declared_data_categories": [],
+      "declared_purposes": [
+        "functionality"
+      ],
+      "declared_third_parties": [],
+      "privacy_policy_url": null,
+      "privacy_policy_hash": "sha256:72dc4bdf4a80ab12e28f3ce3f732c2145905cd95a303d60888395bc35d67c1d1"
+    },
+    "context": {
+      "regions_in_scope": [
+        "GLOBAL"
+      ],
+      "rulepacks": [
+        "ENTERPRISE_GOV_BASELINE",
+        "CWS_LIMITED_USE"
+      ],
+      "domain_categories": [
+        "general"
+      ],
+      "cross_border_risk": false
+    },
+    "rule_results": {
+      "scan_id": "nkabooldphfdjcbhcodblkfmigmpchhi",
+      "rule_results": [
+        {
+          "rule_id": "CWS_LIMITED_USE::R1",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.9,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_1"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require developer justification or reduce scope to specific domains",
+          "triggered_at": "2026-01-31T20:26:42.903119"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R2",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block \u2014 Limited Use policy requires explicit PII declaration",
+          "triggered_at": "2026-01-31T20:26:42.903281"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R3",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.75,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_3"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Manual review required to confirm data handling practices",
+          "triggered_at": "2026-01-31T20:26:42.903332"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R4",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_4"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block \u2014 Limited Use requires explicit third-party data sharing declaration",
+          "triggered_at": "2026-01-31T20:26:42.903367"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R5",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Verify clipboard access is limited to user-initiated copy/paste operations",
+          "triggered_at": "2026-01-31T20:26:42.903394"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R6",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_6"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require justification for unlimited storage use",
+          "triggered_at": "2026-01-31T20:26:42.903408"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R7",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_7"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Manual security review required for sensitive domain access",
+          "triggered_at": "2026-01-31T20:26:42.903489"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R8",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_8"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require developer to disclose all external endpoints in store listing",
+          "triggered_at": "2026-01-31T20:26:42.903527"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R9",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_9"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require disclosure of network interception capabilities",
+          "triggered_at": "2026-01-31T20:26:42.903563"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R10",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_10"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block immediately \u2014 malware/adware detected",
+          "triggered_at": "2026-01-31T20:26:42.903597"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R1",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_1",
+            "NIST-SP-800-53::AC-3"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require explicit business justification from developer before allowing org-wide",
+          "triggered_at": "2026-01-31T20:26:42.903616"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R2",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_1"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Verify extension purpose aligns with sensitive domain access",
+          "triggered_at": "2026-01-31T20:26:42.903653"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R3",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.9,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2",
+            "CWS_LIMITED_USE::SECTION_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block installation \u2014 undisclosed data exfiltration risk",
+          "triggered_at": "2026-01-31T20:26:42.903687"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R4",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require manual verification of store listing or source code review",
+          "triggered_at": "2026-01-31T20:26:42.903707"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R5",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.75,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_3"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require security review of API usage and network behavior",
+          "triggered_at": "2026-01-31T20:26:42.903718"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R6",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Review external endpoints and require declaration on Chrome Web Store",
+          "triggered_at": "2026-01-31T20:26:42.903741"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R7",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_4"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require source code transparency or additional dynamic analysis",
+          "triggered_at": "2026-01-31T20:26:42.903800"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R8",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block immediately \u2014 known malware signature detected",
+          "triggered_at": "2026-01-31T20:26:42.903830"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R9",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_6"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Verify justification for each dangerous permission",
+          "triggered_at": "2026-01-31T20:26:42.903851"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R10",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_7"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require developer to publish privacy policy",
+          "triggered_at": "2026-01-31T20:26:42.903873"
+        }
+      ]
+    },
+    "report": {
+      "scan_id": "nkabooldphfdjcbhcodblkfmigmpchhi",
+      "extension_id": "nkabooldphfdjcbhcodblkfmigmpchhi",
+      "extension_name": "Pinterest Love: Pinterest Screenshot Saver++",
+      "created_at": "2026-01-31T20:26:42.903958",
+      "decision": {
+        "verdict": "NEEDS_REVIEW",
+        "rationale": "1. [CWS_LIMITED_USE::R1] Condition matched. Verdict: NEEDS_REVIEW\n2. [ENTERPRISE_GOV_BASELINE::R1] Condition matched. Verdict: NEEDS_REVIEW\n3. [ENTERPRISE_GOV_BASELINE::R9] Condition matched. Verdict: NEEDS_REVIEW\n... and 1 more rule(s) triggered.",
+        "action_required": "Require developer justification or reduce scope to specific domains",
+        "triggered_rules": [
+          "CWS_LIMITED_USE::R1",
+          "ENTERPRISE_GOV_BASELINE::R1",
+          "ENTERPRISE_GOV_BASELINE::R9",
+          "ENTERPRISE_GOV_BASELINE::R10"
+        ],
+        "block_rules": [],
+        "review_rules": [
+          "CWS_LIMITED_USE::R1",
+          "ENTERPRISE_GOV_BASELINE::R1",
+          "ENTERPRISE_GOV_BASELINE::R9",
+          "ENTERPRISE_GOV_BASELINE::R10"
+        ]
+      },
+      "rule_results": [
+        {
+          "rule_id": "CWS_LIMITED_USE::R1",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.9,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_1"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require developer justification or reduce scope to specific domains",
+          "triggered_at": "2026-01-31T20:26:42.903119"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R2",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block \u2014 Limited Use policy requires explicit PII declaration",
+          "triggered_at": "2026-01-31T20:26:42.903281"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R3",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.75,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_3"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Manual review required to confirm data handling practices",
+          "triggered_at": "2026-01-31T20:26:42.903332"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R4",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_4"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block \u2014 Limited Use requires explicit third-party data sharing declaration",
+          "triggered_at": "2026-01-31T20:26:42.903367"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R5",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Verify clipboard access is limited to user-initiated copy/paste operations",
+          "triggered_at": "2026-01-31T20:26:42.903394"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R6",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_6"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require justification for unlimited storage use",
+          "triggered_at": "2026-01-31T20:26:42.903408"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R7",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_7"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Manual security review required for sensitive domain access",
+          "triggered_at": "2026-01-31T20:26:42.903489"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R8",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_8"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require developer to disclose all external endpoints in store listing",
+          "triggered_at": "2026-01-31T20:26:42.903527"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R9",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_9"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require disclosure of network interception capabilities",
+          "triggered_at": "2026-01-31T20:26:42.903563"
+        },
+        {
+          "rule_id": "CWS_LIMITED_USE::R10",
+          "rulepack": "CWS_LIMITED_USE",
+          "verdict": "ALLOW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "CWS_LIMITED_USE::SECTION_10"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block immediately \u2014 malware/adware detected",
+          "triggered_at": "2026-01-31T20:26:42.903597"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R1",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_1",
+            "NIST-SP-800-53::AC-3"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require explicit business justification from developer before allowing org-wide",
+          "triggered_at": "2026-01-31T20:26:42.903616"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R2",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.85,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_1"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Verify extension purpose aligns with sensitive domain access",
+          "triggered_at": "2026-01-31T20:26:42.903653"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R3",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.9,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2",
+            "CWS_LIMITED_USE::SECTION_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block installation \u2014 undisclosed data exfiltration risk",
+          "triggered_at": "2026-01-31T20:26:42.903687"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R4",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require manual verification of store listing or source code review",
+          "triggered_at": "2026-01-31T20:26:42.903707"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R5",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.75,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_3"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require security review of API usage and network behavior",
+          "triggered_at": "2026-01-31T20:26:42.903718"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R6",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Review external endpoints and require declaration on Chrome Web Store",
+          "triggered_at": "2026-01-31T20:26:42.903741"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R7",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_4"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Require source code transparency or additional dynamic analysis",
+          "triggered_at": "2026-01-31T20:26:42.903800"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R8",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "ALLOW",
+          "confidence": 0.95,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_5"
+          ],
+          "explanation": "Condition not matched. Verdict: ALLOW",
+          "recommended_action": "Block immediately \u2014 known malware signature detected",
+          "triggered_at": "2026-01-31T20:26:42.903830"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R9",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.8,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_6"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Verify justification for each dangerous permission",
+          "triggered_at": "2026-01-31T20:26:42.903851"
+        },
+        {
+          "rule_id": "ENTERPRISE_GOV_BASELINE::R10",
+          "rulepack": "ENTERPRISE_GOV_BASELINE",
+          "verdict": "NEEDS_REVIEW",
+          "confidence": 0.7,
+          "evidence_refs": [],
+          "citations": [
+            "ENTERPRISE_GOV_BASELINE::GUIDE_7"
+          ],
+          "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+          "recommended_action": "Require developer to publish privacy policy",
+          "triggered_at": "2026-01-31T20:26:42.903873"
+        }
+      ],
+      "total_rules_evaluated": 20,
+      "rules_triggered": 4,
+      "block_count": 0,
+      "review_count": 4,
+      "allow_count": 16
+    },
+    "decision": {
+      "verdict": "NEEDS_REVIEW",
+      "rationale": "1. [CWS_LIMITED_USE::R1] Condition matched. Verdict: NEEDS_REVIEW\n2. [ENTERPRISE_GOV_BASELINE::R1] Condition matched. Verdict: NEEDS_REVIEW\n3. [ENTERPRISE_GOV_BASELINE::R9] Condition matched. Verdict: NEEDS_REVIEW\n... and 1 more rule(s) triggered.",
+      "action_required": "Require developer justification or reduce scope to specific domains"
+    }
+  },
+  "governance_report": {
+    "scan_id": "nkabooldphfdjcbhcodblkfmigmpchhi",
+    "extension_id": "nkabooldphfdjcbhcodblkfmigmpchhi",
+    "extension_name": "Pinterest Love: Pinterest Screenshot Saver++",
+    "created_at": "2026-01-31T20:26:42.903958",
+    "decision": {
+      "verdict": "NEEDS_REVIEW",
+      "rationale": "1. [CWS_LIMITED_USE::R1] Condition matched. Verdict: NEEDS_REVIEW\n2. [ENTERPRISE_GOV_BASELINE::R1] Condition matched. Verdict: NEEDS_REVIEW\n3. [ENTERPRISE_GOV_BASELINE::R9] Condition matched. Verdict: NEEDS_REVIEW\n... and 1 more rule(s) triggered.",
+      "action_required": "Require developer justification or reduce scope to specific domains",
+      "triggered_rules": [
+        "CWS_LIMITED_USE::R1",
+        "ENTERPRISE_GOV_BASELINE::R1",
+        "ENTERPRISE_GOV_BASELINE::R9",
+        "ENTERPRISE_GOV_BASELINE::R10"
+      ],
+      "block_rules": [],
+      "review_rules": [
+        "CWS_LIMITED_USE::R1",
+        "ENTERPRISE_GOV_BASELINE::R1",
+        "ENTERPRISE_GOV_BASELINE::R9",
+        "ENTERPRISE_GOV_BASELINE::R10"
+      ]
+    },
+    "rule_results": [
+      {
+        "rule_id": "CWS_LIMITED_USE::R1",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "NEEDS_REVIEW",
+        "confidence": 0.9,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_1"
+        ],
+        "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+        "recommended_action": "Require developer justification or reduce scope to specific domains",
+        "triggered_at": "2026-01-31T20:26:42.903119"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R2",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.85,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_2"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Block \u2014 Limited Use policy requires explicit PII declaration",
+        "triggered_at": "2026-01-31T20:26:42.903281"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R3",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.75,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_3"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Manual review required to confirm data handling practices",
+        "triggered_at": "2026-01-31T20:26:42.903332"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R4",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_4"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Block \u2014 Limited Use requires explicit third-party data sharing declaration",
+        "triggered_at": "2026-01-31T20:26:42.903367"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R5",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.7,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_5"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Verify clipboard access is limited to user-initiated copy/paste operations",
+        "triggered_at": "2026-01-31T20:26:42.903394"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R6",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.7,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_6"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require justification for unlimited storage use",
+        "triggered_at": "2026-01-31T20:26:42.903408"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R7",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.85,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_7"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Manual security review required for sensitive domain access",
+        "triggered_at": "2026-01-31T20:26:42.903489"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R8",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_8"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require developer to disclose all external endpoints in store listing",
+        "triggered_at": "2026-01-31T20:26:42.903527"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R9",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_9"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require disclosure of network interception capabilities",
+        "triggered_at": "2026-01-31T20:26:42.903563"
+      },
+      {
+        "rule_id": "CWS_LIMITED_USE::R10",
+        "rulepack": "CWS_LIMITED_USE",
+        "verdict": "ALLOW",
+        "confidence": 0.95,
+        "evidence_refs": [],
+        "citations": [
+          "CWS_LIMITED_USE::SECTION_10"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Block immediately \u2014 malware/adware detected",
+        "triggered_at": "2026-01-31T20:26:42.903597"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R1",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "NEEDS_REVIEW",
+        "confidence": 0.95,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_1",
+          "NIST-SP-800-53::AC-3"
+        ],
+        "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+        "recommended_action": "Require explicit business justification from developer before allowing org-wide",
+        "triggered_at": "2026-01-31T20:26:42.903616"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R2",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.85,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_1"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Verify extension purpose aligns with sensitive domain access",
+        "triggered_at": "2026-01-31T20:26:42.903653"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R3",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.9,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_2",
+          "CWS_LIMITED_USE::SECTION_5"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Block installation \u2014 undisclosed data exfiltration risk",
+        "triggered_at": "2026-01-31T20:26:42.903687"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R4",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require manual verification of store listing or source code review",
+        "triggered_at": "2026-01-31T20:26:42.903707"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R5",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.75,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_3"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require security review of API usage and network behavior",
+        "triggered_at": "2026-01-31T20:26:42.903718"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R6",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_2"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Review external endpoints and require declaration on Chrome Web Store",
+        "triggered_at": "2026-01-31T20:26:42.903741"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R7",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.7,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_4"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Require source code transparency or additional dynamic analysis",
+        "triggered_at": "2026-01-31T20:26:42.903800"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R8",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "ALLOW",
+        "confidence": 0.95,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_5"
+        ],
+        "explanation": "Condition not matched. Verdict: ALLOW",
+        "recommended_action": "Block immediately \u2014 known malware signature detected",
+        "triggered_at": "2026-01-31T20:26:42.903830"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R9",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "NEEDS_REVIEW",
+        "confidence": 0.8,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_6"
+        ],
+        "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+        "recommended_action": "Verify justification for each dangerous permission",
+        "triggered_at": "2026-01-31T20:26:42.903851"
+      },
+      {
+        "rule_id": "ENTERPRISE_GOV_BASELINE::R10",
+        "rulepack": "ENTERPRISE_GOV_BASELINE",
+        "verdict": "NEEDS_REVIEW",
+        "confidence": 0.7,
+        "evidence_refs": [],
+        "citations": [
+          "ENTERPRISE_GOV_BASELINE::GUIDE_7"
+        ],
+        "explanation": "Condition matched. Verdict: NEEDS_REVIEW",
+        "recommended_action": "Require developer to publish privacy policy",
+        "triggered_at": "2026-01-31T20:26:42.903873"
+      }
+    ],
+    "total_rules_evaluated": 20,
+    "rules_triggered": 4,
+    "block_count": 0,
+    "review_count": 4,
+    "allow_count": 16
+  },
+  "governance_error": null
+}
