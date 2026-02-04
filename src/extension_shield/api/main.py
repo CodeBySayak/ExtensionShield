@@ -1350,6 +1350,72 @@ async def health_check():
     return {"status": "healthy", "service": "project-atlas", "version": "1.0.0"}
 
 
+@app.get("/api/scan/icon/{extension_id}")
+async def get_extension_icon(extension_id: str):
+    """
+    Get extension icon from the extracted extension folder.
+    Tries common icon sizes (128, 64, 48, 32, 16) and returns the first found.
+    
+    Args:
+        extension_id: Chrome extension ID
+        
+    Returns:
+        PNG icon file
+    """
+    results = scan_results.get(extension_id)
+    if not results:
+        raise HTTPException(status_code=404, detail="Extension not found")
+    
+    extracted_path = results.get("extracted_path")
+    if not extracted_path or not os.path.exists(extracted_path):
+        raise HTTPException(status_code=404, detail="Extracted files not found")
+    
+    # Try common icon sizes in order of preference
+    icon_sizes = ["128", "64", "48", "32", "16", "96", "256"]
+    icons_dir = os.path.join(extracted_path, "icons")
+    
+    # First try icons directory
+    if os.path.exists(icons_dir):
+        for size in icon_sizes:
+            icon_path = os.path.join(icons_dir, f"{size}.png")
+            if os.path.exists(icon_path):
+                return FileResponse(icon_path, media_type="image/png")
+    
+    # Try root directory
+    for size in icon_sizes:
+        icon_path = os.path.join(extracted_path, f"icon{size}.png")
+        if os.path.exists(icon_path):
+            return FileResponse(icon_path, media_type="image/png")
+        
+        icon_path = os.path.join(extracted_path, f"{size}.png")
+        if os.path.exists(icon_path):
+            return FileResponse(icon_path, media_type="image/png")
+    
+    # Try checking manifest for icon paths
+    manifest_path = os.path.join(extracted_path, "manifest.json")
+    if os.path.exists(manifest_path):
+        try:
+            with open(manifest_path, "r", encoding="utf-8") as f:
+                manifest = json.load(f)
+                
+            # Check icons object in manifest
+            icons = manifest.get("icons", {})
+            if icons:
+                # Get the largest icon
+                largest_size = max(icons.keys(), key=lambda x: int(x))
+                icon_rel_path = icons[largest_size]
+                icon_path = os.path.join(extracted_path, icon_rel_path)
+                
+                # Security check
+                if os.path.abspath(icon_path).startswith(os.path.abspath(extracted_path)):
+                    if os.path.exists(icon_path):
+                        return FileResponse(icon_path, media_type="image/png")
+        except Exception as e:
+            logger.warning(f"Failed to read manifest for icons: {e}")
+    
+    raise HTTPException(status_code=404, detail="No icon found for this extension")
+
+
 # Mount static files for React frontend assets (if static directory exists)
 if STATIC_DIR.exists() and (STATIC_DIR / "assets").exists():
     app.mount("/assets", StaticFiles(directory=STATIC_DIR / "assets"), name="assets")
