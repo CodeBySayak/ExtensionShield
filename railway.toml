@@ -6,13 +6,17 @@
 builder = "dockerfile"
 dockerfilePath = "Dockerfile"
 
-# Build arguments (set these in Railway dashboard as environment variables)
-# These are passed to Docker build for frontend compilation
-# REQUIRED for authentication to work:
-#   VITE_SUPABASE_URL=https://xxxxx.supabase.co
-#   VITE_SUPABASE_ANON_KEY=your-anon-key-here
-# OPTIONAL:
-#   VITE_API_BASE_URL=/api (if you want to override the API base URL)
+# Railway automatically passes environment variables as build arguments
+# if they match ARG names in the Dockerfile. Make sure these are set in
+# Railway dashboard as SERVICE variables (not shared variables):
+#   VITE_SUPABASE_URL - Frontend build-time: Supabase project URL
+#   VITE_SUPABASE_ANON_KEY - Frontend build-time: Supabase anon key
+#   VITE_API_BASE_URL - Optional: Custom API base URL
+#
+# IMPORTANT: These MUST be set in Railway dashboard BEFORE building.
+# Railway will pass them as Docker build arguments automatically.
+# If these are missing, the frontend will be built without Supabase config
+# and you'll see "Supabase is not configured" error in production.
 
 [deploy]
 # Number of replicas (Railway handles scaling)
@@ -20,7 +24,8 @@ numReplicas = 1
 
 # Health check configuration
 healthcheckPath = "/health"
-healthcheckTimeout = 60
+healthcheckTimeout = 120
+healthcheckInterval = 10
 
 # Start command timeout - give more time for Python/UV to initialize
 startCommand = ""

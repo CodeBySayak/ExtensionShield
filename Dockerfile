@@ -27,9 +27,13 @@ RUN npm ci
 COPY frontend/ ./
 
 # Set Vite environment variables for build
-ENV VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
-ENV VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
-ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
+# Use default empty values if not provided (Railway should pass these as build args)
+ENV VITE_SUPABASE_URL=${VITE_SUPABASE_URL:-}
+ENV VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY:-}
+ENV VITE_API_BASE_URL=${VITE_API_BASE_URL:-}
+
+# Debug: Show what values we have (will be empty if not passed)
+RUN echo "Building frontend with VITE_SUPABASE_URL=${VITE_SUPABASE_URL:-NOT_SET}"
 
 # Build production bundle
 RUN npm run build
