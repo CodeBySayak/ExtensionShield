@@ -52,6 +52,8 @@ COPY pyproject.toml uv.lock README.md ./
 
 # Copy application source code (needed for package build)
 COPY src/ ./src/
+COPY scripts/ ./scripts/
+COPY docs/supabase_migrations/ ./docs/supabase_migrations/
 
 # Install Python dependencies and build the project
 RUN uv sync --frozen --no-dev
@@ -80,5 +82,5 @@ EXPOSE 8007
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=5 \
     CMD curl -f http://localhost:${PORT:-8007}/health || exit 1
 
-# Run the application - uses PORT env var for Railway compatibility
-CMD ["sh", "-c", "uvicorn extension_shield.api.main:app --host 0.0.0.0 --port ${PORT:-8007}"]
+# Run the application with migrations (Supabase only)
+CMD ["sh", "/app/scripts/start_api.sh"]

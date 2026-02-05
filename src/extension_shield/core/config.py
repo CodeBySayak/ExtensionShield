@@ -92,6 +92,10 @@ class Settings:
     supabase_jwks_url: Optional[str]
     supabase_jwt_aud: str
 
+    # Admin API keys
+    admin_api_key: Optional[str]
+    telemetry_admin_key: Optional[str]
+
     @property
     def paths(self) -> LocalPaths:
         storage_root = Path(self.extension_storage_path)
@@ -124,7 +128,8 @@ class Settings:
                 raise ValueError("Missing required env var SUPABASE_URL for prod (supabase backend)")
             if not self.supabase_key:
                 raise ValueError(
-                    "Missing required env var SUPABASE_SERVICE_ROLE_KEY or SUPABASE_ANON_KEY for prod (supabase backend)"
+                    "Missing required env var SUPABASE_SERVICE_ROLE_KEY for prod (supabase backend). "
+                    "Backend writes require service role key; anon key is frontend-only."
                 )
 
         if self.db_backend == "postgres":
@@ -141,7 +146,8 @@ def get_settings() -> Settings:
     - ENV / APP_ENV / EXTENSION_SHIELD_ENV: local|dev|prod
     - EXTENSION_STORAGE_PATH: local filesystem root for artifacts/backups
     - DATABASE_PATH: sqlite file path
-    - SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY, SUPABASE_SCAN_RESULTS_TABLE
+    - SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_SCAN_RESULTS_TABLE
+    - ADMIN_API_KEY, TELEMETRY_ADMIN_KEY (optional, for admin endpoints)
     - STORAGE_BACKEND: local|supabase (currently only local FS is used)
     - DB_BACKEND: sqlite|supabase|postgres (postgres not supported yet)
     """
@@ -156,7 +162,8 @@ def get_settings() -> Settings:
     database_path = os.environ.get("DATABASE_PATH", "project-atlas.db")
 
     supabase_url = os.environ.get("SUPABASE_URL")
-    supabase_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_ANON_KEY")
+    # Only use service role key for backend writes (never anon key)
+    supabase_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
     supabase_scan_results_table = os.environ.get("SUPABASE_SCAN_RESULTS_TABLE", "scan_results")
     supabase_jwt_aud = os.environ.get("SUPABASE_JWT_AUD", "authenticated")
 
@@ -165,13 +172,26 @@ def get_settings() -> Settings:
         base = supabase_url.rstrip("/")
         supabase_jwks_url = f"{base}/auth/v1/.well-known/jwks.json"
 
+    # Admin API keys
+    admin_api_key = os.environ.get("ADMIN_API_KEY")
+    telemetry_admin_key = os.environ.get("TELEMETRY_ADMIN_KEY")
+
     storage_backend = _parse_storage_backend(os.environ.get("STORAGE_BACKEND"))
 
     explicit_db_backend = _parse_db_backend(os.environ.get("DB_BACKEND"))
     if explicit_db_backend:
         db_backend: DbBackend = explicit_db_backend
+        # If explicitly set to supabase but service role key is missing, log warning and fall back to sqlite
+        if db_backend == "supabase" and not supabase_key:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning(
+                "DB_BACKEND=supabase but SUPABASE_SERVICE_ROLE_KEY is missing. "
+                "Backend writes require service role key. Falling back to sqlite."
+            )
+            db_backend = "sqlite"
     else:
-        # Current behavior: enable Supabase when URL + key exist, else use SQLite.
+        # Auto-select: enable Supabase when URL + service role key exist, else use SQLite.
         db_backend = "supabase" if (supabase_url and supabase_key) else "sqlite"
 
     settings = Settings(
@@ -185,6 +205,8 @@ def get_settings() -> Settings:
         supabase_scan_results_table=supabase_scan_results_table,
         supabase_jwks_url=supabase_jwks_url,
         supabase_jwt_aud=supabase_jwt_aud,
+        admin_api_key=admin_api_key,
+        telemetry_admin_key=telemetry_admin_key,
     )
     settings.validate()
     return settings

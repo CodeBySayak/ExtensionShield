@@ -676,11 +676,19 @@ class SupabaseDatabase:
             risk_dist = result.get("risk_distribution", {}) or {}
             extracted_files = result.get("extracted_files") or []
 
+            # Map timestamp to scanned_at (Supabase column name)
+            timestamp_value = result.get("timestamp")
+            # Convert ISO string to timestamptz if needed, or use current time
+            if timestamp_value:
+                scanned_at = timestamp_value
+            else:
+                scanned_at = datetime.now(timezone.utc).isoformat()
+            
             row = {
                 "extension_id": extension_id,
                 "extension_name": extension_name,
                 "url": result.get("url"),
-                "timestamp": result.get("timestamp"),
+                "scanned_at": scanned_at,  # Renamed from timestamp → scanned_at
                 "status": result.get("status"),
                 "security_score": result.get("overall_security_score"),
                 "risk_level": result.get("overall_risk"),
@@ -698,7 +706,8 @@ class SupabaseDatabase:
                 "extracted_path": result.get("extracted_path"),
                 "extracted_files": extracted_files,
                 "error": result.get("error"),
-                "updated_at": datetime.now().isoformat(),
+                # updated_at is auto-updated by trigger, but set it anyway for initial insert
+                "updated_at": datetime.now(timezone.utc).isoformat(),
             }
 
             # Upsert on extension_id
@@ -743,13 +752,18 @@ class SupabaseDatabase:
             scans_resp = (
                 self.client.table(self.table_scan_results)
                 .select(
-                    "extension_id, extension_name, url, timestamp, status, security_score, risk_level, total_findings, total_files, high_risk_count, medium_risk_count, low_risk_count"
+                    "extension_id, extension_name, url, scanned_at, status, security_score, risk_level, total_findings, total_files, high_risk_count, medium_risk_count, low_risk_count"
                 )
                 .in_("extension_id", ext_ids)
                 .execute()
             )
             scans = getattr(scans_resp, "data", None) or []
-            by_id = {r.get("extension_id"): r for r in scans}
+            by_id = {}
+            for r in scans:
+                # Map scanned_at → timestamp for API compatibility
+                if "scanned_at" in r:
+                    r["timestamp"] = r.pop("scanned_at")
+                by_id[r.get("extension_id")] = r
 
             # Preserve user history ordering; attach scan summary where available.
             out: List[Dict[str, Any]] = []
@@ -772,7 +786,14 @@ class SupabaseDatabase:
                 .execute()
             )
             data = getattr(resp, "data", None) or []
-            return data[0] if data else None
+            if not data:
+                return None
+            
+            # Map scanned_at → timestamp for API compatibility
+            result = data[0]
+            if "scanned_at" in result:
+                result["timestamp"] = result.pop("scanned_at")
+            return result
         except Exception as e:
             print(f"Error getting scan result (Supabase): {e}")
             return None
@@ -782,13 +803,18 @@ class SupabaseDatabase:
             resp = (
                 self.client.table(self.table_scan_results)
                 .select(
-                    "extension_id, extension_name, url, timestamp, status, security_score, risk_level, total_findings, total_files, high_risk_count, medium_risk_count, low_risk_count"
+                    "extension_id, extension_name, url, scanned_at, status, security_score, risk_level, total_findings, total_files, high_risk_count, medium_risk_count, low_risk_count"
                 )
-                .order("timestamp", desc=True)
+                .order("scanned_at", desc=True)
                 .limit(limit)
                 .execute()
             )
-            return getattr(resp, "data", None) or []
+            rows = getattr(resp, "data", None) or []
+            # Map scanned_at → timestamp for API compatibility
+            for row in rows:
+                if "scanned_at" in row:
+                    row["timestamp"] = row.pop("scanned_at")
+            return rows
         except Exception as e:
             print(f"Error getting scan history (Supabase): {e}")
             return []
@@ -797,13 +823,18 @@ class SupabaseDatabase:
         try:
             resp = (
                 self.client.table(self.table_scan_results)
-                .select("extension_id, extension_name, timestamp, security_score, risk_level, total_findings")
+                .select("extension_id, extension_name, scanned_at, security_score, risk_level, total_findings")
                 .eq("status", "completed")
-                .order("timestamp", desc=True)
+                .order("scanned_at", desc=True)
                 .limit(limit)
                 .execute()
             )
-            return getattr(resp, "data", None) or []
+            rows = getattr(resp, "data", None) or []
+            # Map scanned_at → timestamp for API compatibility
+            for row in rows:
+                if "scanned_at" in row:
+                    row["timestamp"] = row.pop("scanned_at")
+            return rows
         except Exception as e:
             print(f"Error getting recent scans (Supabase): {e}")
             return []
@@ -881,26 +912,206 @@ class SupabaseDatabase:
                 "avg_security_score": 0,
             }
 
+    def increment_page_view(self, day: str, path: str) -> int:
+        """
+        Increment a page view count for a given UTC day + path (Supabase backend).
+        
+        Uses atomic RPC function to prevent race conditions and lost updates.
+
+        Args:
+            day: YYYY-MM-DD (UTC)
+            path: Route path (e.g., /research)
+
+        Returns:
+            Updated count
+        """
+        path = (path or "/").strip()
+        if not path.startswith("/"):
+            path = "/" + path
+
+        try:
+            # Use atomic RPC function for safe concurrent increments
+            resp = self.client.rpc(
+                "increment_page_view",
+                {"p_day": day, "p_path": path}
+            ).execute()
+            
+            # Parse RPC return value - handle multiple response formats
+            result = getattr(resp, "data", None)
+            if result is None:
+                return 0
+            
+            # Case 1: Direct integer
+            if isinstance(result, int):
+                return result
+            
+            # Case 2: String representation of integer
+            if isinstance(result, str):
+                try:
+                    return int(result)
+                except (ValueError, TypeError):
+                    return 0
+            
+            # Case 3: Dictionary with count or function name as key
+            if isinstance(result, dict):
+                # Try common keys
+                count = result.get("count") or result.get("increment_page_view") or result.get("value")
+                if count is not None:
+                    try:
+                        return int(count)
+                    except (ValueError, TypeError):
+                        pass
+                return 0
+            
+            # Case 4: List of values
+            if isinstance(result, list) and len(result) > 0:
+                first_item = result[0]
+                # If list contains integers
+                if isinstance(first_item, int):
+                    return first_item
+                # If list contains dicts
+                if isinstance(first_item, dict):
+                    count = first_item.get("count") or first_item.get("increment_page_view") or first_item.get("value")
+                    if count is not None:
+                        try:
+                            return int(count)
+                        except (ValueError, TypeError):
+                            pass
+                # If list contains strings
+                if isinstance(first_item, str):
+                    try:
+                        return int(first_item)
+                    except (ValueError, TypeError):
+                        pass
+            
+            return 0
+                
+        except Exception as e:
+            print(f"Error incrementing page view (Supabase): {e}")
+            # Fallback to non-atomic method if RPC doesn't exist (backward compatibility)
+            try:
+                resp = (
+                    self.client.table("page_views_daily")
+                    .select("count")
+                    .eq("day", day)
+                    .eq("path", path)
+                    .limit(1)
+                    .execute()
+                )
+                data = getattr(resp, "data", None) or []
+                
+                if data:
+                    current_count = int(data[0].get("count", 0))
+                    new_count = current_count + 1
+                    self.client.table("page_views_daily").update(
+                        {"count": new_count}
+                    ).eq("day", day).eq("path", path).execute()
+                    return new_count
+                else:
+                    self.client.table("page_views_daily").insert(
+                        {"day": day, "path": path, "count": 1}
+                    ).execute()
+                    return 1
+            except Exception:
+                return 0
+
+    def get_page_view_summary(self, days: int = 14) -> Dict[str, Any]:
+        """
+        Return aggregate telemetry counts for the last N UTC days (Supabase backend).
+
+        Returns:
+            {
+              "days": int,
+              "start_day": "YYYY-MM-DD",
+              "end_day": "YYYY-MM-DD",
+              "by_day": { "YYYY-MM-DD": int },
+              "by_path": { "/research": int },
+              "rows": [{ "day": "...", "path": "...", "count": 123 }]
+            }
+        """
+        days = int(days or 14)
+        days = max(1, min(days, 365))
+
+        now_utc = datetime.now(timezone.utc).date()
+        start_date = now_utc - timedelta(days=days - 1)
+        start_day = start_date.strftime("%Y-%m-%d")
+        end_day = now_utc.strftime("%Y-%m-%d")
+
+        try:
+            resp = (
+                self.client.table("page_views_daily")
+                .select("day, path, count")
+                .gte("day", start_day)
+                .order("day", desc=False)
+                .execute()
+            )
+            rows = getattr(resp, "data", None) or []
+
+            by_day: Dict[str, int] = {}
+            by_path: Dict[str, int] = {}
+            for r in rows:
+                d = r.get("day")
+                p = r.get("path")
+                c = int(r.get("count") or 0)
+                if d:
+                    by_day[d] = by_day.get(d, 0) + c
+                if p:
+                    by_path[p] = by_path.get(p, 0) + c
+
+            return {
+                "days": days,
+                "start_day": start_day,
+                "end_day": end_day,
+                "by_day": by_day,
+                "by_path": by_path,
+                "rows": rows,
+            }
+        except Exception as e:
+            print(f"Error getting page view summary (Supabase): {e}")
+            return {
+                "days": days,
+                "start_day": start_day,
+                "end_day": end_day,
+                "by_day": {},
+                "by_path": {},
+                "rows": [],
+            }
+
 
 def _create_db():
     """
     Choose storage backend:
-    - Supabase if SUPABASE_URL + key are set
-    - SQLite otherwise
+    - Supabase if SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY are set
+    - SQLite otherwise (dev fallback)
     """
+    import logging
+    logger = logging.getLogger(__name__)
+    
     settings = get_settings()
 
     if settings.db_backend == "supabase":
         try:
-            return SupabaseDatabase()
+            db = SupabaseDatabase()
+            logger.info("✓ DB backend selected: supabase")
+            print("✓ DB backend selected: supabase")
+            return db
         except Exception as e:
-            print(
+            logger.warning(
                 f"Supabase enabled but failed to initialize. Falling back to SQLite. Error: {e}"
             )
-            return Database()
+            print(
+                f"⚠️  Supabase enabled but failed to initialize. Falling back to SQLite. Error: {e}"
+            )
+            db = Database()
+            logger.info("✓ DB backend selected: sqlite (fallback)")
+            print("✓ DB backend selected: sqlite (fallback)")
+            return db
 
     if settings.db_backend == "sqlite":
-        return Database()
+        db = Database()
+        logger.info("✓ DB backend selected: sqlite")
+        print("✓ DB backend selected: sqlite")
+        return db
 
     # Postgres not supported by current implementation (see core.config validation).
     raise ValueError(f"Unsupported DB backend: {settings.db_backend}")
@@ -908,3 +1119,4 @@ def _create_db():
 
 # Global database instance
 db = _create_db()
+

@@ -137,6 +137,38 @@ def _get_user_id(request: Request) -> str:
     return "anon"
 
 
+def _require_admin_key(request: Request) -> None:
+    """
+    Verify X-Admin-Key header matches ADMIN_API_KEY.
+    
+    Raises HTTPException(403) if:
+    - Header is missing
+    - Key doesn't match ADMIN_API_KEY
+    - ADMIN_API_KEY is not configured
+    """
+    settings = get_settings()
+    admin_key = settings.admin_api_key
+    
+    if not admin_key:
+        raise HTTPException(
+            status_code=403,
+            detail="Admin API key is not configured"
+        )
+    
+    provided_key = request.headers.get("X-Admin-Key") or request.headers.get("x-admin-key")
+    if not provided_key:
+        raise HTTPException(
+            status_code=403,
+            detail="X-Admin-Key header is required"
+        )
+    
+    if provided_key != admin_key:
+        raise HTTPException(
+            status_code=403,
+            detail="Invalid admin API key"
+        )
+
+
 def _deep_scan_limit_status(user_id: str) -> Dict[str, Any]:
     now = datetime.now(timezone.utc)
     day_key = now.strftime("%Y-%m-%d")
@@ -1477,14 +1509,14 @@ async def track_pageview(event: PageViewEvent):
     - No IP storage
     - No user identifier
     - Server computes day in UTC
+    - Supports both SQLite and Supabase backends
     """
     day = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     path = (event.path or "/").strip()
     try:
-        count = db.increment_page_view(day=day, path=path)  # SQLite-backed
+        count = db.increment_page_view(day=day, path=path)
     except AttributeError:
-        # If a non-SQLite backend is active and telemetry isn't implemented there yet,
-        # fail open (do not break the UI).
+        # If backend doesn't support telemetry methods, fail open (do not break the UI).
         count = 0
     return {"day": day, "path": path if path.startswith("/") else f"/{path}", "count": count}
 
@@ -1585,6 +1617,332 @@ async def health_check():
         "storage_path": str(RESULTS_DIR),
         "storage_exists": RESULTS_DIR.exists()
     }
+
+
+@app.get("/api/health/db")
+async def database_health_check(request: Request):
+    """
+    Production-safe database health check endpoint (admin-protected).
+    
+    Returns backend type, table status, write capability, table counts, function verification,
+    and migration completeness checks.
+    Useful for verifying Supabase is properly configured in production.
+    
+    Requires: X-Admin-Key header matching ADMIN_API_KEY
+    
+    Verifies:
+    - Backend type (supabase/sqlite)
+    - Required tables exist (scan_results, user_scan_history, page_views_daily)
+    - increment_page_view function exists (Supabase only)
+    - Table row counts
+    - Write capability (tested via safe operations)
+    - Migration completeness:
+      * statistics table existence + row count
+      * scan_results column structure (scanned_at for Supabase, timestamp for SQLite)
+      * increment_page_view RPC exists and callable (Supabase only)
+    
+    Example response:
+    {
+        "backend": "supabase",
+        "tables_ok": true,
+        "can_write": true,
+        "status": "healthy",
+        "tables": {
+            "scan_results": {"exists": true, "count": 42},
+            "user_scan_history": {"exists": true, "count": 15},
+            "page_views_daily": {"exists": true, "count": 128}
+        },
+        "functions": {
+            "increment_page_view": {"exists": true}
+        },
+        "migrations": {
+            "statistics": {"exists": true, "count": 4},
+            "scan_results_columns_ok": true,
+            "page_views_rpc_ok": true
+        },
+        "missing_tables": []
+    }
+    
+    Note: Does NOT expose secrets, env values, or sensitive configuration.
+    """
+    # Require admin key
+    _require_admin_key(request)
+    
+    from extension_shield.api.database import Database, SupabaseDatabase
+    
+    backend_type = "unknown"
+    tables_ok = False
+    can_write = False
+    missing_tables = []
+    tables_info = {}
+    functions_info = {}
+    error_message = None
+    
+    try:
+        # Determine backend type
+        if isinstance(db, SupabaseDatabase):
+            backend_type = "supabase"
+            
+            # Check tables via information_schema query (preferred) or safe probe
+            required_tables = ["scan_results", "user_scan_history", "page_views_daily"]
+            existing_tables = []
+            
+            # Try to use information_schema query via RPC if available, otherwise use safe probes
+            try:
+                # Attempt to query information_schema via raw SQL (if Supabase supports it)
+                # Fallback to safe table probes if not available
+                for table_name in required_tables:
+                    try:
+                        # Safe probe: select count limit 1 (doesn't expose data)
+                        resp = db.client.table(table_name).select("*", count="exact").limit(1).execute()
+                        existing_tables.append(table_name)
+                        
+                        # Get row count (Supabase returns count in response)
+                        count = getattr(resp, "count", None)
+                        if count is None:
+                            # Fallback: query with count="exact" and limit
+                            count_resp = db.client.table(table_name).select("*", count="exact").limit(10000).execute()
+                            count = getattr(count_resp, "count", 0)
+                        
+                        tables_info[table_name] = {
+                            "exists": True,
+                            "count": count if count is not None else 0
+                        }
+                    except Exception as e:
+                        # Table doesn't exist or can't be accessed
+                        missing_tables.append(table_name)
+                        tables_info[table_name] = {
+                            "exists": False,
+                            "count": None
+                        }
+                        if not error_message:
+                            error_message = str(e)[:200]  # Truncate to avoid exposing sensitive info
+            except Exception as e:
+                # If all table checks fail, set error
+                if not error_message:
+                    error_message = str(e)[:200]
+            
+            # Check for increment_page_view function via pg_proc query or safe RPC test
+            try:
+                # Try to call the function with a harmless test path and today's date
+                # This will create a test row that we can optionally clean up
+                today = datetime.now(timezone.utc).date().strftime("%Y-%m-%d")
+                test_path = "/__healthcheck"
+                
+                # Call RPC to test function existence and write capability
+                test_resp = db.client.rpc("increment_page_view", {
+                    "p_day": today,
+                    "p_path": test_path
+                }).execute()
+                
+                # If RPC succeeds, function exists and we can write
+                functions_info["increment_page_view"] = {"exists": True}
+                can_write = True
+                
+                # Optional: Clean up test row (delete the healthcheck entry)
+                try:
+                    db.client.table("page_views_daily").delete().eq("day", today).eq("path", test_path).execute()
+                except Exception:
+                    # If cleanup fails, that's okay - the test row is harmless
+                    pass
+                    
+            except Exception as e:
+                # Function doesn't exist or can't be called
+                functions_info["increment_page_view"] = {"exists": False}
+                can_write = False
+                if not error_message:
+                    error_message = f"increment_page_view check failed: {str(e)[:100]}"
+            
+            # Tables are OK if at least scan_results exists (required)
+            # user_scan_history is required for auth features
+            # page_views_daily is optional but recommended
+            if "scan_results" in existing_tables:
+                tables_ok = True
+                # can_write is set by function test above
+            else:
+                tables_ok = False
+                if not error_message:
+                    error_message = "Required table scan_results is missing"
+                
+        elif isinstance(db, Database):
+            backend_type = "sqlite"
+            
+            # For SQLite, check if tables exist via sqlite_master
+            try:
+                with db.get_connection() as conn:
+                    cursor = conn.cursor()
+                    
+                    # Check required tables
+                    required_tables = ["scan_results", "user_scan_history", "page_views_daily"]
+                    for table_name in required_tables:
+                        cursor.execute(
+                            "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
+                            (table_name,)
+                        )
+                        exists = cursor.fetchone() is not None
+                        
+                        # Get count if table exists
+                        count = None
+                        if exists:
+                            try:
+                                cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
+                                count = cursor.fetchone()[0]
+                            except Exception:
+                                count = None
+                        
+                        tables_info[table_name] = {
+                            "exists": exists,
+                            "count": count
+                        }
+                        if not exists:
+                            missing_tables.append(table_name)
+                    
+                    tables_ok = "scan_results" in [t for t, info in tables_info.items() if info["exists"]]
+                    
+                    # Test write capability by incrementing page view for healthcheck
+                    if tables_ok:
+                        try:
+                            today = datetime.now(timezone.utc).date().strftime("%Y-%m-%d")
+                            test_path = "/__healthcheck"
+                            # This will create or increment a test row
+                            db.increment_page_view(today, test_path)
+                            can_write = True
+                            # Optional: Clean up test row
+                            try:
+                                with db.get_connection() as cleanup_conn:
+                                    cleanup_cursor = cleanup_conn.cursor()
+                                    cleanup_cursor.execute(
+                                        "DELETE FROM page_views_daily WHERE day = ? AND path = ?",
+                                        (today, test_path)
+                                    )
+                            except Exception:
+                                pass  # Cleanup failure is okay
+                        except Exception as e:
+                            can_write = False
+                            if not error_message:
+                                error_message = f"Write test failed: {str(e)[:100]}"
+                    else:
+                        can_write = False
+            except Exception as e:
+                tables_ok = False
+                can_write = False
+                error_message = str(e)[:200]
+        else:
+            backend_type = "unknown"
+                
+    except Exception as e:
+        # If we can't determine backend, return defaults
+        backend_type = "error"
+        error_message = str(e)[:200]  # Truncate to avoid exposing sensitive info
+    
+    # Migration verification
+    migrations_info = {}
+    
+    try:
+        if isinstance(db, SupabaseDatabase):
+            # Check statistics table (migration 004)
+            statistics_exists = False
+            statistics_count = None
+            try:
+                stats_resp = db.client.table("statistics").select("*", count="exact").limit(1).execute()
+                statistics_exists = True
+                statistics_count = getattr(stats_resp, "count", None)
+            except Exception:
+                statistics_exists = False
+            
+            migrations_info["statistics"] = {
+                "exists": statistics_exists,
+                "count": statistics_count if statistics_count is not None else None
+            }
+            
+            # Verify scan_results columns (especially scanned_at)
+            scan_results_columns_ok = False
+            # Check if scan_results table exists (from tables_info)
+            if tables_info.get("scan_results", {}).get("exists", False):
+                try:
+                    # Try to query scanned_at column (should exist after migration 001b)
+                    test_resp = db.client.table("scan_results").select("scanned_at").limit(1).execute()
+                    scan_results_columns_ok = True
+                except Exception:
+                    # Column might not exist or table structure is wrong
+                    scan_results_columns_ok = False
+            else:
+                scan_results_columns_ok = False
+            
+            migrations_info["scan_results_columns_ok"] = scan_results_columns_ok
+            
+            # Verify RPC increment_page_view exists AND callable
+            page_views_rpc_ok = functions_info.get("increment_page_view", {}).get("exists", False)
+            migrations_info["page_views_rpc_ok"] = page_views_rpc_ok
+            
+        elif isinstance(db, Database):
+            # For SQLite, check statistics table
+            statistics_exists = False
+            statistics_count = None
+            try:
+                with db.get_connection() as conn:
+                    cursor = conn.cursor()
+                    cursor.execute(
+                        "SELECT name FROM sqlite_master WHERE type='table' AND name='statistics'"
+                    )
+                    statistics_exists = cursor.fetchone() is not None
+                    
+                    if statistics_exists:
+                        cursor.execute("SELECT COUNT(*) FROM statistics")
+                        statistics_count = cursor.fetchone()[0]
+            except Exception:
+                statistics_exists = False
+            
+            migrations_info["statistics"] = {
+                "exists": statistics_exists,
+                "count": statistics_count
+            }
+            
+            # Verify scan_results columns (timestamp in SQLite, not scanned_at)
+            scan_results_columns_ok = False
+            if tables_info.get("scan_results", {}).get("exists", False):
+                try:
+                    with db.get_connection() as conn:
+                        cursor = conn.cursor()
+                        # Check if timestamp column exists (SQLite uses timestamp, not scanned_at)
+                        cursor.execute("PRAGMA table_info(scan_results)")
+                        columns = [row[1] for row in cursor.fetchall()]
+                        scan_results_columns_ok = "timestamp" in columns
+                except Exception:
+                    scan_results_columns_ok = False
+            else:
+                scan_results_columns_ok = False
+            
+            migrations_info["scan_results_columns_ok"] = scan_results_columns_ok
+            
+            # SQLite doesn't use RPC functions
+            migrations_info["page_views_rpc_ok"] = None
+    except Exception as e:
+        # If migration checks fail, mark as unknown
+        if not error_message:
+            error_message = f"Migration check failed: {str(e)[:100]}"
+    
+    response = {
+        "backend": backend_type,
+        "tables_ok": tables_ok,
+        "can_write": can_write,
+        "status": "healthy" if (tables_ok and can_write) else "degraded",
+        "tables": tables_info,
+        "migrations": migrations_info,
+    }
+    
+    # Add functions info for Supabase
+    if backend_type == "supabase" and functions_info:
+        response["functions"] = functions_info
+    
+    # Add diagnostic info if degraded
+    if not tables_ok or missing_tables:
+        response["missing_tables"] = missing_tables
+        if error_message:
+            # Only include first line of error to avoid exposing sensitive info
+            response["error"] = error_message.split("\n")[0][:200]
+    
+    return response
 
 
 @app.get("/api/scan/icon/{extension_id}")

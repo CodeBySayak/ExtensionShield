@@ -1,4 +1,4 @@
-.PHONY: help format lint test api frontend clean install analyze docker-build docker-up docker-down docker-logs
+.PHONY: help format lint test api frontend clean install analyze docker-build docker-up docker-down docker-logs migrate start lint-migrations
 
 # Default target - show help
 help:
@@ -14,12 +14,15 @@ help:
 	@echo "Code Quality:"
 	@echo "  make format          - Format Python code with Black"
 	@echo "  make lint            - Run Pylint on source code"
+	@echo "  make lint-migrations - Lint Supabase migration files"
 	@echo "  make test            - Run pytest test suite"
 	@echo "  make precommit       - Run pre-commit hooks on all files"
 	@echo ""
 	@echo "Run Applications (Local Development):"
 	@echo "  make api             - Start FastAPI server for frontend (port 8007)"
 	@echo "  make frontend        - Start React frontend dev server (port 5173)"
+	@echo "  make migrate         - Run Supabase migrations (safe, prod only)"
+	@echo "  make start           - Run migrations (if Supabase) then start API"
 	@echo "  make analyze URL=... - Analyze extension from Chrome Web Store URL"
 	@echo "  make analyze-file FILE=... - Analyze local CRX/ZIP file"
 	@echo ""
@@ -40,6 +43,12 @@ lint:
 	uv run pylint src/
 	@echo "✓ Linting complete"
 
+# Lint Supabase migrations
+lint-migrations:
+	@echo "Linting Supabase migrations..."
+	python scripts/lint_migrations.py
+	@echo "✓ Migration lint complete"
+
 # Run tests
 test:
 	@echo "Running pytest..."
@@ -58,6 +67,24 @@ api:
 	@echo "Access at: http://localhost:8007"
 	@echo "API docs at: http://localhost:8007/docs"
 	uv run extension-shield serve --reload
+
+# Run Supabase migrations (prod only, safe to run multiple times)
+migrate:
+	@if [ -n "$(DB_BACKEND)" ] && [ "$(DB_BACKEND)" != "supabase" ]; then \
+		echo "Skipping Supabase migrations: DB_BACKEND=$(DB_BACKEND)"; \
+	elif [ -n "$$SUPABASE_URL" ] && [ -n "$$SUPABASE_SERVICE_ROLE_KEY" ]; then \
+		echo "Running Supabase migrations..."; \
+		python scripts/run_supabase_migrations.py; \
+	else \
+		echo "Skipping Supabase migrations: Supabase env not set"; \
+	fi
+
+# Start API server (production style)
+start: migrate
+	@echo "Starting FastAPI server..."
+	@echo "Access at: http://localhost:8007"
+	@echo "API docs at: http://localhost:8007/docs"
+	uvicorn extension_shield.api.main:app --host 0.0.0.0 --port $${PORT:-8007}
 
 # Start React frontend
 frontend:
