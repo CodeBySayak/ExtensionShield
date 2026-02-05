@@ -49,11 +49,33 @@ export const AuthProvider = ({ children }) => {
           return;
         }
         
-        const { data, error } = await supabase.auth.getSession();
-        if (error) throw error;
+        // Handle OAuth callback - check for hash fragments
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        const accessToken = hashParams.get('access_token');
+        const error = hashParams.get('error');
+        const errorDescription = hashParams.get('error_description');
+        
+        if (error) {
+          console.error("OAuth error:", error, errorDescription);
+          setAuthError(errorDescription || error || "Authentication failed");
+          // Clean up URL
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        
+        // Get current session (this will include OAuth session if redirect just happened)
+        const { data, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError) throw sessionError;
         if (!isMounted) return;
+        
         setSession(data.session || null);
         setUser(toUiUser(data.session?.user));
+        
+        // If we just got a session from OAuth, close the modal
+        if (data.session && accessToken) {
+          setIsSignInModalOpen(false);
+          // Clean up URL hash
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
       } catch (error) {
         console.error("Auth session load failed:", error);
         // Don't crash - just continue without auth
@@ -68,10 +90,24 @@ export const AuthProvider = ({ children }) => {
     try {
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       if (supabaseUrl) {
-        const { data } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+        const { data } = supabase.auth.onAuthStateChange((event, nextSession) => {
           if (!isMounted) return;
+          
+          console.log("Auth state changed:", event, nextSession?.user?.email);
+          
           setSession(nextSession || null);
           setUser(toUiUser(nextSession?.user));
+          
+          // Close modal on successful sign in
+          if (event === 'SIGNED_IN' && nextSession) {
+            setIsSignInModalOpen(false);
+            setAuthError(null);
+          }
+          
+          // Clear error on sign out
+          if (event === 'SIGNED_OUT') {
+            setAuthError(null);
+          }
         });
         authStateSubscription = data;
       }
@@ -119,7 +155,14 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(true);
     try {
       const sbUser = await authService.signInWithEmail(email, password);
-      setUser(toUiUser(sbUser));
+      // Refresh session to ensure it's up to date
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (sessionData?.session) {
+        setSession(sessionData.session);
+        setUser(toUiUser(sessionData.session.user));
+      } else {
+        setUser(toUiUser(sbUser));
+      }
       setIsSignInModalOpen(false);
       return sbUser;
     } catch (error) {
@@ -135,8 +178,17 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(true);
     try {
       const sbUser = await authService.signUpWithEmail(email, password, name);
-      setUser(toUiUser(sbUser));
-      setIsSignInModalOpen(false);
+      // If session exists (email confirmation disabled), set it
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (sessionData?.session) {
+        setSession(sessionData.session);
+        setUser(toUiUser(sessionData.session.user));
+        setIsSignInModalOpen(false);
+      } else {
+        // Email confirmation required - user needs to check email
+        setUser(toUiUser(sbUser));
+        // Don't close modal, show success message instead
+      }
       return sbUser;
     } catch (error) {
       setAuthError(error.message);

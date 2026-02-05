@@ -28,29 +28,61 @@ const checkSupabaseConfig = () => {
 
 const signInWithGoogle = async () => {
   checkSupabaseConfig();
-  const { error } = await supabase.auth.signInWithOAuth({
+  
+  // Get the current origin and pathname to redirect back to the same page
+  const redirectTo = `${window.location.origin}${window.location.pathname}`;
+  
+  const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: window.location.origin,
+      redirectTo: redirectTo,
+      queryParams: {
+        access_type: 'offline',
+        prompt: 'consent',
+      },
     },
   });
-  if (error) throw new Error(error.message || "Google sign-in failed");
+  
+  if (error) {
+    console.error("Google OAuth error:", error);
+    throw new Error(error.message || "Google sign-in failed");
+  }
+  
+  // OAuth will redirect, so we don't need to return anything
+  // The redirect will happen automatically
 };
 
 const signInWithGitHub = async () => {
   checkSupabaseConfig();
-  const { error } = await supabase.auth.signInWithOAuth({
+  
+  // Get the current origin and pathname to redirect back to the same page
+  const redirectTo = `${window.location.origin}${window.location.pathname}`;
+  
+  const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "github",
     options: {
-      redirectTo: window.location.origin,
+      redirectTo: redirectTo,
     },
   });
-  if (error) throw new Error(error.message || "GitHub sign-in failed");
+  
+  if (error) {
+    console.error("GitHub OAuth error:", error);
+    throw new Error(error.message || "GitHub sign-in failed");
+  }
+  
+  // OAuth will redirect, so we don't need to return anything
+  // The redirect will happen automatically
 };
 
 const signInWithEmail = async (email, password) => {
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) throw new Error(error.message || "Invalid credentials");
+  if (error) {
+    // Provide more helpful error messages
+    if (error.message.includes("Email not confirmed")) {
+      throw new Error("Please check your email and click the confirmation link before signing in.");
+    }
+    throw new Error(error.message || "Invalid credentials");
+  }
   return data.user;
 };
 
@@ -61,6 +93,12 @@ const signUpWithEmail = async (email, password, name) => {
     options: name ? { data: { full_name: name } } : undefined,
   });
   if (error) throw new Error(error.message || "Sign up failed");
+  
+  // If email confirmation is required, user will need to check their email
+  if (data.user && !data.session) {
+    throw new Error("Please check your email to confirm your account before signing in.");
+  }
+  
   return data.user;
 };
 
