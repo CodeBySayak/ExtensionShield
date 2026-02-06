@@ -64,9 +64,30 @@ def _get_base_llm_settings(model_name: str, model_parameters: Optional[Dict]) ->
         }
 
     if LLM_PROVIDER == LLMProviderType.OPENAI:
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            raise ValueError(
+                "OPENAI_API_KEY environment variable is not set. "
+                "Please set it in your .env file or environment variables."
+            )
+        # Validate OpenAI API key format
+        if not api_key.startswith("sk-"):
+            raise ValueError(
+                f"Invalid OpenAI API key format. OpenAI API keys should start with 'sk-', "
+                f"but got '{api_key[:10]}...'. "
+                "Please check your API key at https://platform.openai.com/api-keys"
+            )
+        # Reject keys starting with 'sk-proj-' as they are not valid OpenAI API keys
+        if api_key.startswith("sk-proj-"):
+            raise ValueError(
+                f"Invalid API key format detected. Keys starting with 'sk-proj-' are not valid OpenAI API keys. "
+                f"Your key appears to be: '{api_key[:15]}...' "
+                "Please get a valid API key from https://platform.openai.com/api-keys. "
+                "Valid OpenAI API keys start with 'sk-' but NOT 'sk-proj-'."
+            )
         return {
             "model": model_name,
-            "api_key": os.getenv("OPENAI_API_KEY"),
+            "api_key": api_key,
             "max_tokens": model_parameters.get("max_tokens", 4096),
             "temperature": model_parameters.get("temperature", 0.7),
         }
