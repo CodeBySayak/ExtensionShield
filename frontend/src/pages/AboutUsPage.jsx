@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import stanImage from "../assets/stan.png";
 import "./AboutUsPage.scss";
 
 const AboutUsPage = () => {
@@ -17,7 +18,7 @@ const AboutUsPage = () => {
           <div className="about-header">
             <div className="profile-image-container">
               <img 
-                src="/images/stan.png" 
+                src={stanImage} 
                 alt="Stanzin - Founder of ExtensionShield"
                 className="profile-image"
                 onError={(e) => {
