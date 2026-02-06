@@ -7,6 +7,7 @@ and retrieve results.
 
 import os
 import json
+import logging
 from pathlib import Path
 from typing import Optional, Dict, Any
 from datetime import datetime, timezone, timedelta
@@ -33,6 +34,8 @@ from extension_shield.scoring.engine import ScoringEngine
 from extension_shield.governance.tool_adapters import SignalPackBuilder
 from extension_shield.core.config import get_settings
 
+# Initialize logger
+logger = logging.getLogger(__name__)
 
 # Pydantic models for request/response
 class ScanRequest(BaseModel):
