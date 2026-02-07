@@ -26,7 +26,7 @@ export default defineConfig(({ mode }) => {
         "manifest-src 'self'",
       ].join('; ');
     } else {
-      // Prod CSP: Strict (no unsafe-eval, minimal unsafe-inline)
+      // Prod CSP: Strict (no unsafe-eval, no unsafe-inline for scripts)
       return [
         "default-src 'self'",
         "base-uri 'self'",
@@ -34,7 +34,7 @@ export default defineConfig(({ mode }) => {
         "frame-ancestors 'none'",
         "form-action 'self'",
         "upgrade-insecure-requests",
-        "script-src 'self'", // No unsafe-eval or unsafe-inline in production
+        "script-src 'self' https://static.cloudflareinsights.com", // No unsafe-eval or unsafe-inline in production
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com", // unsafe-inline needed for React inline styles
         "font-src 'self' https://fonts.gstatic.com data:",
         "img-src 'self' data: https:",
