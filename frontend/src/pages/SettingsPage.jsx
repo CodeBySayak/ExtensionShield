@@ -112,7 +112,7 @@ const SettingsPage = () => {
                         checked={settings.securityEngine === "aggressive"}
                         onChange={() => handleChange("securityEngine", "aggressive")}
                       />
-                      <span style={{ color: settings.securityEngine === "aggressive" ? "#ef4444" : "inherit" }}>
+                      <span style={{ color: settings.securityEngine === "aggressive" ? "#8b5cf6" : "inherit" }}>
                         Aggressive
                       </span>
                     </div>

@@ -85,11 +85,11 @@
   max-width: 56rem;
   margin: 0 auto;
   padding: 1.5rem;
-  background: var(--atlas-bg-card, rgba(16, 24, 40, 0.8));
-  border: 1px solid var(--atlas-border, rgba(148, 163, 184, 0.1));
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--atlas-border, rgba(148, 163, 184, 0.15));
   border-radius: 1rem;
   backdrop-filter: blur(20px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .settings-card-header {
@@ -190,8 +190,8 @@
   }
   
   &.active-aggressive {
-    background: rgba(239, 68, 68, 0.1);
-    border-color: #ef4444;
+    background: rgba(139, 92, 246, 0.15);
+    border-color: rgba(139, 92, 246, 0.4);
   }
   
   input[type="radio"] {
@@ -207,6 +207,14 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    
+    span {
+      transition: color 0.2s ease;
+    }
+  }
+  
+  &.active-aggressive .option-label span {
+    color: #8b5cf6;
   }
   
   .option-description {
