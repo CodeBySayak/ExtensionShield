@@ -15,7 +15,7 @@ from datetime import datetime, timezone, timedelta
 from fastapi import FastAPI, HTTPException, BackgroundTasks, Response, UploadFile, File, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from pydantic import BaseModel
 import shutil
 
@@ -112,6 +112,37 @@ async def attach_user_context(request: Request, call_next):
         request.state.user_id = _get_current_user_id(request)
     except Exception:
         request.state.user_id = None
+    return await call_next(request)
+
+
+@app.middleware("http")
+async def domain_redirect_middleware(request: Request, call_next):
+    """
+    Redirect non-canonical domains to extensionshield.com.
+    
+    This middleware handles:
+    - extensionscanner.com -> extensionshield.com
+    Note: extensionaudit.com will be added in the future.
+    
+    Preserves path and query parameters.
+    """
+    host = request.headers.get("host", "").lower()
+    canonical_domain = "extensionshield.com"
+    # Note: extensionaudit.com will be added in the future
+    non_canonical_domains = ["extensionscanner.com"]
+    
+    # Check if this is a non-canonical domain
+    if any(host.startswith(domain) for domain in non_canonical_domains):
+        # Preserve path and query string
+        path = request.url.path
+        query = request.url.query
+        redirect_url = f"https://{canonical_domain}{path}"
+        if query:
+            redirect_url += f"?{query}"
+        
+        # Return 301 permanent redirect
+        return RedirectResponse(url=redirect_url, status_code=301)
+    
     return await call_next(request)
 
 
@@ -1141,6 +1172,42 @@ async def root():
         return FileResponse(index_file)
     # Otherwise return API info (development mode)
     return {"name": "Project Atlas API", "version": "1.0.0", "status": "running"}
+
+
+@app.get("/robots.txt")
+async def robots_txt(request: Request):
+    """
+    Dynamic robots.txt that varies by domain.
+    
+    - extensionshield.com: Allow all, point to sitemap
+    - extensionscanner.com: Disallow all (redirect domain)
+    - Note: extensionaudit.com will be added in the future
+    """
+    host = request.headers.get("host", "").lower()
+    canonical_domain = "extensionshield.com"
+    # Note: extensionaudit.com will be added in the future
+    non_canonical_domains = ["extensionscanner.com"]
+    
+    # Check if this is a non-canonical domain
+    if any(host.startswith(domain) for domain in non_canonical_domains):
+        # Disallow all for non-canonical domains
+        robots_content = """User-agent: *
+Disallow: /
+"""
+    else:
+        # Allow all for canonical domain
+        robots_content = """User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://extensionshield.com/sitemap.xml
+
+# Disallow admin/internal routes
+Disallow: /settings
+Disallow: /reports
+"""
+    
+    return Response(content=robots_content, media_type="text/plain")
 
 
 @app.get("/api/limits/deep-scan")
