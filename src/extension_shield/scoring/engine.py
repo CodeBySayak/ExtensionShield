@@ -213,30 +213,44 @@ class ScoringEngine:
             self.weights.governance_weights,
         )
         
-        # Build LayerScore objects
+        # Build LayerScore objects (using adjusted scores after gate penalties)
         security_layer = LayerScore(
             layer_name="security",
-            score=security_score,
+            score=security_score,  # This is now the adjusted score
             risk=round(security_risk, 4),
             factors=security_factors,
         )
         
         privacy_layer = LayerScore(
             layer_name="privacy",
-            score=privacy_score,
+            score=privacy_score,  # This is now the adjusted score
             risk=round(privacy_risk, 4),
             factors=privacy_factors,
         )
         
         governance_layer = LayerScore(
             layer_name="governance",
-            score=governance_score,
+            score=governance_score,  # This is now the adjusted score
             risk=round(governance_risk, 4),
             factors=governance_factors,
         )
         
         # =====================================================================
-        # STEP 3: Calculate overall score (weighted average of layers)
+        # STEP 3: Evaluate hard gates (before calculating overall score)
+        # =====================================================================
+        
+        gate_results = self.gates.evaluate_all(signal_pack, manifest)
+        self._last_gate_results = gate_results
+        
+        # STEP 3.1: Incorporate hard gate penalties into layer scores
+        # Hard gates should affect the numeric scores, not just trigger decisions
+        security_score, privacy_score, governance_score = self._apply_gate_penalties(
+            security_score, privacy_score, governance_score, gate_results
+        )
+        
+        # =====================================================================
+        # STEP 4: Calculate overall score (weighted average of layers)
+        # AFTER gate penalties are applied
         # =====================================================================
         
         layer_weights = self.weights.layer_weights
@@ -256,7 +270,7 @@ class ScoringEngine:
             )
         
         logger.debug(
-            "Layer scores: security=%d, privacy=%d, governance=%d, overall=%d",
+            "Layer scores (after gate penalties): security=%d, privacy=%d, governance=%d, overall=%d",
             security_score,
             privacy_score,
             governance_score,
@@ -264,11 +278,8 @@ class ScoringEngine:
         )
         
         # =====================================================================
-        # STEP 4: Evaluate hard gates
+        # STEP 5: Get gate results for decision making
         # =====================================================================
-        
-        gate_results = self.gates.evaluate_all(signal_pack, manifest)
-        self._last_gate_results = gate_results
         
         blocking_gates = self.gates.get_blocking_gates(gate_results)
         warning_gates = self.gates.get_warning_gates(gate_results)
@@ -282,7 +293,7 @@ class ScoringEngine:
             )
         
         # =====================================================================
-        # STEP 5: Determine final decision
+        # STEP 6: Determine final decision
         # =====================================================================
         
         decision, reasons = self._determine_decision(
@@ -302,7 +313,7 @@ class ScoringEngine:
                 decision = Decision.NEEDS_REVIEW
         
         # =====================================================================
-        # STEP 6: Build final result
+        # STEP 7: Build final result
         # =====================================================================
         
         result = ScoringResult(
@@ -532,6 +543,87 @@ class ScoringEngine:
         ))
         
         return factors
+    
+    def _apply_gate_penalties(
+        self,
+        security_score: int,
+        privacy_score: int, 
+        governance_score: int,
+        gate_results: List[GateResult],
+    ) -> Tuple[int, int, int]:
+        """
+        Apply hard gate penalties to layer scores.
+        
+        Hard gates that trigger should significantly penalize the corresponding layer score.
+        This ensures that gate findings are reflected in both decisions AND numeric scores.
+        
+        Args:
+            security_score: Original security score
+            privacy_score: Original privacy score
+            governance_score: Original governance score
+            gate_results: Results from hard gate evaluation
+            
+        Returns:
+            Tuple of (adjusted_security_score, adjusted_privacy_score, adjusted_governance_score)
+        """
+        # Gate penalty mappings (gate_id -> (layer, penalty))
+        # BLOCK gates get higher penalty than WARN gates
+        gate_penalties = {
+            'CRITICAL_SAST': ('security', 50),      # BLOCK gate
+            'VT_MALWARE': ('security', 45),         # BLOCK gate
+            'TOS_VIOLATION': ('governance', 60),    # BLOCK gate - severe governance issue
+            'PURPOSE_MISMATCH': ('governance', 45), # WARN/BLOCK gate - major consistency issue
+            'SENSITIVE_EXFIL': ('privacy', 40),     # WARN gate
+        }
+        
+        # Track penalties by layer
+        security_penalty = 0
+        privacy_penalty = 0
+        governance_penalty = 0
+        
+        for gate_result in gate_results:
+            if not gate_result.triggered:
+                continue
+                
+            gate_config = gate_penalties.get(gate_result.gate_id)
+            if not gate_config:
+                continue
+                
+            layer, base_penalty = gate_config
+            
+            # Scale penalty based on gate decision severity and confidence
+            penalty_multiplier = 1.0
+            if gate_result.decision == 'BLOCK':
+                penalty_multiplier = 1.0  # Full penalty for BLOCK
+            elif gate_result.decision == 'WARN':
+                penalty_multiplier = 0.7  # Reduced penalty for WARN
+            
+            # Apply confidence scaling
+            adjusted_penalty = int(base_penalty * penalty_multiplier * gate_result.confidence)
+            
+            # Apply penalty to appropriate layer
+            if layer == 'security':
+                security_penalty = max(security_penalty, adjusted_penalty)
+            elif layer == 'privacy':
+                privacy_penalty = max(privacy_penalty, adjusted_penalty)
+            elif layer == 'governance':
+                governance_penalty = max(governance_penalty, adjusted_penalty)
+        
+        # Apply penalties (ensure scores don't go below 0)
+        adjusted_security = max(0, security_score - security_penalty)
+        adjusted_privacy = max(0, privacy_score - privacy_penalty)
+        adjusted_governance = max(0, governance_score - governance_penalty)
+        
+        # Log penalties for debugging
+        if security_penalty > 0 or privacy_penalty > 0 or governance_penalty > 0:
+            logger.info(
+                "Applied gate penalties: security %d->%d (-%d), privacy %d->%d (-%d), governance %d->%d (-%d)",
+                security_score, adjusted_security, security_penalty,
+                privacy_score, adjusted_privacy, privacy_penalty,
+                governance_score, adjusted_governance, governance_penalty,
+            )
+        
+        return adjusted_security, adjusted_privacy, adjusted_governance
     
     def _determine_decision(
         self,

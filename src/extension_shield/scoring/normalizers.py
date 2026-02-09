@@ -56,11 +56,12 @@ TEST_FILE_PATTERNS = [
 ]
 
 # SAST severity weights for scoring
+# CRITICAL findings should dominate the score to ensure security scores reflect true risk
 SAST_SEVERITY_WEIGHTS: Dict[str, float] = {
-    "CRITICAL": 4.0,
-    "HIGH": 4.0,
-    "ERROR": 2.0,
-    "MEDIUM": 2.0,
+    "CRITICAL": 15.0,  # Increased from 4.0 - critical findings should dominate security score
+    "HIGH": 8.0,       # Increased from 4.0 - high severity findings are serious
+    "ERROR": 3.0,      # Increased from 2.0
+    "MEDIUM": 1.5,     # Decreased from 2.0 - less impact to balance critical/high
     "WARNING": 0.5,
     "INFO": 0.1,
     "LOW": 0.1,
@@ -226,7 +227,8 @@ def normalize_sast(
         severity_breakdown[severity_upper] = severity_breakdown.get(severity_upper, 0) + 1
     
     # Compute severity using saturating formula
-    severity = _saturating_severity(x, k=0.08)
+    # Use more aggressive saturation for critical security findings
+    severity = _saturating_severity(x, k=0.12)  # Increased from 0.08 for faster saturation
     
     # Determine confidence
     if not sast_pack.deduped_findings and sast_pack.files_scanned == 0:
