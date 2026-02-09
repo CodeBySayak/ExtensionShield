@@ -146,16 +146,26 @@ class RealScanService {
   }
 
   // Get real scan results from CLI analysis
+  // UNIFIED: Returns payload as-is from backend (no legacy transformation)
+  // Backend already upgrades legacy payloads and ensures consumer_insights
   async getRealScanResults(extensionId) {
+    const url = `${this.baseURL}/api/scan/results/${extensionId}`;
     try {
-      // Try to read the analysis file that CLI creates
-      const response = await fetch(
-        `${this.baseURL}/api/scan/results/${extensionId}`,
-      );
+      console.log("RESULTS_ENDPOINT", url);
+      
+      const response = await fetch(url, {
+        headers: {
+          ...this.getRequestHeaders(),
+        },
+      });
 
       if (response.ok) {
-        const results = await response.json();
-        return this.formatRealResults(results);
+        const data = await response.json();
+        console.log("TOP_KEYS", Object.keys(data));
+        
+        // Return payload as-is - backend already upgrades legacy payloads
+        // DO NOT call formatRealResults() - it creates legacy keys (securityScore, riskLevel, sastResults)
+        return data;
       }
 
       // 404 is expected while a scan is still running or results haven't been persisted yet.
@@ -163,7 +173,13 @@ class RealScanService {
         return null;
       }
 
-      const data = await response.json().catch(() => ({}));
+      const text = await response.text();
+      let data = {};
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        // Ignore parse errors
+      }
       const detail = data?.detail;
       const message =
         (typeof detail === "string" && detail) ||
@@ -185,33 +201,58 @@ class RealScanService {
 
   // Check scan status
   async checkScanStatus(extensionId) {
+    const url = `${this.baseURL}/api/scan/status/${extensionId}`;
     try {
-      const response = await fetch(
-        `${this.baseURL}/api/scan/status/${extensionId}`,
-      );
-      if (response.ok) {
-        const data = await response.json();
-        // Check if the status response contains an error with code 401
-        if (data.error && (data.error_code === 401 || data.error?.includes("API key") || data.error?.includes("Invalid API key"))) {
+      console.group(`[DEBUG checkScanStatus] ${extensionId}`);
+      console.log("URL:", url);
+      
+      const response = await fetch(url);
+      console.log("HTTP Status:", response.status);
+      
+      let responseBody = null;
+      try {
+        const text = await response.text();
+        responseBody = text.substring(0, 500);
+        console.log("Response body (first 500 chars):", responseBody);
+        const data = JSON.parse(text);
+        
+        if (response.ok) {
+          // Check if the status response contains an error with code 401
+          if (data.error && (data.error_code === 401 || data.error?.includes("API key") || data.error?.includes("Invalid API key"))) {
+            console.log("Detected 401 error in response");
+            console.groupEnd();
+            return { scanned: false, status: "failed", error: "Connection is down try back in a while", error_code: 401 };
+          }
+          console.groupEnd();
+          return data;
+        }
+        // Check for 401 status code
+        if (response.status === 401) {
+          console.log("HTTP 401 detected");
+          console.groupEnd();
           return { scanned: false, status: "failed", error: "Connection is down try back in a while", error_code: 401 };
         }
-        return data;
+        console.groupEnd();
+        return { scanned: false };
+      } catch (parseError) {
+        console.error("Failed to parse response:", parseError);
+        console.groupEnd();
+        return { scanned: false };
       }
-      // Check for 401 status code
-      if (response.status === 401) {
-        return { scanned: false, status: "failed", error: "Connection is down try back in a while", error_code: 401 };
-      }
-      return { scanned: false };
     } catch (error) {
       console.error("Failed to check scan status:", error);
+      console.log("Error message:", error.message);
       // Determine if it's a network error (server down)
       if (error.message.includes("fetch") || error.message.includes("network")) {
+        console.groupEnd();
         throw new Error("Backend server unavailable. Please make sure the API server is running (make api).");
       }
       // Check for 401 errors
       if (error.status === 401 || error.message?.includes("401") || error.message?.includes("API key")) {
+        console.groupEnd();
         return { scanned: false, status: "failed", error: "Connection is down try back in a while", error_code: 401 };
       }
+      console.groupEnd();
       return { scanned: false, status: "error", error: error.message };
     }
   }
