@@ -2494,7 +2494,7 @@ async def track_pageview(event: PageViewEvent):
     - No IP storage
     - No user identifier
     - Server computes day in UTC
-    - Supports both SQLite and Supabase backends
+    - Supports Postgres (Supabase) and SQLite dev fallback
     """
     day = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     path = (event.path or "/").strip()
@@ -2530,7 +2530,7 @@ async def get_history(http_request: Request, limit: int = 50):
     """
     user_id = getattr(getattr(http_request, "state", None), "user_id", None)
     if not user_id:
-        # When using Supabase (staging or prod), require auth. SQLite/local allows global history for testing.
+        # When using Supabase (staging or prod), require auth. SQLite fallback allows global history for dev testing.
         if isinstance(db, SupabaseDatabase):
             raise HTTPException(status_code=401, detail="Sign in to view history")
         history = db.get_scan_history(limit=limit)
@@ -2553,7 +2553,7 @@ async def get_user_karma(http_request: Request):
         raise HTTPException(status_code=401, detail="Sign in to view karma")
     
     if not isinstance(db, SupabaseDatabase):
-        # SQLite doesn't have karma tracking
+        # SQLite fallback doesn't have karma tracking (Postgres only)
         return {"karma_points": 0, "total_scans": 0, "created_at": None, "updated_at": None}
     
     karma = db.get_user_karma(user_id=user_id)
@@ -2561,20 +2561,21 @@ async def get_user_karma(http_request: Request):
 
 
 @app.get("/api/recent")
-async def get_recent_scans(limit: int = 10):
+async def get_recent_scans(limit: int = 10, search: str = None):
     """
     Get recent scans with summary info including risk and signals mapping.
 
     Args:
         limit: Maximum number of results to return
+        search: Optional filter by extension name or ID (case-insensitive, Postgres/SQLite)
 
     Returns:
         List of recent scans with risk_and_signals mapping; db_backend for verification (supabase|sqlite).
     """
     db_backend = "supabase" if isinstance(db, SupabaseDatabase) else "sqlite"
     try:
-        logger.info(f"[get_recent_scans] Fetching {limit} recent scans")
-        recent = db.get_recent_scans(limit=limit)
+        logger.info(f"[get_recent_scans] Fetching {limit} recent scans, search={search}")
+        recent = db.get_recent_scans(limit=limit, search=search)
         logger.info(f"[get_recent_scans] Retrieved {len(recent)} scans from database")
 
         if len(recent) == 0:
