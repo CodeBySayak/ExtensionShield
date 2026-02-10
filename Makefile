@@ -87,7 +87,7 @@ api:
 # Validate local dev is pulling from Supabase Postgres (requires DB_BACKEND=supabase + Supabase env)
 validate-postgres:
 	@echo "Validating Supabase Postgres connection and scan_results..."
-	python scripts/validate_postgres_local.py
+	uv run python scripts/validate_postgres_local.py
 
 # Run Supabase migrations (prod only, safe to run multiple times)
 migrate:
