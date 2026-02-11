@@ -53,7 +53,7 @@ const BenchmarksPage = () => {
         setBenchmarksData(benchmarks);
         setLoading(false);
       } catch (err) {
-        console.error('Error loading benchmark data:', err);
+        // console.error('Error loading benchmark data:', err); // prod: no console
         // Provide more helpful error message
         const errorMessage = err.message || 'Failed to load benchmark data. Please check that the data files are available.';
         setError(errorMessage);

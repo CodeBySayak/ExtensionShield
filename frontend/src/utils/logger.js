@@ -32,11 +32,12 @@ export const logger = {
   },
 
   /**
-   * Log errors (always logged, even in production)
-   * Errors are important for debugging production issues
+   * Log errors (development only for now; prod: no console output)
    */
   error: (...args) => {
-    console.error(...args);
+    if (isDev) {
+      console.error(...args);
+    }
   },
 
   /**

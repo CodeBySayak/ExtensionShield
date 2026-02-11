@@ -26,7 +26,7 @@ export const validateReturnTo = (returnTo) => {
   
   // Reject strings containing control characters or null bytes
   if (hasControlChars(returnTo)) {
-    console.warn("Invalid returnTo (contains control characters):", returnTo);
+    // console.warn("Invalid returnTo (contains control characters):", returnTo); // prod: no console
     return "/";
   }
   
@@ -35,19 +35,19 @@ export const validateReturnTo = (returnTo) => {
   
   // Only allow relative paths starting with /
   if (!returnTo.startsWith("/")) {
-    console.warn("Invalid returnTo (not relative):", returnTo);
+    // console.warn("Invalid returnTo (not relative):", returnTo); // prod: no console
     return "/";
   }
   
   // Prevent protocol-relative URLs (//evil.com)
   if (returnTo.startsWith("//")) {
-    console.warn("Invalid returnTo (protocol-relative):", returnTo);
+    // console.warn("Invalid returnTo (protocol-relative):", returnTo); // prod: no console
     return "/";
   }
   
   // Prevent loops: if returnTo is /auth/callback or starts with it, force home
   if (returnTo === "/auth/callback" || returnTo.startsWith("/auth/callback")) {
-    console.warn("Invalid returnTo (would cause loop):", returnTo);
+    // console.warn("Invalid returnTo (would cause loop):", returnTo); // prod: no console
     return "/";
   }
   

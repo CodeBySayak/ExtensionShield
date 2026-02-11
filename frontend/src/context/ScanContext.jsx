@@ -42,7 +42,7 @@ export const ScanProvider = ({ children }) => {
       const metrics = await databaseService.getDashboardMetrics();
       setDashboardStats(metrics);
     } catch (err) {
-      console.error("Error loading dashboard stats:", err);
+      // console.error("Error loading dashboard stats:", err); // prod: no console
     }
   }, []);
 
@@ -53,7 +53,7 @@ export const ScanProvider = ({ children }) => {
       setScanHistory(history);
       return history;
     } catch (err) {
-      console.error("Error loading scan history:", err);
+      // console.error("Error loading scan history:", err); // prod: no console
       setScanHistory([]);
       return [];
     }
@@ -306,7 +306,7 @@ export const ScanProvider = ({ children }) => {
       const baseURL = import.meta.env.VITE_API_URL || "";
       const url = `${baseURL}/api/scan/results/${extId}`;
       
-      console.log("RESULTS_ENDPOINT", url);
+      // console.log("RESULTS_ENDPOINT", url); // prod: no console
       
       const response = await fetch(url, {
         headers: {
@@ -323,7 +323,7 @@ export const ScanProvider = ({ children }) => {
       }
 
       const data = await response.json();
-      console.log("TOP_KEYS", Object.keys(data));
+      // console.log("TOP_KEYS", Object.keys(data)); // prod: no console
       
       // Use payload as-is - backend already upgrades legacy payloads and ensures consumer_insights
       setScanResults(data);
@@ -333,7 +333,7 @@ export const ScanProvider = ({ children }) => {
       // Navigate to results page
       navigate(`/scan/results/${extId}`);
     } catch (err) {
-      console.error(err);
+      // console.error(err); // prod: no console
       setError("Failed to load scan results from history.");
     }
   }, [navigate]);
@@ -347,7 +347,7 @@ export const ScanProvider = ({ children }) => {
       const baseURL = import.meta.env.VITE_API_URL || "";
       const url = `${baseURL}/api/scan/results/${extId}`;
       
-      console.log("RESULTS_ENDPOINT", url);
+      // console.log("RESULTS_ENDPOINT", url); // prod: no console
       
       const response = await fetch(url, {
         headers: {
@@ -364,7 +364,7 @@ export const ScanProvider = ({ children }) => {
       }
 
       const data = await response.json();
-      console.log("TOP_KEYS", Object.keys(data));
+      // console.log("TOP_KEYS", Object.keys(data)); // prod: no console
       
       // Use payload as-is - backend already upgrades legacy payloads and ensures consumer_insights
       setScanResults(data);
@@ -372,7 +372,7 @@ export const ScanProvider = ({ children }) => {
       setError("");
       return data;
     } catch (err) {
-      console.error("Failed to load scan results:", err);
+      // console.error("Failed to load scan results:", err); // prod: no console
       setError("Failed to load scan results.");
       return null;
     }

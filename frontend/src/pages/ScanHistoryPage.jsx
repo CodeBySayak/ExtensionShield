@@ -203,7 +203,7 @@ const ScanHistoryPage = () => {
               }
             })
             .catch((err) => {
-              console.error("Error loading dashboard stats:", err);
+              // console.error("Error loading dashboard stats:", err); // prod: no console
             });
         }
         
@@ -214,7 +214,7 @@ const ScanHistoryPage = () => {
           setAllScans(enrichedScans);
         }
       } catch (error) {
-        console.error("Failed to load scan history:", error);
+        // console.error("Failed to load scan history:", error); // prod: no console
         if (isMounted) {
           setAllScans([]);
         }
@@ -381,7 +381,7 @@ const ScanHistoryPage = () => {
       setCopiedId(extId);
       setTimeout(() => setCopiedId(null), 2000);
     } catch (err) {
-      console.error("Failed to copy:", err);
+      // console.error("Failed to copy:", err); // prod: no console
     }
   };
 

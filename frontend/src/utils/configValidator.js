@@ -37,7 +37,7 @@ export const validateSupabaseConfig = () => {
   }
 
   if (errors.length > 0) {
-    console.error("❌ Supabase Configuration Errors:", errors);
+    // console.error("❌ Supabase Configuration Errors:", errors); // prod: no console
     return { valid: false, errors, warnings };
   }
 
@@ -46,7 +46,7 @@ export const validateSupabaseConfig = () => {
     
     // Warn in production
     if (window.location.origin.includes("extensionshield.com")) {
-      console.warn("⚠️ WARNING: Debug mode is enabled in production!");
+      // console.warn("⚠️ WARNING: Debug mode is enabled in production!"); // prod: no console
     }
   }
 
@@ -62,11 +62,11 @@ export const validateOrigin = () => {
   const isAllowed = ALLOWED_ORIGINS.includes(origin);
 
   if (!isAllowed && isDebug) {
-    console.warn(
-      `⚠️ Origin ${origin} is not in the allowed list.`,
-      "This may indicate a misconfiguration."
-    );
-    console.warn("Allowed origins:", ALLOWED_ORIGINS);
+    // console.warn(
+    //   `⚠️ Origin ${origin} is not in the allowed list.`,
+    //   "This may indicate a misconfiguration."
+    // ); // prod: no console
+    // console.warn("Allowed origins:", ALLOWED_ORIGINS); // prod: no console
   }
 
   return isAllowed;
@@ -80,13 +80,13 @@ export const validateConfig = () => {
   const originCheck = validateOrigin();
 
   if (!supabaseCheck.valid) {
-    console.error("Configuration validation failed. Authentication may not work.");
+    // console.error("Configuration validation failed. Authentication may not work."); // prod: no console
     return false;
   }
 
   if (supabaseCheck.warnings.length > 0) {
     supabaseCheck.warnings.forEach(warning => {
-      console.warn("⚠️", warning);
+      // console.warn("⚠️", warning); // prod: no console
     });
   }
 
@@ -104,7 +104,7 @@ export const initConfigValidation = () => {
   const isValid = validateConfig();
 
   if (isValid) {
-    console.log("✅ Configuration validated successfully");
+    // console.log("✅ Configuration validated successfully"); // prod: no console
   }
 
   return isValid;

@@ -14,7 +14,7 @@ const SafetyLabelCard = ({ rows = [], onEvidenceClick }) => {
     if (typeof onEvidenceClick === 'function') {
       onEvidenceClick(evidenceId);
     } else {
-      console.log('evidence:', evidenceId);
+      // console.log('evidence:', evidenceId); // prod: no console
     }
   };
 

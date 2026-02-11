@@ -54,7 +54,7 @@ const signInWithGoogle = async () => {
   });
   
   if (error) {
-    console.error("Google OAuth error:", error);
+    // console.error("Google OAuth error:", error); // prod: no console
     sessionStorage.removeItem("auth:returnTo");
     throw new Error(error.message || "Google sign-in failed");
   }
@@ -84,7 +84,7 @@ const signInWithGitHub = async () => {
   });
   
   if (error) {
-    console.error("GitHub OAuth error:", error);
+    // console.error("GitHub OAuth error:", error); // prod: no console
     sessionStorage.removeItem("auth:returnTo");
     throw new Error(error.message || "GitHub sign-in failed");
   }

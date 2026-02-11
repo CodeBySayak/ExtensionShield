@@ -45,7 +45,7 @@ const AuthCallbackPage = () => {
         // Never log sensitive values (codes, tokens, verifiers)
         if (errorParam) {
           // Only log error type, not full error details that might contain sensitive info
-          console.error("OAuth error from provider:", errorParam);
+          // console.error("OAuth error from provider:", errorParam); // prod: no console
           setError(errorDescription || errorParam || "Authentication failed");
           setStatus("error");
           
@@ -61,7 +61,7 @@ const AuthCallbackPage = () => {
         // Validate code is present (user might land here manually or with invalid URL)
         // Never log the code value
         if (!code) {
-          console.error("No authorization code in callback URL");
+          // console.error("No authorization code in callback URL"); // prod: no console
           setError("Missing authorization code. Please try signing in again.");
           setStatus("error");
           
@@ -78,13 +78,13 @@ const AuthCallbackPage = () => {
 
         // Exchange code for session (PKCE flow)
         // Note: Never log the code or any sensitive values
-        console.log("Exchanging authorization code for session...");
+        // console.log("Exchanging authorization code for session..."); // prod: no console
         const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
 
         if (exchangeError) {
           // Never log the actual error message as it might contain sensitive info
           // Only log error type
-          console.error("Failed to exchange code for session:", exchangeError.message);
+          // console.error("Failed to exchange code for session:", exchangeError.message); // prod: no console
           
           // Handle specific PKCE verifier missing error
           const isPKCEError = exchangeError.message?.includes("code verifier") || 
@@ -108,7 +108,7 @@ const AuthCallbackPage = () => {
 
         if (data?.session) {
           // Only log non-sensitive info (email is safe)
-          console.log("Session created successfully, user:", data.session.user?.email);
+          // console.log("Session created successfully, user:", data.session.user?.email); // prod: no console
           
           // Get and validate return URL from sessionStorage
           const returnTo = validateReturnTo(sessionStorage.getItem("auth:returnTo"));
@@ -126,11 +126,11 @@ const AuthCallbackPage = () => {
             
             // Small delay to show success state, then redirect
             redirectTimeoutRef.current = setTimeout(() => {
-              console.log("Redirecting to:", returnTo);
+              // console.log("Redirecting to:", returnTo); // prod: no console
               try {
                 navigate(returnTo, { replace: true });
               } catch (navError) {
-                console.error("Navigation error:", navError);
+                // console.error("Navigation error:", navError); // prod: no console
                 // Fallback to window.location if navigate fails
                 window.location.href = returnTo;
               }
@@ -142,11 +142,11 @@ const AuthCallbackPage = () => {
             try {
               const { data: sessionData } = await supabase.auth.getSession();
               if (sessionData?.session) {
-                console.log("Session verified, proceeding with redirect");
+                // console.log("Session verified, proceeding with redirect"); // prod: no console
                 redirectAfterAuthState();
               }
             } catch (err) {
-              console.error("Session verification failed:", err);
+              // console.error("Session verification failed:", err); // prod: no console
               // Continue anyway - the exchange was successful
               redirectAfterAuthState();
             }
@@ -154,7 +154,7 @@ const AuthCallbackPage = () => {
 
           // Set up auth state listener to wait for SIGNED_IN event
           const { data: authStateData } = supabase.auth.onAuthStateChange((event, session) => {
-            console.log("Auth state change in callback:", event, session ? "has session" : "no session");
+            // console.log("Auth state change in callback:", event, session ? "has session" : "no session"); // prod: no console
             if ((event === "SIGNED_IN" || event === "TOKEN_REFRESHED") && session) {
               authStateReceived = true;
               redirectAfterAuthState();
@@ -169,12 +169,12 @@ const AuthCallbackPage = () => {
           // This handles edge cases where the event might not fire
           fallbackTimeoutRef.current = setTimeout(() => {
             if (!redirectExecuted) {
-              console.warn("Auth state change event not received within timeout, redirecting anyway");
+              // console.warn("Auth state change event not received within timeout, redirecting anyway"); // prod: no console
               redirectAfterAuthState();
             }
           }, 2000);
         } else {
-          console.error("No session returned from exchangeCodeForSession");
+          // console.error("No session returned from exchangeCodeForSession"); // prod: no console
           setError("Session creation failed");
           setStatus("error");
           
@@ -185,7 +185,7 @@ const AuthCallbackPage = () => {
           }, 2000);
         }
       } catch (err) {
-        console.error("Unexpected error in auth callback:", err);
+        // console.error("Unexpected error in auth callback:", err); // prod: no console
         setError(err.message || "An unexpected error occurred");
         setStatus("error");
         

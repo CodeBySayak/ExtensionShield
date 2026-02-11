@@ -147,7 +147,7 @@ export async function enrichScan(scan, options = {}) {
   } catch (err) {
     // If fetch fails, use what we have and create fallback
     // This ensures we always return a valid scan object, never null
-    console.warn(`Could not fetch full result for ${scan.extension_id}, using available data:`, err);
+    // console.warn(`Could not fetch full result for ${scan.extension_id}, using available data:`, err); // prod: no console
     const fallbackData = { metadata, ...scan };
     const enriched = enrichScanWithSignals(baseScan, fallbackData);
     return enriched;
@@ -165,7 +165,7 @@ export async function enrichScan(scan, options = {}) {
  */
 export async function enrichScans(scans, options = {}) {
   if (!scans || scans.length === 0) {
-    console.warn('[enrichScans] No scans provided');
+    // console.warn('[enrichScans] No scans provided'); // prod: no console
     return [];
   }
 
@@ -181,7 +181,7 @@ export async function enrichScans(scans, options = {}) {
         }),
   };
 
-  console.log(`[enrichScans] Enriching ${scans.length} scans, skipFullFetch=${enrichmentOptions.skipFullFetch}`);
+  // console.log(`[enrichScans] Enriching ${scans.length} scans, skipFullFetch=${enrichmentOptions.skipFullFetch}`); // prod: no console
 
   const enrichmentPromises = scans.map((scan) => enrichScan(scan, enrichmentOptions));
   const results = await Promise.allSettled(enrichmentPromises);
@@ -194,13 +194,13 @@ export async function enrichScans(scans, options = {}) {
       } else {
         // If enrichment failed, create a fallback scan instead of filtering it out
         // This ensures the table always shows all scans, even if enrichment fails
-        console.warn(`[enrichScans] Failed to enrich scan ${index}, using fallback:`, result.reason);
+        // console.warn(`[enrichScans] Failed to enrich scan ${index}, using fallback:`, result.reason); // prod: no console
         return createFallbackScan(scans[index]);
       }
     })
     .filter(scan => scan && scan.extension_id); // Only filter out scans without extension_id
   
-  console.log(`[enrichScans] Successfully enriched ${enriched.length} of ${scans.length} scans`);
+  // console.log(`[enrichScans] Successfully enriched ${enriched.length} of ${scans.length} scans`); // prod: no console
   return enriched;
 }
 

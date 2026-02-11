@@ -113,46 +113,46 @@ const ScanResultsPageV2 = () => {
     if (scanResults) {
       setRawData(scanResults);
 
-      // ── DEBUG (dev only): raw payload inspection ──
-      if (process.env.NODE_ENV === "development") {
-        console.group("[DEBUG ScanResultsPageV2] RAW payload inspection");
-        console.log("raw keys:", Object.keys(scanResults || {}));
-        console.log("raw.report_view_model keys:", Object.keys(scanResults?.report_view_model || {}));
-        console.log("typeof raw.report_view_model.consumer_insights:", typeof scanResults?.report_view_model?.consumer_insights);
-        console.log("typeof raw.consumer_insights:", typeof scanResults?.consumer_insights);
-        console.log("raw.report_view_model.consumer_insights:", scanResults?.report_view_model?.consumer_insights);
-        console.log("raw.report_view_model.consumerInsights (camelCase?):", scanResults?.report_view_model?.consumerInsights);
-        console.log("raw.scoring_v2 exists?", typeof scanResults?.scoring_v2, scanResults?.scoring_v2 ? Object.keys(scanResults.scoring_v2) : "N/A");
-        console.groupEnd();
-      }
+      // ── DEBUG (dev only): raw payload inspection ── (commented for prod: no console)
+      // if (process.env.NODE_ENV === "development") {
+      //   console.group("[DEBUG ScanResultsPageV2] RAW payload inspection");
+      //   console.log("raw keys:", Object.keys(scanResults || {}));
+      //   console.log("raw.report_view_model keys:", Object.keys(scanResults?.report_view_model || {}));
+      //   console.log("typeof raw.report_view_model.consumer_insights:", typeof scanResults?.report_view_model?.consumer_insights);
+      //   console.log("typeof raw.consumer_insights:", typeof scanResults?.consumer_insights);
+      //   console.log("raw.report_view_model.consumer_insights:", scanResults?.report_view_model?.consumer_insights);
+      //   console.log("raw.report_view_model.consumerInsights (camelCase?):", scanResults?.report_view_model?.consumerInsights);
+      //   console.log("raw.scoring_v2 exists?", typeof scanResults?.scoring_v2, scanResults?.scoring_v2 ? Object.keys(scanResults.scoring_v2) : "N/A");
+      //   console.groupEnd();
+      // }
 
       // Use safe normalizer - never throws (synchronous)
       const vm = normalizeScanResultSafe(scanResults);
       setViewModel(vm);
 
-      // ── DEBUG (dev only): post-normalization inspection ──
-      if (process.env.NODE_ENV === "development") {
-        console.group("[DEBUG ScanResultsPageV2] POST-NORMALIZATION inspection");
-        console.log("viewModel keys:", Object.keys(vm || {}));
-        console.log("typeof viewModel.consumerInsights:", typeof vm?.consumerInsights);
-        console.log("viewModel.consumerInsights:", vm?.consumerInsights);
-        console.log("viewModel.reportViewModel?.consumer_insights:", vm?.reportViewModel?.consumer_insights);
-        console.log("!!viewModel.consumerInsights:", !!vm?.consumerInsights);
-        console.log("!!raw.report_view_model.consumer_insights:", !!scanResults?.report_view_model?.consumer_insights);
-        const ci = vm?.consumerInsights;
-        if (ci) {
-          console.log("consumerInsights.safety_label.length:", Array.isArray(ci.safety_label) ? ci.safety_label.length : "not array");
-          console.log("consumerInsights.scenarios.length:", Array.isArray(ci.scenarios) ? ci.scenarios.length : "not array");
-          console.log("consumerInsights.top_drivers.length:", Array.isArray(ci.top_drivers) ? ci.top_drivers.length : "not array");
-        } else {
-          console.log("consumerInsights is undefined/null");
-        }
-        console.groupEnd();
-      }
+      // ── DEBUG (dev only): post-normalization inspection ── (commented for prod: no console)
+      // if (process.env.NODE_ENV === "development") {
+      //   console.group("[DEBUG ScanResultsPageV2] POST-NORMALIZATION inspection");
+      //   console.log("viewModel keys:", Object.keys(vm || {}));
+      //   console.log("typeof viewModel.consumerInsights:", typeof vm?.consumerInsights);
+      //   console.log("viewModel.consumerInsights:", vm?.consumerInsights);
+      //   console.log("viewModel.reportViewModel?.consumer_insights:", vm?.reportViewModel?.consumer_insights);
+      //   console.log("!!viewModel.consumerInsights:", !!vm?.consumerInsights);
+      //   console.log("!!raw.report_view_model.consumer_insights:", !!scanResults?.report_view_model?.consumer_insights);
+      //   const ci = vm?.consumerInsights;
+      //   if (ci) {
+      //     console.log("consumerInsights.safety_label.length:", Array.isArray(ci.safety_label) ? ci.safety_label.length : "not array");
+      //     console.log("consumerInsights.scenarios.length:", Array.isArray(ci.scenarios) ? ci.scenarios.length : "not array");
+      //     console.log("consumerInsights.top_drivers.length:", Array.isArray(ci.top_drivers) ? ci.top_drivers.length : "not array");
+      //   } else {
+      //     console.log("consumerInsights is undefined/null");
+      //   }
+      //   console.groupEnd();
+      // }
       
       if (!vm) {
         setNormalizationError("Failed to normalize scan result data");
-        console.error("[ScanResultsPageV2] normalizeScanResultSafe returned null");
+        // console.error("[ScanResultsPageV2] normalizeScanResultSafe returned null"); // prod: no console
       } else {
         setNormalizationError(null);
         
@@ -160,7 +160,7 @@ const ScanResultsPageV2 = () => {
         const validation = validateEvidenceIntegrity(vm);
         if (!validation.valid) {
           validation.warnings.forEach(warning => {
-            console.warn(`[ScanResultsPageV2] Evidence warning: ${warning}`);
+            // console.warn(`[ScanResultsPageV2] Evidence warning: ${warning}`); // prod: no console
           });
         }
       }

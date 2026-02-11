@@ -395,7 +395,7 @@ function computeEffectiveBand(scoreBand: ScoreBand, gateBand: ScoreBand | null):
  */
 function assertExists<T>(value: T | undefined | null, name: string): T {
   if (value === undefined || value === null) {
-    console.warn(`[normalizeScanResult] Missing expected field: ${name}`);
+    // console.warn(`[normalizeScanResult] Missing expected field: ${name}`); // prod: no console
     throw new Error(`Missing required field: ${name}`);
   }
   return value;
@@ -460,7 +460,7 @@ function toEvidenceItemVM(
       rawData: ev,
     };
   } catch {
-    console.warn(`[buildEvidenceIndex] Failed to convert evidence item: ${id || 'unknown'}`);
+    // console.warn(`[buildEvidenceIndex] Failed to convert evidence item: ${id || 'unknown'}`); // prod: no console
     return null;
   }
 }
@@ -520,7 +520,7 @@ export function extractEvidenceItems(
       });
     }
   } catch (error) {
-    console.warn('[extractEvidenceItems] Error extracting evidence:', error);
+    // console.warn('[extractEvidenceItems] Error extracting evidence:', error); // prod: no console
     // Return whatever we have so far (empty is fine)
   }
   
@@ -542,7 +542,7 @@ function buildEvidenceIndex(raw: RawScanResult): Record<string, EvidenceItemVM> 
       evidenceIndex[id] = evidence;
     });
   } catch (error) {
-    console.warn('[buildEvidenceIndex] Error building evidence index:', error);
+    // console.warn('[buildEvidenceIndex] Error building evidence index:', error); // prod: no console
     // Return empty object - never throw
   }
   
@@ -748,7 +748,7 @@ export function normalizeScanResult(raw: RawScanResult): ReportViewModel {
   // Support both snake_case (raw API) and camelCase (formatted data)
   const extensionId = raw.extension_id || (raw as unknown as { extensionId?: string }).extensionId;
   if (!extensionId) {
-    console.error('[normalizeScanResult] Missing extension_id in raw result');
+    // console.error('[normalizeScanResult] Missing extension_id in raw result'); // prod: no console
     throw new Error('Invalid scan result: missing extension_id');
   }
   
@@ -917,14 +917,14 @@ export function normalizeScanResult(raw: RawScanResult): ReportViewModel {
  */
 export function normalizeScanResultSafe(raw: RawScanResult | null | undefined): ReportViewModel | null {
   if (!raw) {
-    console.warn('[normalizeScanResultSafe] Received null or undefined raw result');
+    // console.warn('[normalizeScanResultSafe] Received null or undefined raw result'); // prod: no console
     return null;
   }
   
   try {
     return normalizeScanResult(raw);
   } catch (error) {
-    console.error('[normalizeScanResultSafe] Failed to normalize scan result:', error);
+    // console.error('[normalizeScanResultSafe] Failed to normalize scan result:', error); // prod: no console
     return null;
   }
 }
@@ -1010,7 +1010,7 @@ export function validateEvidenceIntegrity(vm: ReportViewModel): {
   // Check if evidence_ids exist but evidenceIndex is empty
   if (referencedIds.length > 0 && indexKeys.length === 0) {
     const warning = `Evidence IDs exist (${referencedIds.length}) but evidenceIndex is empty`;
-    console.warn(`[validateEvidenceIntegrity] ${warning}`);
+    // console.warn(`[validateEvidenceIntegrity] ${warning}`); // prod: no console
     warnings.push(warning);
   }
   
@@ -1018,7 +1018,7 @@ export function validateEvidenceIntegrity(vm: ReportViewModel): {
   const orphanedIds = referencedIds.filter((id) => !vm.evidenceIndex[id]);
   if (orphanedIds.length > 0 && indexKeys.length > 0) {
     const warning = `${orphanedIds.length} evidence ID(s) referenced but not found in evidenceIndex: ${orphanedIds.slice(0, 3).join(', ')}${orphanedIds.length > 3 ? '...' : ''}`;
-    console.warn(`[validateEvidenceIntegrity] ${warning}`);
+    // console.warn(`[validateEvidenceIntegrity] ${warning}`); // prod: no console
     warnings.push(warning);
   }
   

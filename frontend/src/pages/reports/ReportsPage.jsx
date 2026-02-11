@@ -21,7 +21,7 @@ const ReportsPage = () => {
       const history = await databaseService.getScanHistory(50);
       setReports(history);
     } catch (error) {
-      console.error("Failed to load reports:", error);
+      // console.error("Failed to load reports:", error); // prod: no console
     } finally {
       setIsLoading(false);
     }

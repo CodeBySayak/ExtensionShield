@@ -106,7 +106,7 @@ export const AuthProvider = ({ children }) => {
         authStateSubscription = data;
       }
     } catch (error) {
-      console.error("Auth state change subscription failed:", error);
+      // console.error("Auth state change subscription failed:", error); // prod: no console
     }
 
     // Check for auth errors in URL params (from OAuth callback failures)
@@ -236,7 +236,7 @@ export const AuthProvider = ({ children }) => {
         setSession(data.session || null);
         setUser(toUiUser(data.session?.user));
       } catch (error) {
-        console.error("Auth session load failed:", error);
+        // console.error("Auth session load failed:", error); // prod: no console
         // Don't crash - just continue without auth
         // Ensure we clear any stuck state
         if (isMounted) {
@@ -367,7 +367,7 @@ export const AuthProvider = ({ children }) => {
       setSession(null);
       setUser(null);
     } catch (error) {
-      console.error("Sign out failed:", error);
+      // console.error("Sign out failed:", error); // prod: no console
     } finally {
       setIsLoading(false);
     }
@@ -393,7 +393,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const { data, error } = await supabase.auth.getSession();
       if (error) {
-        console.error("Auth refresh failed:", error);
+        // console.error("Auth refresh failed:", error); // prod: no console
         setSession(null);
         setUser(null);
       } else {
@@ -401,7 +401,7 @@ export const AuthProvider = ({ children }) => {
         setUser(toUiUser(data.session?.user));
       }
     } catch (error) {
-      console.error("Auth refresh error:", error);
+      // console.error("Auth refresh error:", error); // prod: no console
       setSession(null);
       setUser(null);
     } finally {

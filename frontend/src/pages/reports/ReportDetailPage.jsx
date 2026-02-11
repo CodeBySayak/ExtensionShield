@@ -502,7 +502,7 @@ const ReportDataUnavailable = ({ extensionId, rawData, error }) => {
       navigator.clipboard.writeText(jsonStr);
       alert("Raw JSON copied to clipboard");
     } catch (e) {
-      console.error("Failed to copy JSON:", e);
+      // console.error("Failed to copy JSON:", e); // prod: no console
     }
   };
   
@@ -634,13 +634,13 @@ const ReportDetailPage = () => {
       
       if (!viewModel) {
         setNormalizationError("Failed to normalize scan result data");
-        console.error("[ReportDetailPage] normalizeScanResultSafe returned null");
+        // console.error("[ReportDetailPage] normalizeScanResultSafe returned null"); // prod: no console
       } else {
         // Validate evidence integrity and log warnings
         const validation = validateEvidenceIntegrity(viewModel);
         if (!validation.valid) {
           validation.warnings.forEach(warning => {
-            console.warn(`[ReportDetailPage] Evidence validation warning: ${warning}`);
+            // console.warn(`[ReportDetailPage] Evidence validation warning: ${warning}`); // prod: no console
           });
         }
       }
@@ -660,7 +660,7 @@ const ReportDetailPage = () => {
       setError(null);
     } catch (err) {
       setError("Failed to load report data");
-      console.error(err);
+      // console.error(err); // prod: no console
     } finally {
       setIsLoading(false);
     }

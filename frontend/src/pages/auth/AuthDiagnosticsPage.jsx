@@ -102,7 +102,7 @@ const AuthDiagnosticsPage = () => {
     try {
       await supabase.auth.signOut();
     } catch (err) {
-      console.error("Sign out error:", err);
+      // console.error("Sign out error:", err); // prod: no console
     }
   };
 

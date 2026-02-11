@@ -216,7 +216,7 @@ const ScannerPage = () => {
         setAllScans(fallbackScans.length > 0 ? fallbackScans : []);
       }
     } catch (error) {
-      console.error("Failed to load scans:", error);
+      // console.error("Failed to load scans:", error); // prod: no console
       setAllScans([]);
     } finally {
       setLoading(false);
@@ -482,7 +482,7 @@ const ScannerPage = () => {
       setCopiedId(extId);
       setTimeout(() => setCopiedId(null), 2000);
     } catch (err) {
-      console.error("Failed to copy:", err);
+      // console.error("Failed to copy:", err); // prod: no console
     }
   };
 

@@ -105,7 +105,7 @@ class RealScanService {
         throw err;
       }
     } catch (error) {
-      console.error("Failed to trigger scan:", error);
+      // console.error("Failed to trigger scan:", error); // prod: no console
       throw error;
     }
   }
@@ -140,7 +140,7 @@ class RealScanService {
         throw err;
       }
     } catch (error) {
-      console.error("Failed to upload file:", error);
+      // console.error("Failed to upload file:", error); // prod: no console
       throw error;
     }
   }
@@ -151,7 +151,7 @@ class RealScanService {
   async getRealScanResults(extensionId) {
     const url = `${this.baseURL}/api/scan/results/${extensionId}`;
     try {
-      console.log("RESULTS_ENDPOINT", url);
+      // console.log("RESULTS_ENDPOINT", url); // prod: no console
       
       const response = await fetch(url, {
         headers: {
@@ -161,7 +161,7 @@ class RealScanService {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("TOP_KEYS", Object.keys(data));
+        // console.log("TOP_KEYS", Object.keys(data)); // prod: no console
         
         // Return payload as-is - backend already upgrades legacy payloads
         // DO NOT call formatRealResults() - it creates legacy keys (securityScore, riskLevel, sastResults)
@@ -192,9 +192,7 @@ class RealScanService {
       throw err;
     } catch (error) {
       // Avoid noisy logs for expected "no results yet" behavior
-      if (error?.status !== 404 && error?.message !== "No scan results found.") {
-        console.error("Failed to get real scan results:", error);
-      }
+      // if (error?.status !== 404 && error?.message !== "No scan results found.") { console.error("Failed to get real scan results:", error); } // prod: no console
       throw error;
     }
   }
@@ -203,56 +201,56 @@ class RealScanService {
   async checkScanStatus(extensionId) {
     const url = `${this.baseURL}/api/scan/status/${extensionId}`;
     try {
-      console.group(`[DEBUG checkScanStatus] ${extensionId}`);
-      console.log("URL:", url);
+      // console.group(`[DEBUG checkScanStatus] ${extensionId}`); // prod: no console
+      // console.log("URL:", url);
       
       const response = await fetch(url);
-      console.log("HTTP Status:", response.status);
+      // console.log("HTTP Status:", response.status);
       
       let responseBody = null;
       try {
         const text = await response.text();
         responseBody = text.substring(0, 500);
-        console.log("Response body (first 500 chars):", responseBody);
+        // console.log("Response body (first 500 chars):", responseBody); // prod: no console
         const data = JSON.parse(text);
         
         if (response.ok) {
           // Check if the status response contains an error with code 401
           if (data.error && (data.error_code === 401 || data.error?.includes("API key") || data.error?.includes("Invalid API key"))) {
-            console.log("Detected 401 error in response");
-            console.groupEnd();
+            // console.log("Detected 401 error in response"); // prod: no console
+            // console.groupEnd();
             return { scanned: false, status: "failed", error: "Connection is down try back in a while", error_code: 401 };
           }
-          console.groupEnd();
+          // console.groupEnd();
           return data;
         }
         // Check for 401 status code
         if (response.status === 401) {
-          console.log("HTTP 401 detected");
-          console.groupEnd();
+          // console.log("HTTP 401 detected"); // prod: no console
+          // console.groupEnd();
           return { scanned: false, status: "failed", error: "Connection is down try back in a while", error_code: 401 };
         }
-        console.groupEnd();
+        // console.groupEnd();
         return { scanned: false };
       } catch (parseError) {
-        console.error("Failed to parse response:", parseError);
-        console.groupEnd();
+        // console.error("Failed to parse response:", parseError); // prod: no console
+        // console.groupEnd();
         return { scanned: false };
       }
     } catch (error) {
-      console.error("Failed to check scan status:", error);
-      console.log("Error message:", error.message);
+      // console.error("Failed to check scan status:", error); // prod: no console
+      // console.log("Error message:", error.message); // prod: no console
       // Determine if it's a network error (server down)
       if (error.message.includes("fetch") || error.message.includes("network")) {
-        console.groupEnd();
+        // console.groupEnd(); // prod: no console
         throw new Error("Backend server unavailable. Please make sure the API server is running (make api).");
       }
       // Check for 401 errors
       if (error.status === 401 || error.message?.includes("401") || error.message?.includes("API key")) {
-        console.groupEnd();
+        // console.groupEnd(); // prod: no console
         return { scanned: false, status: "failed", error: "Connection is down try back in a while", error_code: 401 };
       }
-      console.groupEnd();
+      // console.groupEnd(); // prod: no console
       return { scanned: false, status: "error", error: error.message };
     }
   }
@@ -358,7 +356,7 @@ class RealScanService {
         timestamp: cliResults.timestamp,
       };
     } catch (error) {
-      console.error("Error formatting CLI results:", error);
+      // console.error("Error formatting CLI results:", error); // prod: no console
       return {
         securityScore: 0,
         riskLevel: "UNKNOWN",
@@ -499,7 +497,7 @@ class RealScanService {
         throw new Error(errorData.detail || "Failed to fetch file content");
       }
     } catch (error) {
-      console.error("Failed to get file content:", error);
+      // console.error("Failed to get file content:", error); // prod: no console
       throw error;
     }
   }
@@ -518,7 +516,7 @@ class RealScanService {
         throw new Error("Failed to fetch file list");
       }
     } catch (error) {
-      console.error("Failed to get file list:", error);
+      // console.error("Failed to get file list:", error); // prod: no console
       throw error;
     }
   }
@@ -569,7 +567,7 @@ class RealScanService {
       }
       throw new Error("Failed to fetch compliance report");
     } catch (error) {
-      console.error("Failed to get compliance report:", error);
+      // console.error("Failed to get compliance report:", error); // prod: no console
       throw error;
     }
   }
@@ -635,7 +633,7 @@ class RealScanService {
         facts: reportData.facts || null,
       };
     } catch (error) {
-      console.error("Error formatting compliance results:", error);
+      // console.error("Error formatting compliance results:", error); // prod: no console
       return {
         scan_id: null,
         rule_results: [],
@@ -673,7 +671,7 @@ class RealScanService {
         throw new Error(error.detail || "Failed to download enforcement bundle");
       }
     } catch (error) {
-      console.error("Failed to download enforcement bundle:", error);
+      // console.error("Failed to download enforcement bundle:", error); // prod: no console
       throw error;
     }
   }
@@ -691,7 +689,7 @@ class RealScanService {
         throw new Error(error.detail || "Failed to get enforcement bundle");
       }
     } catch (error) {
-      console.error("Failed to get enforcement bundle:", error);
+      // console.error("Failed to get enforcement bundle:", error); // prod: no console
       throw error;
     }
   }

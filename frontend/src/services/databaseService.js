@@ -34,7 +34,7 @@ class DatabaseService {
       }
       return await response.json();
     } catch (error) {
-      console.error("Error fetching statistics:", error);
+      // console.error("Error fetching statistics:", error); // prod: no console
       return {
         total_scans: 0,
         high_risk_extensions: 0,
@@ -63,7 +63,7 @@ class DatabaseService {
       const data = await response.json();
       return data.history || [];
     } catch (error) {
-      console.error("Error fetching scan history:", error);
+      // console.error("Error fetching scan history:", error); // prod: no console
       return [];
     }
   }
@@ -79,32 +79,28 @@ class DatabaseService {
       if (search && search.trim()) {
         url += `&search=${encodeURIComponent(search.trim())}`;
       }
-      console.log(`[databaseService] Fetching recent scans from: ${url}`);
+      // console.log(`[databaseService] Fetching recent scans from: ${url}`); // prod: no console
       
       const response = await fetch(url);
       
       if (!response.ok) {
         const errorText = await response.text();
-        console.error(`[databaseService] API error (${response.status}):`, errorText);
+        // console.error(`[databaseService] API error (${response.status}):`, errorText); // prod: no console
         throw new Error(`Failed to fetch recent scans: ${response.status} ${errorText}`);
       }
       
       const data = await response.json();
-      console.log(`[databaseService] Received ${data.recent?.length || 0} recent scans`);
+      // console.log(`[databaseService] Received ${data.recent?.length || 0} recent scans`); // prod: no console
       
       if (!data.recent) {
-        console.warn("[databaseService] Response missing 'recent' field:", data);
+        // console.warn("[databaseService] Response missing 'recent' field:", data); // prod: no console
         return [];
       }
       
       return data.recent || [];
     } catch (error) {
-      console.error("[databaseService] Error fetching recent scans:", error);
-      console.error("[databaseService] Error details:", {
-        message: error.message,
-        stack: error.stack,
-        name: error.name
-      });
+      // console.error("[databaseService] Error fetching recent scans:", error); // prod: no console
+      // console.error("[databaseService] Error details:", { message: error.message, stack: error.stack, name: error.name }); // prod: no console
       // Return empty array to prevent UI crashes, but log the error
       return [];
     }
@@ -118,7 +114,7 @@ class DatabaseService {
   async getScanResult(extensionId) {
     try {
       const url = `${this.API_BASE_URL}/scan/results/${extensionId}`;
-      console.log("RESULTS_ENDPOINT", url);
+      // console.log("RESULTS_ENDPOINT", url); // prod: no console
       
       const response = await fetch(url, {
         headers: {
@@ -134,10 +130,10 @@ class DatabaseService {
       }
       
       const data = await response.json();
-      console.log("TOP_KEYS", Object.keys(data));
+      // console.log("TOP_KEYS", Object.keys(data)); // prod: no console
       return data;
     } catch (error) {
-      console.error("Error fetching scan result:", error);
+      // console.error("Error fetching scan result:", error); // prod: no console
       return null;
     }
   }
@@ -155,7 +151,7 @@ class DatabaseService {
       }
       return true;
     } catch (error) {
-      console.error("Error deleting scan result:", error);
+      // console.error("Error deleting scan result:", error); // prod: no console
       return false;
     }
   }
@@ -173,7 +169,7 @@ class DatabaseService {
       }
       return true;
     } catch (error) {
-      console.error("Error clearing all results:", error);
+      // console.error("Error clearing all results:", error); // prod: no console
       return false;
     }
   }

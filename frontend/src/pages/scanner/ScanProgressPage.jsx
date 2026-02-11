@@ -173,7 +173,7 @@ const ScanProgressPage = () => {
         // Silently fail - results might not exist yet (scan still running)
         // This is expected and not an error
         if (e.message && !e.message.includes("No scan results found") && !e.message.includes("404")) {
-          console.warn("Failed to fetch extension info:", e);
+          // console.warn("Failed to fetch extension info:", e); // prod: no console
         }
       }
     };
