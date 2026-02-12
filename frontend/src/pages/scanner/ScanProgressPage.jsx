@@ -42,7 +42,7 @@ class RocketGameErrorBoundary extends React.Component {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: '#0a0f1a',
+          background: '#0d1424',
           color: '#f8fafc',
           flexDirection: 'column',
           gap: '1rem',

@@ -358,7 +358,7 @@ const RocketGame = ({
       const bgCache = bgCacheRef.current;
       if (!bgCache.gradient || bgCache.height !== h) {
         const grad = ctx.createLinearGradient(0, 0, 0, h);
-        grad.addColorStop(0, "#0a0f1a");
+        grad.addColorStop(0, "#0d1424");
         grad.addColorStop(0.5, "#1a1f2e");
         grad.addColorStop(1, "#0f1419");
         bgCache.gradient = grad;

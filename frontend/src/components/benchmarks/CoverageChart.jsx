@@ -29,7 +29,7 @@ const CoverageChart = ({ data }) => {
       const definition = categoryDefinitions[label];
       return (
         <div style={{
-          background: 'rgba(10, 15, 26, 0.95)',
+          background: 'rgba(13, 20, 36, 0.95)',
           border: '1px solid rgba(34, 197, 94, 0.3)',
           borderRadius: '8px',
           padding: '12px',

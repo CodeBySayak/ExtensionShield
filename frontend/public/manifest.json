@@ -4,7 +4,7 @@
   "description": "Analyze Chrome extensions for hidden threats, malware, and privacy risks. Free security scanning powered by AI and static analysis.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0f1a",
+  "background_color": "#0d1424",
   "theme_color": "#22c55e",
   "orientation": "portrait-primary",
   "icons": [

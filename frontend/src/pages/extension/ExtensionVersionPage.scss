@@ -4,7 +4,7 @@
 
 .version-page {
   min-height: 100vh;
-  background: var(--atlas-bg-primary, #030712);
+  background: var(--atlas-bg-primary, #0d1424);
   color: var(--atlas-text-primary, #f8fafc);
   position: relative;
   
@@ -133,7 +133,7 @@
   
   code {
     padding: 0.5rem 1rem;
-    background: rgba(10, 15, 26, 0.6);
+    background: rgba(13, 20, 36, 0.6);
     border: 1px solid rgba(148, 163, 184, 0.1);
     border-radius: 6px;
     font-family: var(--font-mono);
@@ -144,7 +144,7 @@
 
 .version-placeholder {
   padding: 2rem;
-  background: rgba(10, 15, 26, 0.6);
+  background: rgba(13, 20, 36, 0.6);
   border: 1px solid rgba(148, 163, 184, 0.1);
   border-radius: 12px;
   

@@ -4,7 +4,7 @@
 
 .open-source-page {
   min-height: 100vh;
-  background: var(--atlas-bg-primary, #030712);
+  background: var(--atlas-bg-primary, #0d1424);
   color: var(--atlas-text-primary, #f8fafc);
   position: relative;
   overflow: hidden;
@@ -79,7 +79,7 @@
   align-items: center;
   gap: 1rem;
   padding: 1.25rem;
-  background: rgba(10, 15, 26, 0.6);
+  background: rgba(13, 20, 36, 0.6);
   border: 1px solid rgba(148, 163, 184, 0.1);
   border-radius: 12px;
   text-decoration: none;
@@ -98,7 +98,7 @@
   
   &.featured {
     grid-column: span 2;
-    background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(10, 15, 26, 0.6) 100%);
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(13, 20, 36, 0.6) 100%);
     border-color: rgba(34, 197, 94, 0.2);
     
     @media (max-width: 640px) {
@@ -183,7 +183,7 @@
   margin-top: 4rem;
   margin-bottom: 3rem;
   padding: 2rem;
-  background: rgba(10, 15, 26, 0.6);
+  background: rgba(13, 20, 36, 0.6);
   border: 1px solid rgba(148, 163, 184, 0.1);
   border-radius: 16px;
   
@@ -246,7 +246,7 @@
 .license-section {
   margin-top: 3rem;
   padding: 1.5rem;
-  background: rgba(10, 15, 26, 0.6);
+  background: rgba(13, 20, 36, 0.6);
   border: 1px solid rgba(148, 163, 184, 0.1);
   border-radius: 12px;
   text-align: center;

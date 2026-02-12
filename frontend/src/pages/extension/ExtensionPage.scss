@@ -4,7 +4,7 @@
 
 .extension-page {
   min-height: 100vh;
-  background: var(--atlas-bg-primary, #030712);
+  background: var(--atlas-bg-primary, #0d1424);
   color: var(--atlas-text-primary, #f8fafc);
   position: relative;
   
@@ -126,7 +126,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(10, 15, 26, 0.6);
+  background: rgba(13, 20, 36, 0.6);
   border: 1px solid rgba(148, 163, 184, 0.1);
   border-radius: 16px;
   font-size: 2rem;
@@ -188,7 +188,7 @@
 
 .score-card {
   padding: 2rem;
-  background: rgba(10, 15, 26, 0.6);
+  background: rgba(13, 20, 36, 0.6);
   border: 1px solid rgba(148, 163, 184, 0.1);
   border-radius: 16px;
   text-align: center;
@@ -251,7 +251,7 @@
 
 .extension-placeholder {
   padding: 2rem;
-  background: rgba(10, 15, 26, 0.6);
+  background: rgba(13, 20, 36, 0.6);
   border: 1px solid rgba(148, 163, 184, 0.1);
   border-radius: 12px;
   text-align: center;

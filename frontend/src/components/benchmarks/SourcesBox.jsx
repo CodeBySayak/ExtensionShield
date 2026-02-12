@@ -3,7 +3,7 @@ import React from "react";
 const SourcesBox = ({ sources }) => {
   return (
     <div style={{
-      background: 'rgba(10, 15, 26, 0.6)',
+      background: 'rgba(13, 20, 36, 0.6)',
       border: '1px solid rgba(148, 163, 184, 0.1)',
       borderRadius: '12px',
       padding: '1.5rem',

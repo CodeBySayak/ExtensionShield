@@ -47,8 +47,8 @@ export const ThemeProvider = ({ children }) => {
       document.documentElement.style.backgroundColor = "#ffffff";
       document.body.style.backgroundColor = "#ffffff";
     } else {
-      document.documentElement.style.backgroundColor = "#0a0f1a";
-      document.body.style.backgroundColor = "#0a0f1a";
+      document.documentElement.style.backgroundColor = "#0d1424";
+      document.body.style.backgroundColor = "#0d1424";
     }
     
     // Save actual theme (not effective theme) to localStorage
