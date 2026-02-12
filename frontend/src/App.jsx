@@ -397,38 +397,69 @@ function AppHeader() {
   const { user, isAuthenticated, openSignInModal, isLoading } = useAuth();
   const isHomePage = location.pathname === "/";
   const [scrolled, setScrolled] = React.useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const mobileMenuRef = React.useRef(null);
 
   React.useEffect(() => {
     if (!isHomePage) return;
     const handleScroll = () => setScrolled(window.scrollY > HEADER_SCROLL_THRESHOLD);
-    handleScroll(); // set initial state
+    handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isHomePage]);
 
+  React.useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  React.useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(e.target) && !e.target.closest(".header-mobile-toggle")) {
+        setMobileMenuOpen(false);
+      }
+    };
+    if (mobileMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
+
   const headerSolid = !isHomePage || scrolled;
   const headerClass = headerSolid ? "solid" : "transparent";
+
+  const allNavLinks = [
+    ...topNavItems.flatMap((item) =>
+      item.dropdownItems
+        ? item.dropdownItems.map((d) => ({ label: d.label, path: d.path, external: d.external, href: d.href }))
+        : [{ label: item.label, path: item.path }]
+    ),
+    ...megaMenuConfig.items.map((item) => ({ label: item.label, path: item.path, external: item.external, href: item.href })),
+  ];
 
   return (
     <header className={`atlas-header ${headerClass}`}>
       <div className="header-container">
-        <NavLink to="/" className="header-logo">
-          <img 
-            src="/logo.png" 
-            alt="ExtensionShield Logo" 
+        <NavLink to="/" className="header-logo" onClick={() => setMobileMenuOpen(false)}>
+          <img
+            src="/logo.png"
+            alt="ExtensionShield Logo"
             className="header-logo-img"
           />
           <span className="logo-text">ExtensionShield</span>
         </NavLink>
 
-        <nav className="header-nav">
+        <nav className="header-nav header-nav-desktop" aria-label="Main">
           {topNavItems.map((item) => (
             <NavItemDropdown key={item.path} item={item} location={location} />
           ))}
           <MainMegamenu />
         </nav>
 
-        <div className="header-actions">
+        <div className="header-actions header-actions-desktop">
           {isLoading ? (
             <div className="auth-loading">
               <span className="loading-dot" />
@@ -438,7 +469,72 @@ function AppHeader() {
           ) : isAuthenticated && user ? (
             <UserMenu />
           ) : (
-            <button className="action-signin" onClick={openSignInModal}>Sign In</button>
+            <button type="button" className="action-signin" onClick={openSignInModal}>
+              Sign In
+            </button>
+          )}
+        </div>
+
+        <button
+          type="button"
+          className="header-mobile-toggle"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileMenuOpen}
+        >
+          <span className="hamburger-bar" />
+          <span className="hamburger-bar" />
+          <span className="hamburger-bar" />
+        </button>
+      </div>
+
+      <div
+        ref={mobileMenuRef}
+        className={`mobile-menu ${mobileMenuOpen ? "mobile-menu-open" : ""}`}
+        aria-hidden={!mobileMenuOpen}
+      >
+        <nav className="mobile-menu-nav" aria-label="Mobile">
+          {allNavLinks.map((link, idx) => {
+            const key = link.path || link.href || idx;
+            if (link.external && link.href) {
+              return (
+                <a
+                  key={key}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mobile-menu-link"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.label}
+                </a>
+              );
+            }
+            return (
+              <NavLink
+                key={key}
+                to={link.path}
+                className="mobile-menu-link"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {link.label}
+              </NavLink>
+            );
+          })}
+        </nav>
+        <div className="mobile-menu-actions">
+          {isLoading ? (
+            <div className="auth-loading">
+              <span className="loading-dot" />
+              <span className="loading-dot" />
+              <span className="loading-dot" />
+            </div>
+          ) : isAuthenticated && user ? (
+            <UserMenu />
+          ) : (
+            <button type="button" className="action-signin mobile-signin" onClick={() => { openSignInModal(); setMobileMenuOpen(false); }}>
+              Sign In
+            </button>
           )}
         </div>
       </div>

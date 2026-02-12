@@ -186,27 +186,6 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-
-  /* Legacy logo styles (for compatibility) */
-  .logo-project {
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: #64748b;
-    letter-spacing: 0.03em;
-  }
-
-  .logo-diamond {
-    font-size: 0.75rem;
-    color: #22c55e;
-    text-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
-  }
-
-  .logo-atlas {
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: #f8fafc;
-    letter-spacing: 0.03em;
-  }
 }
 
 .modal-title {
@@ -536,13 +515,37 @@
   }
 }
 
-/* Responsive */
+/* Responsive - seamless from large to smallest screens */
+.signin-modal-overlay {
+  padding: 0.75rem;
+  align-items: center;
+}
+
 @media (max-width: 480px) {
+  .signin-modal-overlay {
+    padding: 0.5rem;
+    align-items: flex-start;
+    padding-top: max(0.5rem, env(safe-area-inset-top));
+  }
+
   .signin-modal {
     padding: 2rem 1.5rem;
     border-radius: 16px;
-    max-height: 90vh;
+    max-height: min(90vh, calc(100dvh - 1rem));
     overflow-y: auto;
+    margin: auto 0;
+  }
+
+  .modal-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-logo {
+    margin-bottom: 1rem;
+  }
+
+  .modal-logo .logo-text {
+    font-size: 1.25rem;
   }
 
   .modal-title {
@@ -556,6 +559,76 @@
   .oauth-btn {
     padding: 0.75rem 1rem;
     font-size: 0.875rem;
+  }
+
+  .modal-close {
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 32px;
+    height: 32px;
+  }
+
+  .modal-close svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .signin-modal-overlay {
+    padding: 0.25rem;
+  }
+
+  .signin-modal {
+    padding: 1.5rem 1rem;
+    border-radius: 14px;
+    max-height: min(92vh, calc(100dvh - 0.5rem));
+  }
+
+  .modal-title {
+    font-size: 1.25rem;
+  }
+
+  .modal-subtitle {
+    font-size: 0.8125rem;
+  }
+
+  .divider span {
+    font-size: 0.75rem;
+  }
+
+  .form-field input {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  .submit-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .mode-toggle p,
+  .mode-toggle button {
+    font-size: 0.8125rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .signin-modal {
+    padding: 1.25rem 0.75rem;
+  }
+
+  .modal-logo .logo-text {
+    font-size: 1.125rem;
+  }
+
+  .modal-title {
+    font-size: 1.125rem;
+  }
+
+  .oauth-btn {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.8125rem;
   }
 }
 

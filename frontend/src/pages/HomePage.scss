@@ -37,11 +37,12 @@
 .hero-section {
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 8.5rem 2rem 2rem;
+  padding: calc(var(--atlas-header-height) + 2rem) 2rem 2rem;
   overflow: hidden;
   gap: 0;
 }
@@ -1997,8 +1998,9 @@
 
 @media (max-width: 768px) {
   .hero-section {
-    padding: 8.5rem 1rem 2rem;
+    padding: calc(var(--atlas-header-height) + 1rem) 1rem 2rem;
     min-height: auto;
+    min-height: 100dvh;
     gap: 1.25rem;
   }
 
@@ -2247,16 +2249,53 @@
 }
 
 @media (max-width: 480px) {
+  .hero-section {
+    padding: calc(var(--atlas-header-height) + 0.75rem) 0.75rem 1.5rem;
+  }
+
+  .hero-grid {
+    padding: 0 0.75rem 3rem;
+    gap: 1.5rem;
+  }
+
+  .hero-left .hero-title {
+    font-size: 1.375rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-left .hero-subtitle {
+    font-size: 0.875rem;
+  }
+
   .hero-headline .hero-title {
     font-size: 1.5rem;
   }
 
   .stats-bar {
-    padding: 0.875rem;
+    padding: 0.75rem;
+    margin: 0 0.75rem;
   }
 
   .stat-value {
     font-size: 1rem;
+  }
+
+  .stat-label {
+    font-size: 0.625rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-section {
+    padding: calc(var(--atlas-header-height) + 0.5rem) 0.5rem 1rem;
+  }
+
+  .hero-grid {
+    padding: 0 0.5rem 2rem;
+  }
+
+  .hero-left .hero-title {
+    font-size: 1.25rem;
   }
 }
 
