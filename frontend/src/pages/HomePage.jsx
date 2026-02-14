@@ -244,10 +244,24 @@ const HomePage = () => {
           className="hero-section"
           aria-label="Chrome Extension Scanner"
         >
-          {/* Mobile/tablet: scanner not supported — show idea + "Check on desktop" */}
+          {/* Mobile/tablet: scanner not supported — show idea + Watch demo + Check on desktop */}
           <div className="hero-mobile-message">
             <p className="hero-tagline">Chrome Extension Scanner</p>
             <h1 className="hero-title">Know what your Chrome extensions can access.</h1>
+            <button
+              type="button"
+              className="hero-mobile-demo-btn"
+              onClick={() => setDemoModalOpen(true)}
+              title="Step-by-step guide"
+            >
+              <span className="hero-demo-icon" aria-hidden>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none" />
+                </svg>
+              </span>
+              <span>Watch demo</span>
+            </button>
             <p className="hero-mobile-cta">Check on desktop.</p>
           </div>
 
@@ -327,11 +341,6 @@ const HomePage = () => {
                 </span>
                 <span>Watch demo</span>
               </button>
-              <DemoModal
-                isOpen={demoModalOpen}
-                onClose={() => setDemoModalOpen(false)}
-                triggerRef={demoTriggerRef}
-              />
             </motion.div>
 
             {/* Right Panel - 3D orbital carousel with focus report card */}
@@ -357,7 +366,7 @@ const HomePage = () => {
                 <span className="beta-dot" />
                 BETA
               </span>
-              <span className="stat-label">Free to scan</span>
+              <span className="stat-label">Try free</span>
             </div>
             <div className="stat-divider" />
             <div className="stat-item">
@@ -395,6 +404,12 @@ const HomePage = () => {
             </svg>
           </motion.button>
           </div>
+
+          <DemoModal
+            isOpen={demoModalOpen}
+            onClose={() => setDemoModalOpen(false)}
+            triggerRef={demoTriggerRef}
+          />
         </section>
 
       {/* Bridge Section - How trusted extensions turn risky */}
@@ -415,7 +430,7 @@ const HomePage = () => {
                 </svg>
               </div>
               <h3>Earn trust</h3>
-              <p>5-star ratings, millions of installs, verified badge.</p>
+              <p>5 stars, millions of installs, verified badge.</p>
             </div>
 
             <div className="bridge-connector">
@@ -432,7 +447,7 @@ const HomePage = () => {
                 </svg>
               </div>
               <h3>Ship an update</h3>
-              <p>Payload hidden in a routine "bug fix" release.</p>
+              <p>Malicious code slips in with a seemingly harmless update.</p>
             </div>
 
             <div className="bridge-connector">
@@ -449,7 +464,7 @@ const HomePage = () => {
                 </svg>
               </div>
               <h3>Abuse permissions</h3>
-              <p>Data theft, ad injection, affiliate hijacking.</p>
+              <p>Data theft, injected ads, hijacked links.</p>
             </div>
           </div>
 
@@ -697,7 +712,7 @@ const HomePage = () => {
       <section className="pricing-section">
         <div className="pricing-header">
           <h2>Simple, Transparent Pricing</h2>
-          <p>Scanning is free for individuals. We reuse results for extensions we've seen before (instant), and run fresh full analysis only when needed.</p>
+          <p>Free during beta. We aim to stay affordable and be here when you need us—always one message away.</p>
         </div>
 
         <div className="pricing-grid">

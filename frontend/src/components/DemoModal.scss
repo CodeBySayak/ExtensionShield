@@ -284,15 +284,36 @@ $success-green: #22c55e;
   display: inline-block;
 }
 
-// Responsive
+// Responsive – tablet and below
+@media (max-width: 1024px) {
+  .demo-modal-content {
+    max-width: min(700px, 92vw);
+  }
+
+  .demo-modal-image-wrap {
+    min-height: 260px;
+  }
+
+  .demo-modal-caption {
+    font-size: 15px;
+  }
+}
+
 @media (max-width: 768px) {
   .demo-modal-overlay {
     padding: 1rem;
+    padding-top: max(1rem, env(safe-area-inset-top));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .demo-modal-content {
+    max-width: min(520px, 96vw);
   }
 
   .demo-modal-main {
-    flex-direction: column;
+    flex-direction: row;
     gap: 0.5rem;
+    position: relative;
   }
 
   .demo-nav-btn {
@@ -332,7 +353,38 @@ $success-green: #22c55e;
 }
 
 @media (max-width: 480px) {
+  .demo-modal-overlay {
+    padding: 0.75rem;
+  }
+
+  .demo-modal-content {
+    max-width: 100%;
+  }
+
+  .demo-modal-image-wrap {
+    min-height: 200px;
+  }
+
   .demo-modal-caption {
     font-size: 13px;
+    margin-bottom: 0.75rem;
+  }
+
+  .demo-nav-btn .demo-nav-btn-inner {
+    width: 32px;
+    height: 32px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .demo-nav-prev {
+    left: 0.125rem;
+  }
+
+  .demo-nav-next {
+    right: 0.125rem;
   }
 }

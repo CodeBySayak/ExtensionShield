@@ -249,6 +249,7 @@ function OrbitIcon({ scan, depth, isSelected, isHovered, interactive = true, com
       {interactive && isHovered && opacity >= 0.6 && (
         <div className="hero-orbit-icon__tooltip">
           <span className="tooltip-name">{tooltipLabel}</span>
+          <span className="tooltip-cta">Click to preview</span>
         </div>
       )}
     </>
@@ -264,7 +265,7 @@ function OrbitIcon({ scan, depth, isSelected, isHovered, interactive = true, com
         onMouseLeave={onHoverEnd}
         aria-label={`View scan: ${scan?.name}`}
         style={style}
-        whileHover={opacity >= 0.5 ? { scale: scale * 1.08 } : {}}
+        whileHover={opacity >= 0.5 ? { scale: scale * 1.14 } : {}}
         whileTap={opacity >= 0.5 ? { scale: scale * 0.98 } : {}}
       >
         {content}
@@ -297,6 +298,7 @@ function PrimaryOrbit({ scans, angle, reducedMotion, focusedIndex, hoveredIndex,
     >
       {scans.map((scan, i) => {
         const depth = computeDepth(reducedMotion ? 0 : angle, i, count, tilt, 1);
+        const globalIndex = i;
         return (
           <div
             key={(scan?.extensionId || scan?.name) + "p" + i}
@@ -309,11 +311,11 @@ function PrimaryOrbit({ scans, angle, reducedMotion, focusedIndex, hoveredIndex,
             <OrbitIcon
               scan={scan}
               depth={depth}
-              isSelected={focusedIndex === i}
-              isHovered={hoveredIndex === i}
+              isSelected={focusedIndex === globalIndex}
+              isHovered={hoveredIndex === globalIndex}
               interactive
-              onClick={() => onSelect(i)}
-              onHoverStart={() => onHover(i)}
+              onClick={() => onSelect(globalIndex)}
+              onHoverStart={() => onHover(globalIndex)}
               onHoverEnd={() => onHover(null)}
             />
           </div>
@@ -323,7 +325,7 @@ function PrimaryOrbit({ scans, angle, reducedMotion, focusedIndex, hoveredIndex,
   );
 }
 
-function SecondaryOrbit({ scans, angle, reducedMotion, tilt }) {
+function SecondaryOrbit({ scans, angle, reducedMotion, tilt, focusedIndex, hoveredIndex, onSelect, onHover }) {
   const count = scans.length;
   const degPerCard = count > 0 ? 360 / count : 360;
 
@@ -337,6 +339,7 @@ function SecondaryOrbit({ scans, angle, reducedMotion, tilt }) {
     >
       {scans.map((scan, i) => {
         const depth = computeDepth(reducedMotion ? 0 : angle, i, count, tilt, 0.6);
+        const globalIndex = PRIMARY_ICON_COUNT + i;
         return (
           <div
             key={(scan?.extensionId || scan?.name) + "s" + i}
@@ -346,7 +349,16 @@ function SecondaryOrbit({ scans, angle, reducedMotion, tilt }) {
               transformStyle: "preserve-3d",
             }}
           >
-            <OrbitIcon scan={scan} depth={depth} isSelected={false} isPaused={false} interactive={false} />
+            <OrbitIcon
+              scan={scan}
+              depth={depth}
+              isSelected={focusedIndex === globalIndex}
+              isHovered={hoveredIndex === globalIndex}
+              interactive
+              onClick={() => onSelect(globalIndex)}
+              onHoverStart={() => onHover(globalIndex)}
+              onHoverEnd={() => onHover(null)}
+            />
           </div>
         );
       })}
@@ -491,10 +503,10 @@ export default function HeroOrbitalCarousel() {
   const secondaryScans = useMemo(() => scansToShow.slice(PRIMARY_ICON_COUNT, PRIMARY_ICON_COUNT + SECONDARY_ICON_COUNT), [scansToShow]);
 
   useEffect(() => {
-    if (focusedIndex >= primaryScans.length) setFocusedIndex(0);
-  }, [focusedIndex, primaryScans.length]);
+    if (focusedIndex >= scansToShow.length) setFocusedIndex(0);
+  }, [focusedIndex, scansToShow.length]);
 
-  const focusScan = primaryScans[focusedIndex % primaryScans.length] || primaryScans[0];
+  const focusScan = scansToShow[focusedIndex] || scansToShow[0];
 
   useEffect(() => {
     const mql = window.matchMedia(`(max-width: ${VIEWPORT_COMPACT}px)`);
@@ -566,7 +578,27 @@ export default function HeroOrbitalCarousel() {
             <div className="hero-orbital-path hero-orbital-path--primary" aria-hidden="true" />
             <div className="hero-orbital-path hero-orbital-path--secondary" aria-hidden="true" />
 
-            <SecondaryOrbit scans={secondaryScans} angle={secondaryAngle} reducedMotion={reducedMotion} tilt={ORBIT_TILT} />
+            {!cardRevealed && (
+              <p className="hero-orbital-cta__helper" aria-hidden="true">
+                <span className="hero-orbital-cta__helper-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" />
+                  </svg>
+                </span>
+                Click any icon to preview
+              </p>
+            )}
+
+            <SecondaryOrbit
+              scans={secondaryScans}
+              angle={secondaryAngle}
+              reducedMotion={reducedMotion}
+              tilt={ORBIT_TILT}
+              focusedIndex={cardRevealed ? focusedIndex : -1}
+              hoveredIndex={hoveredIndex}
+              onSelect={handleSelect}
+              onHover={handleHover}
+            />
             <PrimaryOrbit
               scans={primaryScans}
               angle={primaryAngle}
@@ -579,27 +611,6 @@ export default function HeroOrbitalCarousel() {
             />
           </div>
         </div>
-
-        {!cardRevealed && (
-          <motion.div
-            className="hero-orbital-cta-wrap"
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, ease: "easeOut" }}
-            aria-hidden="true"
-          >
-            <button
-              type="button"
-              className="hero-orbital-cta"
-              onClick={() => handleSelect(0)}
-              aria-label="Try an example — opens a preview"
-            >
-              <span className="hero-orbital-cta__dot" />
-              <span className="hero-orbital-cta__label">Try an example</span>
-            </button>
-            <p className="hero-orbital-cta__helper">Or click any icon to preview.</p>
-          </motion.div>
-        )}
       </div>
       <ReportCardModal open={cardRevealed} onClose={closeModal} focusScan={focusScan} isVisible={isVisible} />
     </>

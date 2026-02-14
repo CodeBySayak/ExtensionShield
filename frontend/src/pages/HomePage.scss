@@ -1637,15 +1637,22 @@
 }
 
 .scan-credit-note {
-  font-size: 0.75rem;
-  color: var(--atlas-text-muted);
-  line-height: 1.5;
+  font-size: 0.8125rem;
+  color: var(--atlas-text-secondary);
+  line-height: 1.55;
   margin-top: 0.75rem;
   margin-bottom: 1.25rem;
   padding: 0.75rem;
   background: rgba(34, 197, 94, 0.05);
   border-left: 2px solid var(--atlas-accent);
   border-radius: 4px;
+}
+
+/* Enterprise: purple theme + accessible text */
+.pricing-card.enterprise .scan-credit-note {
+  background: rgba(139, 92, 246, 0.08);
+  border-left-color: rgba(139, 92, 246, 0.5);
+  color: var(--atlas-text-secondary);
 }
 
 .pricing-features {
@@ -2039,6 +2046,48 @@
     color: var(--atlas-text-secondary);
     margin: 0;
   }
+
+  /* Watch demo – visible on tablet and below */
+  .hero-mobile-demo-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 1rem 0 0.5rem;
+    padding: 0.625rem 1.25rem;
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--atlas-accent);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+
+    .hero-demo-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        width: 18px;
+        height: 18px;
+        color: currentColor;
+      }
+    }
+
+    &:hover {
+      background: rgba(34, 197, 94, 0.2);
+      border-color: rgba(34, 197, 94, 0.5);
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.15);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--atlas-accent);
+      outline-offset: 2px;
+    }
+  }
 }
 
 @media (max-width: 1024px) {
@@ -2350,6 +2399,16 @@
   .hero-section {
     padding: calc(var(--atlas-header-height) + 0.75rem) 1rem 1.5rem;
     padding-top: 5rem;
+  }
+
+  .hero-mobile-demo-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+
+    .hero-demo-icon svg {
+      width: 16px;
+      height: 16px;
+    }
   }
 
   .hero-grid {
