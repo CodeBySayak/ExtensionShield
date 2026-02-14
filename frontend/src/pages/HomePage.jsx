@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import databaseService from "../services/databaseService";
 import SEOHead from "../components/SEOHead";
 import { HeroOrbitalCarousel } from "../components/hero";
+import DemoModal from "../components/DemoModal";
 import "./HomePage.scss";
 
 // Real extension listings (Chrome Web Store style). logoUrl set to null to avoid
@@ -33,6 +34,8 @@ const HomePage = () => {
   const [displayCount, setDisplayCount] = useState(0);
   const displayCountRef = useRef(0);
   const rafRef = useRef(null);
+  const [demoModalOpen, setDemoModalOpen] = useState(false);
+  const demoTriggerRef = useRef(null);
 
   // Animate display count from current to target (incremental counter effect)
   useEffect(() => {
@@ -309,12 +312,12 @@ const HomePage = () => {
                 {scanError && <p className="scan-error-hint">{scanError}</p>}
               </div>
 
-              <a
-                href="https://app.tango.us/app/workflow/Scan-Google-Translate-Extension-with-ExtensionShield-c1e43d157b434aedbaff4176df94d55d"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                ref={demoTriggerRef}
                 className="hero-demo-link"
                 title="Copy extension URL → paste here (step-by-step)"
+                onClick={() => setDemoModalOpen(true)}
               >
                 <span className="hero-demo-icon" aria-hidden>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -323,7 +326,12 @@ const HomePage = () => {
                   </svg>
                 </span>
                 <span>Watch demo</span>
-              </a>
+              </button>
+              <DemoModal
+                isOpen={demoModalOpen}
+                onClose={() => setDemoModalOpen(false)}
+                triggerRef={demoTriggerRef}
+              />
             </motion.div>
 
             {/* Right Panel - 3D orbital carousel with focus report card */}
