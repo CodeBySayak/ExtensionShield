@@ -18,7 +18,7 @@ export const useScan = () => {
 
 export const ScanProvider = ({ children }) => {
   const navigate = useNavigate();
-  const { isAuthenticated, accessToken, openSignInModal } = useAuth();
+  const { isAuthenticated, accessToken } = useAuth();
 
   // Mount guard — prevents setState on unmounted component during long async flows
   const mountedRef = useRef(true);
@@ -224,9 +224,8 @@ export const ScanProvider = ({ children }) => {
       setScanStage(null);
       setIsScanning(false);
 
-      // Refresh stats and history (best-effort)
-      await loadScanHistory();
-      await loadDashboardStats();
+      // Refresh stats and history in parallel (best-effort, non-blocking)
+      void Promise.all([loadScanHistory(), loadDashboardStats()]);
 
       // IMPORTANT: Do not auto-navigate to results.
       // The progress page will show a "Scan complete" prompt allowing users
@@ -316,8 +315,7 @@ export const ScanProvider = ({ children }) => {
       setScanStage(null);
       setIsScanning(false);
 
-      await loadScanHistory();
-      await loadDashboardStats();
+      void Promise.all([loadScanHistory(), loadDashboardStats()]);
       // Do not auto-navigate; progress page will prompt.
     } catch (err) {
       // Handle rate limit error (429) with user-friendly message

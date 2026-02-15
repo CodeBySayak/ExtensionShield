@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useScan } from "../context/ScanContext";
@@ -96,25 +96,24 @@ const HomePage = () => {
     return () => observer.disconnect();
   }, []);
 
-  const scrollToProof = () => {
+  const scrollToProof = useCallback(() => {
     document.getElementById("proof")?.scrollIntoView({ behavior: "smooth" });
-  };
+  }, []);
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
 
-  const handleScan = () => {
+  const handleScan = useCallback(() => {
     const input = scanInput.trim();
     if (input) {
-      // No auth required for scanning — goes straight to game loading page
       setScanInput("");
       setUrl("");
       startScan(input);
     } else {
-      navigate('/scan');
+      navigate("/scan");
     }
-  };
+  }, [scanInput, setUrl, startScan, navigate]);
 
   const organizationSchema = {
     "@context": "https://schema.org",

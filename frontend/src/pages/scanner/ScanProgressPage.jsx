@@ -396,28 +396,25 @@ const ScanProgressPage = () => {
     };
   }, [shouldShowGame]);
 
-  // Manual navigation to results
-  const handleViewResults = () => {
+  const handleViewResults = useCallback(() => {
     setUserExited(true);
     setShowCompletionModal(false);
     const extId = scanResults?.extension_id || scanId;
     const extName = scanResults?.extension_name;
     const route = getScanResultsRoute(extId, extName);
     if (route) navigate(route, { replace: true });
-  };
+  }, [scanResults?.extension_id, scanResults?.extension_name, scanId, navigate]);
 
-  // Handle error modal dismissal
-  const handleDismissError = () => {
+  const handleDismissError = useCallback(() => {
     setShowErrorModal(false);
     setError(null);
     setErrorMessage("");
-  };
+  }, []);
 
-  // Handle continue playing after completion
-  const handleContinuePlaying = () => {
+  const handleContinuePlaying = useCallback(() => {
     setShowCompletionModal(false);
     setUserChoseKeepPlaying(true);
-  };
+  }, []);
 
   // Always render something - never show blank page
   // Show error if normalized ID is empty (invalid format or missing)

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import React, { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useScan } from "../../context/ScanContext";
@@ -141,7 +141,7 @@ const RowActions = ({ scan, onViewReport, onMonitor, onCopyLink, showActions }) 
 
   return (
     <div className="row-hover-actions" ref={actionsRef}>
-      <button className="hover-action-btn primary" onClick={onViewReport} title="View Report">
+      <button className="hover-action-btn primary" onClick={() => onViewReport(scan)} title="View Report">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
           <circle cx="12" cy="12" r="3" />
@@ -155,7 +155,7 @@ const RowActions = ({ scan, onViewReport, onMonitor, onCopyLink, showActions }) 
         <span>Monitor</span>
         <span className="pro-badge">ENTERPRISE</span>
       </button>
-      <button className="hover-action-btn" onClick={onCopyLink} title="Copy Share Link">
+      <button className="hover-action-btn" onClick={() => onCopyLink(scan)} title="Copy Share Link">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
           <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
@@ -163,6 +163,30 @@ const RowActions = ({ scan, onViewReport, onMonitor, onCopyLink, showActions }) 
       </button>
     </div>
   );
+};
+
+// Pure formatters — stable references, no re-creation per render
+const formatUserCount = (count) => {
+  if (!count) return "—";
+  const num = typeof count === "string" ? parseInt(count.replace(/,/g, ""), 10) : count;
+  if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
+  if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
+  return num.toString();
+};
+
+const formatTimeAgo = (timestamp) => {
+  if (!timestamp) return "—";
+  const now = new Date();
+  const scanTime = new Date(timestamp);
+  const diffMs = now - scanTime;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+  if (diffMins < 1) return "Just now";
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+  return scanTime.toLocaleDateString();
 };
 
 const ScannerPage = () => {
@@ -365,52 +389,24 @@ const ScannerPage = () => {
     }
   }, [location.state, setUrl]);
 
-  const handleScanClick = async () => {
+  const handleScanClick = useCallback(() => {
     if (!url.trim()) {
       setError("Please enter a Chrome Web Store URL");
       return;
     }
-    await startScan(url);
-  };
+    startScan(url);
+  }, [url, startScan, setError]);
 
   const deepScanLimitReached = deepScanLimit && deepScanLimit.remaining <= 0;
   const scanDisabledDueToLimit = Boolean(deepScanLimitReached && !cachedAvailable);
   const scanDisabledTooltip = "Daily scan limit reached (2 scans per day). Sign in or try again tomorrow.";
 
-  // Format user count
-  const formatUserCount = (count) => {
-    if (!count) return "—";
-    const num = typeof count === "string" ? parseInt(count.replace(/,/g, ""), 10) : count;
-    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
-    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
-    return num.toString();
-  };
-
-  // Format time ago
-  const formatTimeAgo = (timestamp) => {
-    if (!timestamp) return "—";
-    const now = new Date();
-    const scanTime = new Date(timestamp);
-    const diffMs = now - scanTime;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-
-    if (diffMins < 1) return "Just now";
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
-    return scanTime.toLocaleDateString();
-  };
-
-  // Handle sorting
-  const handleSort = (key) => {
-    let direction = "asc";
-    if (sortConfig.key === key && sortConfig.direction === "asc") {
-      direction = "desc";
-    }
-    setSortConfig({ key, direction });
-  };
+  const handleSort = useCallback((key) => {
+    setSortConfig((prev) => {
+      const direction = prev.key === key && prev.direction === "asc" ? "desc" : "asc";
+      return { key, direction };
+    });
+  }, []);
 
   // Sort and paginate data
   const sortedAndPaginatedScans = useMemo(() => {
@@ -459,28 +455,26 @@ const ScannerPage = () => {
     return sorted.slice(0, TEASER_LIMIT);
   }, [allScans, sortConfig]);
 
-  // View existing scan report - no auth required (only scanning new extensions requires login)
-  const handleViewReport = (scan) => {
+  const handleViewReport = useCallback((scan) => {
     const route = getScanResultsRoute(scan.extension_id, scan.extension_name);
     navigate(route);
-  };
+  }, [navigate]);
 
-  const handleMonitor = (extId) => {
-    // Enterprise feature
+  const handleMonitor = useCallback(() => {
     navigate("/enterprise");
-  };
+  }, [navigate]);
 
-  const handleCopyLink = async (scan) => {
+  const handleCopyLink = useCallback((scan) => {
     const route = getScanResultsRoute(scan.extension_id, scan.extension_name);
     const link = `${window.location.origin}${route}`;
-    try {
-      await navigator.clipboard.writeText(link);
-      setCopiedId(scan.extension_id);
-      setTimeout(() => setCopiedId(null), 2000);
-    } catch (err) {
-      // console.error("Failed to copy:", err); // prod: no console
-    }
-  };
+    navigator.clipboard.writeText(link).then(
+      () => {
+        setCopiedId(scan.extension_id);
+        setTimeout(() => setCopiedId(null), 2000);
+      },
+      () => {}
+    );
+  }, []);
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -801,9 +795,9 @@ const ScannerPage = () => {
                           <RowActions
                             scan={scan}
                             showActions={hoveredRow === scan.extension_id}
-                            onViewReport={() => handleViewReport(scan)}
-                            onMonitor={() => handleMonitor(scan.extension_id)}
-                            onCopyLink={() => handleCopyLink(scan)}
+                            onViewReport={handleViewReport}
+                            onMonitor={handleMonitor}
+                            onCopyLink={handleCopyLink}
                           />
                           {copiedId === scan.extension_id && (
                             <span className="copied-toast">Copied!</span>
