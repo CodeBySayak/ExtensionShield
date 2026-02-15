@@ -142,16 +142,8 @@ export const ScanProvider = ({ children }) => {
       return;
     }
 
-    // Require authentication before scanning (production, or in dev when VITE_REQUIRE_AUTH_FOR_SCAN=true)
-    const isDevelopment = import.meta.env.DEV || import.meta.env.MODE === 'development';
-    const requireAuthForScan = import.meta.env.VITE_REQUIRE_AUTH_FOR_SCAN === 'true';
-    if ((!isDevelopment || requireAuthForScan) && !isAuthenticated) {
-      sessionStorage.setItem("auth:pendingScanUrl", urlToScan);
-      sessionStorage.setItem("auth:returnTo", "/scan");
-      setError(null); // No error message - modal is the prompt
-      openSignInModal();
-      return;
-    }
+    // No authentication required for scanning - anonymous users can scan with IP-based rate limiting
+    // Authentication is only required to view saved scan history
 
     // Clear input state so /scan page starts clean after scan completes
     setUrl("");
@@ -175,17 +167,15 @@ export const ScanProvider = ({ children }) => {
 
       setCurrentExtensionId(extId);
 
-      // Daily deep-scan limit check (cached lookups still allowed) - skip in development
-      const isDevelopment = import.meta.env.DEV || import.meta.env.MODE === 'development';
-      if (isDevelopment) {
-        // In development, skip limit check - backend will also skip it
-      } else {
+      // Daily scan limit check (cached lookups still allowed) - skip in development
+      const isDev = import.meta.env.DEV || import.meta.env.MODE === 'development';
+      if (!isDev) {
         try {
           const limit = await realScanService.getDeepScanLimitStatus();
           if (limit?.remaining <= 0) {
             const cached = await realScanService.hasCachedResults(extId);
             if (!cached) {
-              setError("Daily deep-scan limit reached. Cached lookups are still unlimited.");
+              setError("Daily scan limit reached (2 scans per day). Sign in or try again tomorrow.");
               setScanStage(null);
               setIsScanning(false);
               return;
@@ -242,9 +232,13 @@ export const ScanProvider = ({ children }) => {
       // The progress page will show a "Scan complete" prompt allowing users
       // to keep playing or view results.
     } catch (err) {
-      // Check for API key errors (401) - show user-friendly message
+      // Handle different error types with user-friendly messages
       let errorMessage = err.message || "Failed to scan extension.";
-      if (err.message?.includes("API key") || err.message?.includes("Invalid API key") || err.message?.includes("Authentication") || err.message?.includes("401")) {
+      
+      // Rate limit error (429) - daily scan limit reached
+      if (err.status === 429 || err.message?.includes("Daily scan limit") || err.message?.includes("DAILY_DEEP_SCAN_LIMIT")) {
+        errorMessage = "Daily scan limit reached (2 scans per day). Sign in or try again tomorrow.";
+      } else if (err.message?.includes("API key") || err.message?.includes("Invalid API key") || err.message?.includes("Authentication") || err.message?.includes("401")) {
         errorMessage = "Connection is down try back in a while";
       } else if (err.message?.includes("Connection refused") || err.message?.includes("Errno 61") || err.message?.includes("LLM service")) {
         errorMessage = "LLM service unavailable. Please check your LLM provider configuration (LLM_FALLBACK_CHAIN).";
@@ -256,18 +250,12 @@ export const ScanProvider = ({ children }) => {
       setIsScanning(false);
       // Stay on progress page to show error
     }
-  }, [url, extractExtensionId, navigate, waitForScanCompletion, loadScanHistory, loadDashboardStats, isAuthenticated, openSignInModal]);
+  }, [url, extractExtensionId, navigate, waitForScanCompletion, loadScanHistory, loadDashboardStats]);
 
   // Handle file upload
+  // No authentication required - anonymous users can upload with IP-based rate limiting
   const handleFileUpload = useCallback(async (file) => {
     const isDevelopment = import.meta.env.DEV || import.meta.env.MODE === 'development';
-    const requireAuthForScan = import.meta.env.VITE_REQUIRE_AUTH_FOR_SCAN === 'true';
-    if ((!isDevelopment || requireAuthForScan) && !isAuthenticated) {
-      sessionStorage.setItem("auth:returnTo", "/scan");
-      setError(null); // No error message - modal is the prompt
-      openSignInModal();
-      return;
-    }
 
     setUrl("");
     setIsScanning(true);
@@ -277,12 +265,12 @@ export const ScanProvider = ({ children }) => {
     setScanStage("extracting");
 
     try {
-      // Daily deep-scan limit check (uploads are always deep scans) - skip in development
+      // Daily scan limit check (uploads are always deep scans) - skip in development
       if (!isDevelopment) {
         try {
           const limit = await realScanService.getDeepScanLimitStatus();
           if (limit?.remaining <= 0) {
-            setError("Daily deep-scan limit reached. Cached lookups are still unlimited.");
+            setError("Daily scan limit reached (2 scans per day). Sign in or try again tomorrow.");
             setScanStage(null);
             setIsScanning(false);
             return;
@@ -332,11 +320,16 @@ export const ScanProvider = ({ children }) => {
       await loadDashboardStats();
       // Do not auto-navigate; progress page will prompt.
     } catch (err) {
-      setError(err.message || "Failed to upload and scan file.");
+      // Handle rate limit error (429) with user-friendly message
+      let errorMessage = err.message || "Failed to upload and scan file.";
+      if (err.status === 429 || err.message?.includes("Daily scan limit") || err.message?.includes("DAILY_DEEP_SCAN_LIMIT")) {
+        errorMessage = "Daily scan limit reached (2 scans per day). Sign in or try again tomorrow.";
+      }
+      setError(errorMessage);
       setScanStage(null);
       setIsScanning(false);
     }
-  }, [navigate, waitForScanCompletion, loadScanHistory, loadDashboardStats, isAuthenticated, openSignInModal]);
+  }, [navigate, waitForScanCompletion, loadScanHistory, loadDashboardStats]);
 
   // Load scan from history (single API: realScanService.getRealScanResults)
   const loadScanFromHistory = useCallback(async (extId, extensionName) => {

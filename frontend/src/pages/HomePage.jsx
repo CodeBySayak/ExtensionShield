@@ -25,7 +25,7 @@ const EXTENSION_CARDS = [
 const HomePage = () => {
   const navigate = useNavigate();
   const { startScan, setUrl, error: scanError } = useScan();
-  const { isAuthenticated, openSignInModal } = useAuth();
+  useAuth(); // Auth not required for scanning; used by other components (e.g. header)
   const [isVisible, setIsVisible] = useState(false);
   const [scanInput, setScanInput] = useState("");
   const [revealedSections, setRevealedSections] = useState({});
@@ -107,18 +107,7 @@ const HomePage = () => {
   const handleScan = () => {
     const input = scanInput.trim();
     if (input) {
-      // Require auth in production, or in dev when VITE_REQUIRE_AUTH_FOR_SCAN=true
-      const isDevelopment = import.meta.env.DEV || import.meta.env.MODE === 'development';
-      const requireAuthForScan = import.meta.env.VITE_REQUIRE_AUTH_FOR_SCAN === 'true';
-      if ((!isDevelopment || requireAuthForScan) && !isAuthenticated) {
-        // Store the URL so we can resume after login
-        sessionStorage.setItem("auth:pendingScanUrl", input);
-        sessionStorage.setItem("auth:returnTo", "/scan");
-        openSignInModal();
-        return;
-      }
-      // Clear context URL so /scan page starts clean, then trigger scan directly.
-      // startScan navigates to /scan/progress/:id → user clicks "View Results" → /scan/results/:id
+      // No auth required for scanning — goes straight to game loading page
       setScanInput("");
       setUrl("");
       startScan(input);

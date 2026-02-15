@@ -2,9 +2,7 @@
   Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests; script-src 'self' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co https://*.supabase.io; frame-src 'self' https://*.supabase.co; worker-src 'self'; manifest-src 'self'
 
 /sitemap.xml
-  Cache-Control: public, max-age=3600
-
-/robots.txt
+  Cache-Control: public, max-age=3600/robots.txt
   Cache-Control: public, max-age=3600
 
 /og.png

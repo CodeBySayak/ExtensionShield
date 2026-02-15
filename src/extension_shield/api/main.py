@@ -604,6 +604,46 @@ def _get_user_id(request: Request) -> str:
     return "anon"
 
 
+def _get_client_ip(request: Request) -> str:
+    """
+    Get the client's IP address for rate limiting anonymous users.
+    
+    Handles proxied requests via X-Forwarded-For and X-Real-IP headers.
+    Falls back to client host if no headers present.
+    """
+    # Check X-Forwarded-For header (from reverse proxy/load balancer)
+    x_forwarded_for = request.headers.get("x-forwarded-for")
+    if x_forwarded_for:
+        # Take the first IP (original client)
+        return x_forwarded_for.split(",")[0].strip()
+    
+    # Check X-Real-IP header (from nginx)
+    x_real_ip = request.headers.get("x-real-ip")
+    if x_real_ip:
+        return x_real_ip.strip()
+    
+    # Fall back to direct client IP
+    if request.client:
+        return request.client.host
+    
+    return "unknown"
+
+
+def _get_rate_limit_key(request: Request) -> str:
+    """
+    Get the rate limit key for the request.
+    
+    For authenticated users: use user_id (allows sharing limit across devices)
+    For anonymous users: use IP address (prevents abuse)
+    """
+    authenticated_user_id = getattr(getattr(request, "state", None), "user_id", None)
+    if authenticated_user_id:
+        return f"user:{authenticated_user_id}"
+    
+    # Use IP for anonymous users
+    return f"ip:{_get_client_ip(request)}"
+
+
 def _require_admin_key(request: Request) -> None:
     """
     Verify X-Admin-Key header matches ADMIN_API_KEY.
@@ -2297,9 +2337,9 @@ Disallow: /reports
 
 @app.get("/api/limits/deep-scan")
 async def get_deep_scan_limit(http_request: Request):
-    """Return daily deep-scan usage status for the current user (placeholder)."""
-    user_id = _get_user_id(http_request)
-    return _deep_scan_limit_status(user_id)
+    """Return daily deep-scan usage status for the current user/IP."""
+    rate_limit_key = _get_rate_limit_key(http_request)
+    return _deep_scan_limit_status(rate_limit_key)
 
 
 @app.post("/api/enterprise/pilot-request")
@@ -2394,37 +2434,27 @@ async def trigger_scan(scan_request: ScanRequest, background_tasks: BackgroundTa
             "status": "running",
         }
 
-    # Get user ID for rate limiting and consumption tracking
-    user_id = _get_user_id(request)
-    
-    # Enforce authentication for deep scans in production
-    # This prevents abuse of VirusTotal API quota by anonymous users
+    # Get rate limit key (user_id for authenticated, IP for anonymous)
+    # This allows both authenticated and anonymous users to scan, with IP-based limits for anonymous
+    rate_limit_key = _get_rate_limit_key(request)
     settings = get_settings()
-    authenticated_user_id = getattr(getattr(request, "state", None), "user_id", None)
-    if settings.is_prod() and not authenticated_user_id:
-        raise HTTPException(
-            status_code=401,
-            detail={
-                "error_code": "AUTH_REQUIRED",
-                "message": "Authentication required to scan new extensions. Sign in to continue. You can view existing reports on the /scan page without signing in.",
-            },
-        )
     
     # Enforce daily deep-scan limit - skip in development
+    # Uses rate_limit_key (user_id for authenticated users, IP for anonymous)
     if settings.is_prod():
-        limit_status = _deep_scan_limit_status(user_id)
+        limit_status = _deep_scan_limit_status(rate_limit_key)
         if limit_status["remaining"] <= 0:
             raise HTTPException(
                 status_code=429,
                 detail={
                     "error_code": "DAILY_DEEP_SCAN_LIMIT",
-                    "message": "Daily deep-scan limit reached. Cached lookups are still unlimited.",
+                    "message": "Daily scan limit reached (2 scans per day). Sign in or try again tomorrow.",
                     **limit_status,
                 },
             )
 
     # Consume one deep scan since we are starting a new analysis run
-    after_consume = _consume_deep_scan(user_id)
+    after_consume = _consume_deep_scan(rate_limit_key)
 
     # Start background analysis
     scan_user_ids[extension_id] = getattr(getattr(request, "state", None), "user_id", None)
@@ -2502,33 +2532,24 @@ async def upload_and_scan(
     import uuid
     extension_id = str(uuid.uuid4())
 
-    # Enforce authentication for file uploads in production
-    # File uploads are always deep scans and consume VirusTotal API quota
+    # Get rate limit key (user_id for authenticated, IP for anonymous)
+    # File uploads are allowed for both authenticated and anonymous users with IP-based limits
     settings = get_settings()
-    authenticated_user_id = getattr(getattr(request, "state", None), "user_id", None)
-    if settings.is_prod() and not authenticated_user_id:
-        raise HTTPException(
-            status_code=401,
-            detail={
-                "error_code": "AUTH_REQUIRED",
-                "message": "Authentication required to scan extensions. Sign in to continue. You can view existing reports on the /scan page without signing in.",
-            },
-        )
+    rate_limit_key = _get_rate_limit_key(request)
 
     # Enforce daily deep-scan limit (uploads are always deep scans) - skip in development
-    user_id = _get_user_id(request)
     if settings.is_prod():
-        limit_status = _deep_scan_limit_status(user_id)
+        limit_status = _deep_scan_limit_status(rate_limit_key)
         if limit_status["remaining"] <= 0:
             raise HTTPException(
                 status_code=429,
                 detail={
                     "error_code": "DAILY_DEEP_SCAN_LIMIT",
-                    "message": "Daily deep-scan limit reached. Cached lookups are still unlimited.",
+                    "message": "Daily scan limit reached (2 scans per day). Sign in or try again tomorrow.",
                     **limit_status,
                 },
             )
-    after_consume = _consume_deep_scan(user_id)
+    after_consume = _consume_deep_scan(rate_limit_key)
 
     # Save uploaded file to extensions_storage (use sanitized filename)
     file_path = RESULTS_DIR / f"{extension_id}_{safe_filename}"

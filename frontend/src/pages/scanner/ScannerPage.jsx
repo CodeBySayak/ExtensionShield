@@ -269,7 +269,7 @@ const ScannerPage = () => {
   // If backend blocks a deep scan (429), refresh limit status so the button can disable immediately.
   useEffect(() => {
     if (!error || typeof error !== "string") return;
-    if (!error.toLowerCase().includes("daily deep-scan limit reached")) return;
+    if (!error.toLowerCase().includes("daily scan limit")) return;
 
     let cancelled = false;
     const refresh = async () => {
@@ -375,7 +375,7 @@ const ScannerPage = () => {
 
   const deepScanLimitReached = deepScanLimit && deepScanLimit.remaining <= 0;
   const scanDisabledDueToLimit = Boolean(deepScanLimitReached && !cachedAvailable);
-  const scanDisabledTooltip = "Daily deep-scan limit reached. Cached lookups are still unlimited.";
+  const scanDisabledTooltip = "Daily scan limit reached (2 scans per day). Sign in or try again tomorrow.";
 
   // Format user count
   const formatUserCount = (count) => {
@@ -625,7 +625,7 @@ const ScannerPage = () => {
 
           {scanDisabledDueToLimit && (
             <div className="deep-scan-limit-banner">
-              Daily deep-scan limit reached. Cached lookups are still unlimited.
+              Daily scan limit reached (2 scans per day). Sign in or try again tomorrow.
             </div>
           )}
 
