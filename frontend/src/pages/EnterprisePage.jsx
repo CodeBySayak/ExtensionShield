@@ -195,15 +195,10 @@ const EnterprisePage = () => {
             </ul>
             <div className="enterprise-card-divider" aria-hidden="true" />
             <div className="enterprise-pilot-addon">
-              <h3 className="enterprise-pilot-addon__heading">Pilot add-on: Custom Extension Build / Hardening</h3>
+              <h3 className="enterprise-pilot-addon__heading">Custom extensions, without the risk.</h3>
               <p className="enterprise-pilot-addon__text">
-                We can build a small internal extension or harden an existing one, then monitor updates with policy + audit exports.
+                We build or harden internal extensions with minimal permissions, signed builds, and change alerts so you stay in policy.
               </p>
-              <ul className="enterprise-pilot-addon__bullets">
-                <li>Least-privilege permissions</li>
-                <li>Signed releases</li>
-                <li>Continuous monitoring + export</li>
-              </ul>
             </div>
           </div>
 

@@ -88,6 +88,14 @@ This directory contains comprehensive documentation for the ExtensionShield proj
   - Current background and optional lighter dark (`data-theme="dark-lighter"`)
   - Concept palettes and accessibility notes
 
+### SEO & other
+
+- **[seo-audit.md](./seo-audit.md)** / **[seo-audit-2026-02.md](./seo-audit-2026-02.md)** - SEO audits (codebase-only and full)
+- **[seo-ranking-and-competitors.md](./seo-ranking-and-competitors.md)** - SEO standing and competitor comparison
+- **[seo-growth-checklist.md](./seo-growth-checklist.md)** - SEO growth checklist (consumer intent)
+- **[GOOGLE_TAG_VERIFY.md](./GOOGLE_TAG_VERIFY.md)** - How to verify Google Tag (gtag) in Network tab
+- **[HEADER_MEGAMENU_PASTE_PACKAGE.md](./HEADER_MEGAMENU_PASTE_PACKAGE.md)** - Header/nav/megamenu paste package for other sites
+
 ### Database & API
 
 - **[DATABASE_README.md](./DATABASE_README.md)** - Database schema, SQLite ↔ Postgres mapping, API routes
