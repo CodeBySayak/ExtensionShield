@@ -17,7 +17,7 @@ import { useScan } from "../../context/ScanContext";
 import realScanService from "../../services/realScanService";
 import { normalizeScanResultSafe, validateEvidenceIntegrity, gateIdToLayer, extractFindingsByLayer } from "../../utils/normalizeScanResult";
 import { getExtensionIconUrl, EXTENSION_ICON_PLACEHOLDER } from "../../utils/constants";
-import { normalizeExtensionId } from "../../utils/extensionId";
+import { normalizeExtensionId, isUUID } from "../../utils/extensionId";
 import { generateSlug } from "../../utils/slug";
 import "./ScanResultsPageV2.scss";
 
@@ -285,8 +285,9 @@ const ScanResultsPageV2 = () => {
     );
   }
 
-  // No results
+  // No results (404 or not scanned yet)
   if (!scanResults && !isLoading && !isLoadingRef.current) {
+    const isUploadScan = scanId && isUUID(scanId);
     return (
       <>
         {noindexHead}
@@ -296,20 +297,31 @@ const ScanResultsPageV2 = () => {
         </nav>
         <div className="results-v2-empty">
           <div className="empty-icon">📋</div>
-          <h2>No Results Found</h2>
-          <p>This extension hasn't been scanned yet or the scan is still in progress.</p>
+          <h2>Scan results not found</h2>
+          <p>
+            {isUploadScan
+              ? "If you just uploaded a ZIP/CRX, the scan may still be running. Check progress below or try again in a moment."
+              : "This extension hasn't been scanned yet or the scan is still in progress."}
+          </p>
           {error && (
             <div className="empty-error" style={{ marginTop: '1rem', color: 'var(--risk-bad)' }}>
               {error}
             </div>
           )}
           <div className="empty-actions">
-            <Button onClick={() => navigate("/scan")} variant="default">
+            {isUploadScan && (
+              <Button onClick={() => navigate(`/scan/progress/${scanId}`)} variant="default">
+                Check scan progress
+              </Button>
+            )}
+            <Button onClick={() => navigate("/scan")} variant={isUploadScan ? "outline" : "default"} style={isUploadScan ? { marginLeft: '0.5rem' } : undefined}>
               Start Scan
             </Button>
-            <Button onClick={() => navigate(`/scan/progress/${scanId}`)} variant="outline" style={{ marginLeft: '0.5rem' }}>
-              Check Progress
-            </Button>
+            {!isUploadScan && scanId && (
+              <Button onClick={() => navigate(`/scan/progress/${scanId}`)} variant="outline" style={{ marginLeft: '0.5rem' }}>
+                Check Progress
+              </Button>
+            )}
           </div>
         </div>
       </div>

@@ -22,12 +22,21 @@ const STEPS = [
   { id: "results", label: "Results", Icon: CheckCircle2, desc: "Single score with full evidence.", weight: "", variant: "results" },
 ];
 
-const OpenCoreEnginesSection = () => {
+/* Step thresholds for scroll-driven flow (0–1 over dev-section → open-core-ctas range) */
+const STEP_THRESHOLDS = [0.1, 0.28, 0.46, 0.64, 0.82];
+
+const OpenCoreEnginesSection = ({ scrollYProgress: externalProgress }) => {
   const sectionRef = useRef(null);
   const flowRef = useRef(null);
   const isInView = useInView(sectionRef, { once: false, amount: 0.1 });
   const [reduced, setReduced] = useState(false);
   const [activeStep, setActiveStep] = useState(-1);
+
+  const internalScroll = useScroll({
+    target: flowRef,
+    offset: ["start 0.85", "end 0.4"],
+  });
+  const scrollYProgress = externalProgress ?? internalScroll.scrollYProgress;
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -37,30 +46,26 @@ const OpenCoreEnginesSection = () => {
     return () => mq.removeEventListener("change", h);
   }, []);
 
-  const { scrollYProgress } = useScroll({
-    target: flowRef,
-    offset: ["start 0.85", "end 0.4"],
-  });
-
   useMotionValueEvent(scrollYProgress, "change", (v) => {
-    if (v < 0.12) setActiveStep(0);
-    else if (v < 0.32) setActiveStep(1);
-    else if (v < 0.52) setActiveStep(2);
-    else if (v < 0.72) setActiveStep(3);
+    if (v < STEP_THRESHOLDS[0]) setActiveStep(0);
+    else if (v < STEP_THRESHOLDS[1]) setActiveStep(1);
+    else if (v < STEP_THRESHOLDS[2]) setActiveStep(2);
+    else if (v < STEP_THRESHOLDS[3]) setActiveStep(3);
     else setActiveStep(4);
   });
 
-  const line1 = useTransform(scrollYProgress, [0.02, 0.2], [0, 1]);
-  const line2 = useTransform(scrollYProgress, [0.22, 0.4], [0, 1]);
-  const line3 = useTransform(scrollYProgress, [0.42, 0.6], [0, 1]);
-  const line4 = useTransform(scrollYProgress, [0.62, 0.8], [0, 1]);
+  /* Connector lines: smooth draw over the scroll range */
+  const line1 = useTransform(scrollYProgress, [0.02, 0.22], [0, 1]);
+  const line2 = useTransform(scrollYProgress, [0.2, 0.4], [0, 1]);
+  const line3 = useTransform(scrollYProgress, [0.38, 0.58], [0, 1]);
+  const line4 = useTransform(scrollYProgress, [0.56, 0.78], [0, 1]);
 
-  const node0 = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
-  const node1 = useTransform(scrollYProgress, [0.1, 0.22], [0, 1]);
-  const node2 = useTransform(scrollYProgress, [0.2, 0.32], [0, 1]);
-  const node3 = useTransform(scrollYProgress, [0.3, 0.42], [0, 1]);
-  const node4 = useTransform(scrollYProgress, [0.5, 0.62], [0, 1]);
-  const node5 = useTransform(scrollYProgress, [0.7, 0.85], [0, 1]);
+  const node0 = useTransform(scrollYProgress, [0, 0.12], [0, 1]);
+  const node1 = useTransform(scrollYProgress, [0.08, 0.28], [0, 1]);
+  const node2 = useTransform(scrollYProgress, [0.24, 0.44], [0, 1]);
+  const node3 = useTransform(scrollYProgress, [0.4, 0.6], [0, 1]);
+  const node4 = useTransform(scrollYProgress, [0.56, 0.76], [0, 1]);
+  const node5 = useTransform(scrollYProgress, [0.72, 0.92], [0, 1]);
   const nodeOpacities = [node0, node1, node2, node3, node4, node5];
 
   return (

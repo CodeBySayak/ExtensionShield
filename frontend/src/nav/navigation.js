@@ -24,6 +24,12 @@ export const topNavItems = [
         path: "/scan"
       },
       {
+        icon: "📦",
+        label: "Scan a Private Build (CRX/ZIP)",
+        description: "Developers (Pro)",
+        path: "/scan/upload"
+      },
+      {
         icon: "🕐",
         label: "Scan History",
         description: "Browse past scans",

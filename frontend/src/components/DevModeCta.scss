@@ -1,0 +1,42 @@
+/* DevModeCta – micro-CTA line under hero bullet; muted text + pill CTA */
+
+.dev-mode-cta {
+  margin-top: 0.75rem;
+  font-size: clamp(0.75rem, 1.2vw, 0.8125rem);
+  color: var(--atlas-text-muted);
+  line-height: 1.55;
+}
+
+.dev-mode-cta__prefix {
+  font-family: ui-monospace, monospace;
+  color: var(--atlas-text-muted);
+  opacity: 0.9;
+}
+
+.dev-mode-cta__pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2em 0.6em;
+  margin: 0 0.1em;
+  font: inherit;
+  font-weight: 500;
+  color: var(--atlas-text-secondary);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--atlas-border);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    color: var(--atlas-accent);
+    background: rgba(34, 197, 94, 0.08);
+    border-color: rgba(34, 197, 94, 0.35);
+    box-shadow: 0 0 12px rgba(34, 197, 94, 0.15);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--atlas-accent);
+    outline-offset: 2px;
+    border-radius: 9999px;
+  }
+}

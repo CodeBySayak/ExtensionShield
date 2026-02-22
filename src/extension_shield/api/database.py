@@ -166,6 +166,18 @@ class Database:
                 cursor.execute("CREATE INDEX IF NOT EXISTS idx_scan_results_slug ON scan_results(slug)")
             except Exception:
                 pass
+            try:
+                cursor.execute("ALTER TABLE scan_results ADD COLUMN user_id TEXT")
+            except Exception:
+                pass
+            try:
+                cursor.execute("ALTER TABLE scan_results ADD COLUMN visibility TEXT DEFAULT 'public'")
+            except Exception:
+                pass
+            try:
+                cursor.execute("ALTER TABLE scan_results ADD COLUMN source TEXT DEFAULT 'webstore'")
+            except Exception:
+                pass
 
             # Statistics table for aggregated metrics
             cursor.execute(
@@ -301,8 +313,9 @@ class Database:
                         high_risk_count, medium_risk_count, low_risk_count,
                         metadata, manifest, permissions_analysis, sast_results,
                         webstore_analysis, summary, extracted_path, extracted_files,
-                        icon_path, icon_base64, icon_media_type, error, updated_at
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        icon_path, icon_base64, icon_media_type, error, updated_at,
+                        user_id, visibility, source
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                     (
                         extension_id,
@@ -331,6 +344,9 @@ class Database:
                         result.get("icon_media_type"),
                         result.get("error"),
                         datetime.now().isoformat(),
+                        result.get("user_id"),
+                        result.get("visibility", "public"),
+                        result.get("source", "webstore"),
                     ),
                 )
 
@@ -540,15 +556,19 @@ class Database:
             logger.error("Error saving feedback: %s", e)
             raise
 
-    def get_user_scan_history(self, user_id: str, limit: int = 50) -> List[Dict[str, Any]]:
+    def get_user_scan_history(self, user_id: str, limit: int = 50, private_only: bool = False) -> List[Dict[str, Any]]:
         """
         Get scan history for a single user, joined with global scan_results by extension_id.
+        
+        Args:
+            user_id: User identifier
+            limit: Max results to return
+            private_only: If True, only return private uploads (source='upload')
         """
         try:
             with self.get_connection() as conn:
                 cursor = conn.cursor()
-                cursor.execute(
-                    """
+                base_query = """
                     SELECT
                         h.extension_id,
                         r.extension_name,
@@ -561,16 +581,19 @@ class Database:
                         r.total_files,
                         r.high_risk_count,
                         r.medium_risk_count,
-                        r.low_risk_count
+                        r.low_risk_count,
+                        r.visibility,
+                        r.source
                     FROM user_scan_history h
                     LEFT JOIN scan_results r
                         ON r.extension_id = h.extension_id
                     WHERE h.user_id = ?
-                    ORDER BY COALESCE(h.last_viewed_at, h.created_at) DESC
-                    LIMIT ?
-                """,
-                    (user_id, limit),
-                )
+                """
+                if private_only:
+                    base_query += " AND r.source = 'upload'"
+                base_query += " ORDER BY COALESCE(h.last_viewed_at, h.created_at) DESC LIMIT ?"
+                
+                cursor.execute(base_query, (user_id, limit))
                 rows = cursor.fetchall()
                 return [dict(row) for row in rows]
         except Exception as e:
@@ -578,18 +601,20 @@ class Database:
             return []
 
     def get_scan_result(self, identifier: str) -> Optional[Dict[str, Any]]:
-        """Get scan result by extension ID or slug. Identifier can be 32-char extension ID or name slug."""
+        """Get scan result by extension ID or slug. Identifier can be 32-char extension ID, upload UUID, or name slug."""
         try:
             with self.get_connection() as conn:
                 cursor = conn.cursor()
-                if _is_extension_id(identifier):
-                    cursor.execute("SELECT * FROM scan_results WHERE extension_id = ?", (identifier,))
-                else:
+                # Always try extension_id first (Chrome ID or upload UUID)
+                cursor.execute("SELECT * FROM scan_results WHERE extension_id = ?", (identifier,))
+                row = cursor.fetchone()
+                if not row and not _is_extension_id(identifier):
+                    # Fall back to slug for human-readable names
                     cursor.execute(
                         """SELECT * FROM scan_results WHERE slug = ? ORDER BY timestamp DESC LIMIT 1""",
                         (identifier,),
                     )
-                row = cursor.fetchone()
+                    row = cursor.fetchone()
                 if not row:
                     return None
                 return self._row_to_dict(row)
@@ -715,6 +740,8 @@ class Database:
                             icon_base64, icon_media_type
                         FROM scan_results
                         WHERE status = 'completed'
+                          AND COALESCE(visibility, 'public') = 'public'
+                          AND COALESCE(source, 'webstore') = 'webstore'
                           AND (extension_name LIKE ? OR extension_id LIKE ?)
                         ORDER BY COALESCE(updated_at, timestamp) DESC
                         LIMIT ?
@@ -733,6 +760,8 @@ class Database:
                             icon_base64, icon_media_type
                         FROM scan_results
                         WHERE status = 'completed'
+                          AND COALESCE(visibility, 'public') = 'public'
+                          AND COALESCE(source, 'webstore') = 'webstore'
                         ORDER BY COALESCE(updated_at, timestamp) DESC
                         LIMIT ?
                     """,
@@ -1116,17 +1145,26 @@ class SupabaseDatabase:
                 "error": result.get("error"),
                 # updated_at is auto-updated by trigger, but set it anyway for initial insert
                 "updated_at": datetime.now(timezone.utc).isoformat(),
+                "user_id": result.get("user_id"),
+                "visibility": result.get("visibility", "public"),
+                "source": result.get("source", "webstore"),
             }
 
             # Upsert on extension_id
             try:
                 self.client.table(self.table_scan_results).upsert(row).execute()
             except Exception as upsert_error:
-                # Allow rollout when DB migration for new icon columns is not applied yet.
+                # Allow rollout when DB migration for new columns is not applied yet.
                 upsert_error_str = str(upsert_error).lower()
                 if "icon_base64" in upsert_error_str or "icon_media_type" in upsert_error_str:
                     row.pop("icon_base64", None)
                     row.pop("icon_media_type", None)
+                    self.client.table(self.table_scan_results).upsert(row).execute()
+                elif "visibility" in upsert_error_str or "source" in upsert_error_str or "42703" in upsert_error_str:
+                    # Migration 20260221100000 not applied: retry without visibility/source
+                    row.pop("visibility", None)
+                    row.pop("source", None)
+                    row.pop("user_id", None)
                     self.client.table(self.table_scan_results).upsert(row).execute()
                 else:
                     raise
@@ -1247,9 +1285,14 @@ class SupabaseDatabase:
             print(f"Error getting user karma (Supabase): {e}")
             return {"karma_points": 0, "total_scans": 0, "created_at": None, "updated_at": None}
 
-    def get_user_scan_history(self, user_id: str, limit: int = 50) -> List[Dict[str, Any]]:
+    def get_user_scan_history(self, user_id: str, limit: int = 50, private_only: bool = False) -> List[Dict[str, Any]]:
         """
         Fetch user history rows, then look up global scan_results by extension_id.
+        
+        Args:
+            user_id: User identifier
+            limit: Max results to return
+            private_only: If True, only return private uploads (source='upload')
         """
         try:
             hist_resp = (
@@ -1265,14 +1308,16 @@ class SupabaseDatabase:
             if not ext_ids:
                 return []
 
-            scans_resp = (
+            query = (
                 self.client.table(self.table_scan_results)
                 .select(
-                    "extension_id, extension_name, url, scanned_at, created_at, updated_at, status, security_score, risk_level, total_findings, total_files, high_risk_count, medium_risk_count, low_risk_count, metadata, sast_results, permissions_analysis, manifest, summary"
+                    "extension_id, extension_name, url, scanned_at, created_at, updated_at, status, security_score, risk_level, total_findings, total_files, high_risk_count, medium_risk_count, low_risk_count, metadata, sast_results, permissions_analysis, manifest, summary, visibility, source"
                 )
                 .in_("extension_id", ext_ids)
-                .execute()
             )
+            if private_only:
+                query = query.eq("source", "upload")
+            scans_resp = query.execute()
             scans = getattr(scans_resp, "data", None) or []
             by_id = {}
             for r in scans:
@@ -1310,17 +1355,19 @@ class SupabaseDatabase:
             return []
 
     def get_scan_result(self, identifier: str) -> Optional[Dict[str, Any]]:
-        """Get scan result by extension ID or slug. Identifier can be 32-char extension ID or name slug."""
+        """Get scan result by extension ID or slug. Identifier can be 32-char extension ID, upload UUID, or name slug."""
         try:
-            if _is_extension_id(identifier):
-                resp = (
-                    self.client.table(self.table_scan_results)
-                    .select("*")
-                    .eq("extension_id", identifier)
-                    .limit(1)
-                    .execute()
-                )
-            else:
+            # Try extension_id first (Chrome ID or upload UUID)
+            resp = (
+                self.client.table(self.table_scan_results)
+                .select("*")
+                .eq("extension_id", identifier)
+                .limit(1)
+                .execute()
+            )
+            data = getattr(resp, "data", None) or []
+            if not data and not _is_extension_id(identifier):
+                # Fall back to slug for human-readable names
                 resp = (
                     self.client.table(self.table_scan_results)
                     .select("*")
@@ -1329,7 +1376,7 @@ class SupabaseDatabase:
                     .limit(1)
                     .execute()
                 )
-            data = getattr(resp, "data", None) or []
+                data = getattr(resp, "data", None) or []
             if not data:
                 return None
             
@@ -1403,12 +1450,15 @@ class SupabaseDatabase:
             return []
 
     def get_recent_scans(self, limit: int = 10, search: Optional[str] = None) -> List[Dict[str, Any]]:
-        """Get recent scans. Optional search filters by extension_name or extension_id (case-insensitive)."""
+        """Get recent scans (public webstore only; exclude private uploads). Optional search filters by extension_name or extension_id."""
+        select_cols = "extension_id, extension_name, slug, scanned_at, created_at, updated_at, security_score, risk_level, total_findings, total_files, high_risk_count, medium_risk_count, low_risk_count, metadata, webstore_analysis, sast_results, permissions_analysis, manifest, summary, icon_base64, icon_media_type"
         try:
             q = (
                 self.client.table(self.table_scan_results)
-                .select("extension_id, extension_name, slug, scanned_at, created_at, updated_at, security_score, risk_level, total_findings, total_files, high_risk_count, medium_risk_count, low_risk_count, metadata, webstore_analysis, sast_results, permissions_analysis, manifest, summary, icon_base64, icon_media_type")
+                .select(select_cols)
                 .eq("status", "completed")
+                .or_("visibility.is.null,visibility.eq.public")
+                .or_("source.is.null,source.eq.webstore")
                 .order("updated_at", desc=True)
             )
             if search and search.strip():
@@ -1448,6 +1498,46 @@ class SupabaseDatabase:
             return rows
         except Exception as e:
             import traceback
+            err_str = str(e).lower()
+            # Migration 20260221100000 not applied: visibility/source columns missing
+            if "42703" in err_str or "visibility" in err_str or "source" in err_str or "does not exist" in err_str:
+                try:
+                    q = (
+                        self.client.table(self.table_scan_results)
+                        .select(select_cols)
+                        .eq("status", "completed")
+                        .order("updated_at", desc=True)
+                    )
+                    if search and search.strip():
+                        term = search.strip()
+                        q = q.or_(f"extension_name.ilike.%{term}%,extension_id.ilike.%{term}%")
+                    resp = q.limit(limit).execute()
+                    rows = getattr(resp, "data", None) or []
+                    print(f"[get_recent_scans Supabase] Retrieved {len(rows)} scans (no visibility/source filter)")
+                    for row in rows:
+                        try:
+                            ts = row.get("scanned_at") or row.get("updated_at") or row.get("created_at")
+                            if ts:
+                                row["timestamp"] = ts
+                            row.pop("scanned_at", None)
+                            row.pop("updated_at", None)
+                            row.pop("created_at", None)
+                            summary = row.get("summary", {})
+                            if isinstance(summary, dict):
+                                if "scoring_v2" in summary:
+                                    row["scoring_v2"] = summary.get("scoring_v2")
+                                if "report_view_model" in summary:
+                                    row["report_view_model"] = summary.get("report_view_model")
+                                if "governance_bundle" in summary:
+                                    row["governance_bundle"] = summary.get("governance_bundle")
+                                if "virustotal_analysis" in summary:
+                                    row["virustotal_analysis"] = summary.get("virustotal_analysis")
+                        except Exception as row_error:
+                            print(f"Error processing row in get_recent_scans (Supabase): {row_error}")
+                            continue
+                    return rows
+                except Exception as fallback_e:
+                    print(f"Error in get_recent_scans fallback (Supabase): {fallback_e}")
             print(f"Error getting recent scans (Supabase): {e}")
             print(f"Traceback: {traceback.format_exc()}")
             return []

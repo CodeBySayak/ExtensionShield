@@ -10,11 +10,15 @@ import os
 import re
 import logging
 import hashlib
+import struct
 from typing import Optional
 
 from extension_shield.core.config import get_settings
 
 logger = logging.getLogger(__name__)
+
+# CRX magic bytes (all CRX versions)
+CRX_MAGIC = b"Cr24"
 
 # Single source of truth: Chrome extension IDs are exactly 32 lowercase letters [a-z]
 CHROME_EXTENSION_ID_PATTERN = re.compile(r"^[a-z]{32}$")
@@ -91,30 +95,133 @@ def calculate_file_hash(file_path: str) -> Optional[str]:
         return None
 
 
-def extract_extension_crx(file_path: str) -> Optional[str]:
-    """Extract .crx file to a persistent directory for file viewing"""
-
-    # Use persistent storage directory instead of /tmp
+def _crx_zip_offset(file_path: str) -> Optional[int]:
+    """
+    Return the byte offset at which the ZIP payload starts in a CRX file.
+    CRX v2: magic(4) + version(4) + pk_len(4) + sig_len(4) + pk + sig → ZIP.
+    CRX v3: magic(4) + version(4) + header_len(4) + header → ZIP.
+    Returns None if the file is not a valid CRX or format is unsupported.
+    """
     try:
-        # Get storage path from environment or use default
+        with open(file_path, "rb") as f:
+            magic = f.read(4)
+            if magic != CRX_MAGIC:
+                return None
+            version_bytes = f.read(4)
+            if len(version_bytes) < 4:
+                return None
+            version = struct.unpack("<I", version_bytes)[0]
+            if version == 2:
+                # pk_len (4) + sig_len (4) + pk + sig
+                pk_len = struct.unpack("<I", f.read(4))[0]
+                sig_len = struct.unpack("<I", f.read(4))[0]
+                # Skip public key and signature
+                f.seek(pk_len + sig_len, 1)
+                return f.tell()
+            if version == 3:
+                header_len = struct.unpack("<I", f.read(4))[0]
+                f.seek(header_len, 1)
+                return f.tell()
+            logger.warning("Unsupported CRX version: %s", version)
+            return None
+    except (OSError, struct.error) as e:
+        logger.warning("Failed to read CRX header: %s", e)
+        return None
+
+
+def _has_manifest(files: list) -> bool:
+    """True if any file in list is manifest.json (case-insensitive)."""
+    return any(f.lower() == "manifest.json" for f in files)
+
+
+def resolve_extension_root(extract_dir: str) -> Optional[str]:
+    """
+    Return the directory that contains manifest.json, handling zips that have
+    a single top-level folder (e.g. when zipping from Chrome's Extensions folder).
+
+    Search is under extension_storage: extract_dir is always
+    <EXTENSION_STORAGE_PATH>/extracted_<basename>_<pid>.
+
+    - If manifest.json is in extract_dir, returns extract_dir.
+    - If manifest.json (any case) is in one or more subdirs, returns the shallowest one.
+    - If no manifest.json is found, returns None (caller should not use extract_dir as root).
+    """
+    if not extract_dir or not os.path.isdir(extract_dir):
+        return None
+    root_manifest = os.path.join(extract_dir, "manifest.json")
+    if os.path.isfile(root_manifest):
+        return extract_dir
+    # Case-insensitive: e.g. Manifest.json
+    for name in os.listdir(extract_dir):
+        if name.lower() == "manifest.json":
+            return extract_dir
+    candidates = []
+    extract_dir_abs = os.path.abspath(extract_dir)
+    for root, _dirs, files in os.walk(extract_dir):
+        if _has_manifest(files):
+            candidates.append(os.path.abspath(root))
+    if not candidates:
+        try:
+            top_level = os.listdir(extract_dir)
+            logger.warning(
+                "No manifest.json found under %s (extension_storage). Top-level contents: %s",
+                extract_dir,
+                top_level[:20],
+            )
+        except OSError:
+            pass
+        return None
+    # Prefer the shallowest path (closest to extract_dir) so we get the real extension root
+    def depth_from_extract(p: str) -> int:
+        try:
+            rel = os.path.relpath(p, extract_dir_abs)
+            if rel == ".":
+                return 0
+            return len(rel.split(os.sep))
+        except ValueError:
+            return 999
+    candidates.sort(key=lambda p: (depth_from_extract(p), p))
+    chosen = candidates[0]
+    if len(candidates) > 1:
+        logger.info(
+            "Resolved extension root to shallowest subdirectory with manifest.json: %s",
+            os.path.basename(chosen),
+        )
+    else:
+        logger.info(
+            "Resolved extension root to subdirectory (zip had top-level folder): %s",
+            os.path.basename(chosen),
+        )
+    return chosen
+
+
+def extract_extension_crx(file_path: str) -> Optional[str]:
+    """Extract .crx or .zip file to a persistent directory for file viewing.
+
+    Extraction always happens under the configured EXTENSION_STORAGE_PATH, resolved
+    to an absolute path so the extract dir is exact (e.g. /app/extensions_storage/extracted_...).
+    """
+    try:
+        # Resolve to absolute path so extraction uses exact configured location (local or /app/...)
         storage_path = get_settings().extension_storage_path
-        os.makedirs(storage_path, exist_ok=True)
-        
-        # Create extraction directory with unique name
+        storage_path_abs = os.path.abspath(os.path.normpath(storage_path))
+        os.makedirs(storage_path_abs, exist_ok=True)
+
         base_name = os.path.basename(file_path)
         extract_dir_name = f"extracted_{base_name}_{os.getpid()}"
-        extract_dir = os.path.join(storage_path, extract_dir_name)
+        extract_dir = os.path.join(storage_path_abs, extract_dir_name)
         os.makedirs(extract_dir, exist_ok=True)
-        
-        logger.info("Extracting .crx file to persistent storage: %s", extract_dir)
 
-        if file_path.endswith(".crx"):
-            # CRX files are ZIP files with a different header
-            # We need to skip the first few bytes
+        logger.info("Extracting to extension_storage (exact path): %s", extract_dir)
+
+        if file_path.lower().endswith(".crx"):
+            # CRX files have a header (v2 or v3) before the ZIP payload
+            zip_offset = _crx_zip_offset(file_path)
+            if zip_offset is None:
+                logger.error("Invalid or unsupported CRX format: %s", file_path)
+                return None
             with open(file_path, "rb") as f:
-                # Skip CRX header (first 4 bytes)
-                f.seek(4)
-                # Read the ZIP content
+                f.seek(zip_offset)
                 zip_data = f.read()
 
             temp_zip = os.path.join(extract_dir, "temp.zip")
@@ -140,7 +247,7 @@ def extract_extension_crx(file_path: str) -> Optional[str]:
 
             os.remove(temp_zip)
 
-        elif file_path.endswith(".zip"):
+        elif file_path.lower().endswith(".zip"):
             # Direct ZIP extraction with zip-slip protection
             with zipfile.ZipFile(file_path, "r") as zip_ref:
                 settings = get_settings()
@@ -163,7 +270,10 @@ def extract_extension_crx(file_path: str) -> Optional[str]:
             logger.error("Unsupported file format for extraction: %s", file_path)
             return None
 
-        return extract_dir
+        # If the zip had a single top-level folder (e.g. Chrome's version folder),
+        # manifest.json lives inside it; resolve to that directory so the rest of
+        # the pipeline finds manifest.json at the extension root.
+        return resolve_extension_root(extract_dir) or extract_dir
     except ValueError:
         # Zip-bomb and zip-slip rejections: propagate to caller
         raise

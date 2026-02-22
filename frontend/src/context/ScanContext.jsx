@@ -339,16 +339,16 @@ export const ScanProvider = ({ children }) => {
         throw new Error("Failed to upload file");
       }
 
-      // Normalize the extension ID to ensure it's exactly 32 chars (a-p) and remove any trailing characters
-      const extensionIdRaw = uploadResult.extension_id;
-      const extensionId = normalizeExtensionId(extensionIdRaw);
+      // Use scan ID: Chrome extension ID (32 a-p) or upload scan ID (UUID)
+      // For uploads, the backend returns a UUID - use it directly
+      const extensionId = uploadResult.extension_id;
       if (!extensionId) {
-        throw new Error("Invalid extension ID format from upload");
+        throw new Error("Invalid extension ID from upload");
       }
 
       setCurrentExtensionId(extensionId);
-      
-      // Navigate to progress page
+
+      // Same route as URL scans: /scan/progress/:scanId then /scan/results/:scanId
       navigate(`/scan/progress/${extensionId}`);
 
       await waitForScanCompletion(extensionId);

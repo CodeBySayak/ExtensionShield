@@ -363,6 +363,8 @@ scan_results: Dict[str, Dict[str, Any]] = {}
 scan_status: Dict[str, str] = {}
 # extension_id -> authenticated user_id (Supabase `sub`) at scan trigger time
 scan_user_ids: Dict[str, Optional[str]] = {}
+# extension_id -> 'upload' for private build uploads; None/webstore for public scans
+scan_source: Dict[str, Optional[str]] = {}
 
 # For /health uptime (no filesystem or internal config in response)
 _health_start_time = datetime.now(timezone.utc)
@@ -749,13 +751,22 @@ def _extract_icon_blob_for_storage(
 
 def _storage_relative_extracted_path(extension_dir: Optional[str]) -> Optional[str]:
     """
-    Return extracted_path in a form resolvable on any backend: basename of the
-    extracted directory (e.g. extracted_<id>.crx_123). Icon endpoint joins this
-    with extension_storage_path so icons work when DB is Supabase and storage is local.
+    Return extracted_path in a form resolvable on any backend: path relative to
+    extension_storage_path (e.g. extracted_<id>.crx_123 or extracted_<id>.zip_9/1.0.0_0
+    when the zip had a top-level version folder). Icon endpoint joins this with
+    extension_storage_path so icons work when DB is Supabase and storage is local.
     """
     if not extension_dir:
         return None
-    return os.path.basename(extension_dir.rstrip(os.sep))
+    storage_path = get_settings().extension_storage_path
+    try:
+        rel = os.path.relpath(extension_dir.rstrip(os.sep), storage_path)
+        # Avoid storing paths that escape storage (e.g. "..")
+        if rel.startswith("..") or os.path.isabs(rel):
+            return os.path.basename(extension_dir.rstrip(os.sep))
+        return rel
+    except ValueError:
+        return os.path.basename(extension_dir.rstrip(os.sep))
 
 
 def extract_extension_id(url: str) -> Optional[str]:
@@ -1121,10 +1132,16 @@ async def run_analysis_workflow(url: str, extension_id: str):
 
             # Final sanitization pass to ensure JSON-serializability
             scan_results[extension_id] = sanitize_for_json(raw_results)
-            scan_status[extension_id] = "completed"
             logger.info("[TIMELINE] report_view_model_built → extension_id=%s, has_rvm=%s", extension_id, bool(scan_results[extension_id].get("report_view_model")))
 
-            # Save to database
+            # Private upload: set user_id, visibility, source before save (so uploads are scoped and excluded from public feed)
+            user_id = scan_user_ids.pop(extension_id, None)
+            source = scan_source.pop(extension_id, None)
+            scan_results[extension_id]["user_id"] = user_id
+            scan_results[extension_id]["visibility"] = "private" if source == "upload" else "public"
+            scan_results[extension_id]["source"] = source if source else "webstore"
+
+            # Save to database *before* marking completed so GET /api/scan/results/:id finds the row
             logger.info("[TIMELINE] saving_to_database → extension_id=%s", extension_id)
             save_success = db.save_scan_result(scan_results[extension_id])
             if not save_success:
@@ -1133,7 +1150,6 @@ async def run_analysis_workflow(url: str, extension_id: str):
                 logger.info("[TIMELINE] saved_to_database → extension_id=%s, success=%s", extension_id, save_success)
 
             # Save to user history (best-effort; anonymous scans are not saved)
-            user_id = scan_user_ids.pop(extension_id, None)
             if user_id:
                 try:
                     db.add_user_scan_history(user_id=user_id, extension_id=extension_id)
@@ -1153,7 +1169,9 @@ async def run_analysis_workflow(url: str, extension_id: str):
             except Exception as file_error:
                 logger.error("[TIMELINE] file_save_failed → extension_id=%s, error=%s", extension_id, str(file_error))
                 # Don't fail the scan if file save fails - database is the primary storage
-            
+
+            # Mark completed only after DB (and file) save so GET /api/scan/results/:id returns 200
+            scan_status[extension_id] = "completed"
             workflow_duration = (datetime.now() - workflow_start).total_seconds()
             logger.info("[TIMELINE] scan_complete → extension_id=%s, duration=%.2fs", extension_id, workflow_duration)
         else:
@@ -2345,7 +2363,7 @@ async def upload_and_scan(
     file: UploadFile = File(...)
 ):
     """
-    Upload a CRX/ZIP file and trigger analysis.
+    Upload a CRX/ZIP file and trigger analysis. Requires authentication in production.
 
     Args:
         file: Uploaded CRX or ZIP file
@@ -2354,6 +2372,11 @@ async def upload_and_scan(
     Returns:
         Scan trigger confirmation with extension ID
     """
+    settings = get_settings()
+    user_id = getattr(getattr(request, "state", None), "user_id", None)
+    if settings.is_prod() and not user_id:
+        raise HTTPException(status_code=401, detail="Sign in to upload private builds")
+
     # Validate file extension
     if not file.filename:
         raise HTTPException(status_code=400, detail="No filename provided")
@@ -2432,8 +2455,9 @@ async def upload_and_scan(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to save file: {str(e)}")
 
-    # Start background analysis with local file path
+    # Start background analysis with local file path (private upload: user_id + source for DB)
     scan_user_ids[extension_id] = getattr(getattr(request, "state", None), "user_id", None)
+    scan_source[extension_id] = "upload"
     background_tasks.add_task(run_analysis_workflow, str(file_path), extension_id)
 
     return {
@@ -2527,8 +2551,9 @@ async def get_scan_results(identifier: str, http_request: Request):
     """
     logger.info("[DEBUG get_scan_results] identifier=%s", identifier)
 
-    # Resolve identifier to extension_id for memory/file lookups
-    extension_id = identifier if _is_extension_id(identifier) else None
+    # Resolve identifier to extension_id for memory/file lookups.
+    # Accept Chrome extension ID (32 a-p) or upload scan ID (e.g. UUID).
+    extension_id = identifier if (_is_extension_id(identifier) or identifier in scan_results) else None
 
     # Authorization: logged-in users may view any completed scan.
     # Only block if an *in-progress* scan belongs to a *different* user.
@@ -2538,10 +2563,15 @@ async def get_scan_results(identifier: str, http_request: Request):
         if scan_owner and scan_owner != user_id:
             raise HTTPException(status_code=403, detail="Access denied")
 
-    # Try memory first (only when identifier is extension_id)
+    # Try memory first (works for both Chrome IDs and upload UUIDs)
     if extension_id and extension_id in scan_results:
         logger.info("[DEBUG get_scan_results] Using memory cache path")
         payload = scan_results[extension_id]
+        # Private reports: only the owning user may view
+        if payload.get("visibility") == "private":
+            requester_id = getattr(getattr(http_request, "state", None), "user_id", None)
+            if not requester_id or payload.get("user_id") != requester_id:
+                raise HTTPException(status_code=404, detail="Scan results not found")
         # Upgrade legacy payload and ensure consumer_insights
         payload = upgrade_legacy_payload(payload, extension_id)
         payload = ensure_consumer_insights(payload)
@@ -2558,6 +2588,11 @@ async def get_scan_results(identifier: str, http_request: Request):
     if results:
         extension_id = results.get("extension_id") or extension_id
         logger.info("[DEBUG get_scan_results] Database row exists: %s", bool(results))
+        # Private reports: only the owning user may view
+        if results.get("visibility") == "private":
+            requester_id = getattr(getattr(http_request, "state", None), "user_id", None)
+            if not requester_id or results.get("user_id") != requester_id:
+                raise HTTPException(status_code=404, detail="Scan results not found")
         # Ensure consistent field naming for frontend
         formatted_results: Dict[str, Any] = {
             "extension_id": results.get("extension_id"),
@@ -2566,6 +2601,9 @@ async def get_scan_results(identifier: str, http_request: Request):
             "url": results.get("url"),
             "timestamp": results.get("timestamp"),
             "status": results.get("status"),
+            "user_id": results.get("user_id"),
+            "visibility": results.get("visibility"),
+            "source": results.get("source"),
             "metadata": results.get("metadata", {}),
             "manifest": results.get("manifest", {}),
             "permissions_analysis": results.get("permissions_analysis", {}),
@@ -2628,7 +2666,9 @@ async def get_scan_results(identifier: str, http_request: Request):
     else:
         logger.warning("[DEBUG get_scan_results] Database row does NOT exist for identifier=%s", identifier)
 
-    # Try loading from file (fallback; only when identifier is extension_id)
+    # Try loading from file (fallback; use identifier so upload UUID works)
+    if not extension_id:
+        extension_id = identifier
     if not extension_id:
         raise HTTPException(status_code=404, detail="Scan results not found")
     logger.info("[DEBUG get_scan_results] Trying file path")
@@ -2638,6 +2678,11 @@ async def get_scan_results(identifier: str, http_request: Request):
         try:
             with open(result_file, "r", encoding="utf-8") as f:
                 payload = json.load(f)
+            # Private reports: only the owning user may view
+            if payload.get("visibility") == "private":
+                requester_id = getattr(getattr(http_request, "state", None), "user_id", None)
+                if not requester_id or payload.get("user_id") != requester_id:
+                    raise HTTPException(status_code=404, detail="Scan results not found")
             # Upgrade legacy payload and ensure consumer_insights
             payload = upgrade_legacy_payload(payload, extension_id)
             payload = ensure_consumer_insights(payload)
@@ -2947,6 +2992,25 @@ async def get_history(http_request: Request, limit: int = 50):
         return {"history": history, "total": len(history)}
 
     history = db.get_user_scan_history(user_id=user_id, limit=limit)
+    return {"history": history, "total": len(history)}
+
+
+@app.get("/api/history/private")
+async def get_private_history(http_request: Request, limit: int = 50):
+    """
+    Get user's private scan history (uploaded CRX/ZIP builds only).
+
+    Args:
+        limit: Maximum number of results to return
+
+    Returns:
+        List of private scan history items (source='upload')
+    """
+    user_id = getattr(getattr(http_request, "state", None), "user_id", None)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Sign in to view private history")
+
+    history = db.get_user_scan_history(user_id=user_id, limit=limit, private_only=True)
     return {"history": history, "total": len(history)}
 
 

@@ -7,9 +7,8 @@ import { useAuth } from "../context/AuthContext";
 import SEOHead from "../components/SEOHead";
 import { HeroOrbitalCarousel } from "../components/hero";
 import DemoModal from "../components/DemoModal";
-import OpenCoreEnginesSection from "../components/home/OpenCoreEnginesSection";
+import DevOpenCoreSection from "../components/home/DevOpenCoreSection";
 import HowWeProtectYouSection from "../components/home/HowWeProtectYouSection";
-import EnterpriseGovernanceSection from "../components/home/EnterpriseGovernanceSection";
 import "./HomePage.scss";
 
 const HomePage = () => {
@@ -239,7 +238,7 @@ const HomePage = () => {
             </motion.div>
           </div>
 
-          {/* Stats Bar - anchored at bottom */}
+          {/* Stats bar — above scroll cue */}
           <motion.div
             className="stats-bar"
             initial={{ opacity: 0, y: 20 }}
@@ -299,8 +298,8 @@ const HomePage = () => {
           />
         </section>
 
-      {/* Open-core engines / How we score – trust section (anchor: #how-we-score) */}
-      <OpenCoreEnginesSection />
+        {/* Combined dev + open-core section: left copy, right pipeline */}
+        <DevOpenCoreSection reducedMotion={reducedMotion} />
 
       {/* How we protect you – animated timeline (scroll-triggered, reduced-motion aware) */}
       <HowWeProtectYouSection />
@@ -460,9 +459,6 @@ const HomePage = () => {
           </div>
         </motion.div>
       </section>
-
-      {/* Extensions productivity + governance (two-column, policy flow) */}
-      <EnterpriseGovernanceSection reducedMotion={reducedMotion} />
       </div>
     </>
   );

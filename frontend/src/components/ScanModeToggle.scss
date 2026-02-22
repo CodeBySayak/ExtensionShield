@@ -1,0 +1,64 @@
+/* ScanModeToggle – segmented pill (User | Dev), matches ThemeToggle visual language */
+.scan-mode-toggle {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--atlas-border);
+  border-radius: 10px;
+  background: var(--theme-hover-bg);
+  padding: 2px;
+  gap: 0;
+}
+
+.scan-mode-toggle__tab {
+  padding: 0 0.875rem;
+  height: 36px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--atlas-text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+  font-family: inherit;
+
+  &:hover {
+    color: var(--atlas-text-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--atlas-accent);
+    outline-offset: 2px;
+  }
+
+  &--active {
+    background: var(--theme-bg-elevated, rgba(255, 255, 255, 0.08));
+    color: var(--atlas-text-primary);
+  }
+}
+
+.scan-mode-toggle--compact {
+  .scan-mode-toggle__tab {
+    padding: 0 0.5rem;
+    height: 32px;
+    font-size: 0.8125rem;
+  }
+}
+
+.light .scan-mode-toggle {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(38, 35, 31, 0.18);
+
+  .scan-mode-toggle__tab {
+    color: var(--atlas-text-secondary);
+
+    &:hover {
+      color: var(--atlas-text-primary);
+    }
+
+    &--active {
+      background: rgba(38, 35, 31, 0.08);
+      color: var(--atlas-text-primary);
+    }
+  }
+}

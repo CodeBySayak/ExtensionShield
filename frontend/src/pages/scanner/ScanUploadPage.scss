@@ -1,0 +1,179 @@
+/* Scan Upload Page – minimal private build upload; theme-aware */
+
+.scan-upload-page {
+  min-height: 100vh;
+  width: 100%;
+  background: transparent;
+  color: var(--atlas-text-primary);
+  font-family: var(--font-sans, inherit);
+  display: flex;
+  flex-direction: column;
+}
+
+.scan-upload-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: calc(var(--atlas-header-height, 72px) + 2rem) var(--layout-padding-x, 1rem);
+  padding-top: 5rem;
+}
+
+.scan-upload-content {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* 3-step indicator: 1 Upload → 2 Scan → 3 Report */
+.scan-upload-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.scan-upload-steps__step {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.scan-upload-steps__step--active .scan-upload-steps__circle {
+  background: var(--atlas-accent);
+  color: #fff;
+  border-color: var(--atlas-accent);
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+}
+
+.scan-upload-steps__step--active .scan-upload-steps__label {
+  color: var(--atlas-text-primary);
+  font-weight: 500;
+}
+
+.scan-upload-steps__circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--atlas-text-muted);
+  background: transparent;
+  border: 1px solid var(--atlas-border);
+  flex-shrink: 0;
+}
+
+.scan-upload-steps__label {
+  font-size: clamp(0.75rem, 1.2vw, 0.8125rem);
+  color: var(--atlas-text-muted);
+  white-space: nowrap;
+}
+
+@media (max-width: 380px) {
+  .scan-upload-steps__label {
+    white-space: normal;
+    max-width: 5em;
+    text-align: left;
+  }
+}
+
+.scan-upload-steps__connector {
+  width: 28px;
+  height: 1px;
+  background: var(--atlas-border);
+  margin: 0 0.35rem;
+  flex-shrink: 0;
+}
+
+.scan-upload-kicker {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--atlas-text-muted);
+  letter-spacing: 0.15em;
+  margin: 0 0 0.5rem;
+  line-height: 1.4;
+}
+
+.scan-upload-headline {
+  font-size: clamp(1.375rem, 3vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
+  color: var(--atlas-text-primary);
+}
+
+.scan-upload-subhead {
+  font-size: clamp(0.9375rem, 1.5vw, 1.0625rem);
+  font-weight: 400;
+  line-height: 1.45;
+  margin: 0 0 2rem;
+  color: var(--atlas-text-secondary);
+}
+
+.scan-upload-dropzone-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.scan-upload-gate {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background: rgba(28, 26, 23, 0.75);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  min-height: 200px;
+}
+
+.scan-upload-gate__text {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--atlas-text-primary);
+}
+
+.scan-upload-gate__btn {
+  padding: 0.5rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #fff;
+  background: var(--atlas-accent);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: opacity 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    opacity: 0.95;
+    box-shadow: 0 4px 12px var(--atlas-accent-glow);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--atlas-accent);
+  }
+}
+
+.scan-upload-privacy {
+  font-size: 0.8125rem;
+  color: var(--atlas-text-muted);
+  margin: 0;
+  line-height: 1.4;
+}

@@ -5,6 +5,7 @@ import GlossaryPage from "../pages/GlossaryPage";
 // Lazy load pages for better code splitting
 const HomePage = React.lazy(() => import("../pages/HomePage"));
 const ScannerPage = React.lazy(() => import("../pages/scanner/ScannerPage"));
+const ScanUploadPage = React.lazy(() => import("../pages/scanner/ScanUploadPage"));
 const ScanProgressPage = React.lazy(() => import("../pages/scanner/ScanProgressPage"));
 const ScanResultsPageV2 = React.lazy(() => import("../pages/scanner/ScanResultsPageV2"));
 const ScanHistoryPage = React.lazy(() => import("../pages/ScanHistoryPage"));
@@ -95,6 +96,17 @@ export const routes = [
       canonical: "/scan"
     },
     priority: 0.9,
+    changefreq: "weekly"
+  },
+  {
+    path: "/scan/upload",
+    element: <ScanUploadPage />,
+    seo: {
+      title: "Upload & Scan Private Extension Build | ExtensionShield",
+      description: "Scan your private Chrome extension build (CRX/ZIP) before you ship. Permissions, network endpoints, risky patterns.",
+      canonical: "/scan/upload"
+    },
+    priority: 0.8,
     changefreq: "weekly"
   },
   {

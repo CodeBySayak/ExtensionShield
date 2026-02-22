@@ -76,6 +76,31 @@ class DatabaseService {
   }
 
   /**
+   * Get private scan history (uploaded CRX/ZIP builds only)
+   */
+  async getPrivateScanHistory(limit = 50, accessToken = undefined) {
+    try {
+      const { response, body } = await fetchJson(
+        `${this.API_BASE_URL}/history/private?limit=${limit}`,
+        {
+          headers: {
+            ...this._authHeaders(accessToken),
+          },
+        }
+      );
+      if (!response.ok) {
+        if (response.status === 401) return [];
+        throw buildFetchError(response, body, "Failed to fetch private scan history");
+      }
+      const historyPayload = body || {};
+      if (Array.isArray(historyPayload)) return historyPayload;
+      return historyPayload.history || [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  /**
    * Get recent scans from the database (Postgres/SQLite).
    * @param {number} limit - Max rows to return
    * @param {string} [search] - Optional filter by extension name or ID (server-side)

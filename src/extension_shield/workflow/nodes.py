@@ -18,6 +18,7 @@ from extension_shield.core.impact_analyzer import ImpactAnalyzer
 from extension_shield.core.privacy_compliance_analyzer import PrivacyComplianceAnalyzer
 from extension_shield.utils.extension import (
     extract_extension_crx,
+    resolve_extension_root,
     cleanup_downloaded_crx,
     is_chrome_extension_store_url,
     is_local_extension_crx_file,
@@ -252,6 +253,12 @@ def manifest_parser_node(state: WorkflowState) -> Command:
     if not extension_dir:
         raise ValueError("No extension directory provided in the workflow state.")
 
+    # Resolve to the dir that actually contains manifest.json (handles zips with
+    # a top-level folder, e.g. when zipping from Chrome's Extensions folder).
+    resolved = resolve_extension_root(extension_dir)
+    if resolved:
+        extension_dir = resolved
+
     try:
         logger.info("Parsing manifest in extension directory: %s", extension_dir)
         manifest_parser = ManifestParser(extension_dir=extension_dir)
@@ -271,7 +278,7 @@ def manifest_parser_node(state: WorkflowState) -> Command:
 
     return Command(
         goto=EXTENSION_ANALYZER_NODE,
-        update={"manifest_data": manifest_data},
+        update={"manifest_data": manifest_data, "extension_dir": extension_dir},
     )
 
 

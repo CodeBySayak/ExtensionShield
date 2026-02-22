@@ -8,7 +8,7 @@ import realScanService from "../../services/realScanService";
 import { getScanResultsRoute } from "../../utils/slug";
 import ScanHUD from "../../components/ScanHUD";
 import SEOHead from "../../components/SEOHead";
-import { normalizeExtensionId } from "../../utils/extensionId";
+import { normalizeExtensionId, isValidExtensionId, isUUID } from "../../utils/extensionId";
 import { logger } from "../../utils/logger";
 import {
   Dialog,
@@ -82,8 +82,9 @@ const ScanProgressPage = () => {
   // Read scanId from any possible param key (scanId, extensionId, id)
   const rawScanId = params.scanId || params.extensionId || params.id || '';
   
-  // Normalize the extension ID - extract exactly 32 chars (a-p) and remove trailing characters
-  const scanId = normalizeExtensionId(rawScanId);
+  // Use Chrome extension ID (32 a-p) or upload scan ID (UUID) from URL
+  // normalizeExtensionId now handles both formats
+  const scanId = normalizeExtensionId(rawScanId) || rawScanId;
   
   // Dev-only logging
   useEffect(() => {
@@ -384,14 +385,27 @@ const ScanProgressPage = () => {
     };
   }, [shouldShowGame]);
 
-  const handleViewResults = useCallback(() => {
+  const handleViewResults = useCallback(async () => {
     setUserExited(true);
     setShowCompletionModal(false);
-    const extId = scanResults?.extension_id || scanId;
-    const extName = scanResults?.extension_name;
+
+    let extId = scanResults?.extension_id || scanId;
+    let extName = scanResults?.extension_name;
+
+    if (!extName && scanId) {
+      try {
+        const freshResults = await realScanService.getRealScanResults(scanId);
+        if (freshResults) {
+          extId = freshResults.extension_id || extId;
+          extName = freshResults.extension_name;
+          setScanResults(freshResults);
+        }
+      } catch (_e) { /* fall through with what we have */ }
+    }
+
     const route = getScanResultsRoute(extId, extName);
     if (route) navigate(route, { replace: true });
-  }, [scanResults?.extension_id, scanResults?.extension_name, scanId, navigate]);
+  }, [scanResults?.extension_id, scanResults?.extension_name, scanId, navigate, setScanResults]);
 
   const handleDismissError = useCallback(() => {
     setShowErrorModal(false);
@@ -415,11 +429,11 @@ const ScanProgressPage = () => {
         <div className="progress-container">
           <div className="no-scan-state">
             <div className="no-scan-icon">⚠️</div>
-            <h2>Invalid Extension ID</h2>
+            <h2>Invalid Scan ID</h2>
             <p>
               {rawScanId 
-                ? `The extension ID "${rawScanId}" is not in a valid format. Extension IDs must be exactly 32 characters (a-p).`
-                : "No extension ID provided in the URL."}
+                ? `The scan ID "${rawScanId}" is not in a valid format. Expected a Chrome extension ID (32 characters a-p) or upload scan UUID.`
+                : "No scan ID provided in the URL."}
             </p>
             <Button onClick={() => navigate("/scan")} variant="default">
               Go to Scanner

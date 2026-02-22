@@ -1,0 +1,214 @@
+/* PrivateBuildDropzone – upload card + drop area; .private-upload-card, .private-upload-dropzone, .is-drag-active */
+
+.private-build-dropzone.private-upload-card {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  padding: 3.25rem 2.5rem;
+  background: rgba(37, 35, 32, 0.5);
+  border: 2px dashed var(--atlas-border);
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  backdrop-filter: blur(8px);
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--atlas-accent);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+  }
+
+  &:not(.private-build-dropzone--disabled):not(.private-build-dropzone--loading):hover {
+    border-color: rgba(180, 172, 157, 0.35);
+    background: rgba(37, 35, 32, 0.65);
+  }
+
+  &.is-drag-active,
+  &--active {
+    border-style: solid;
+    border-color: var(--atlas-accent);
+    background: rgba(34, 197, 94, 0.08);
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.25);
+    cursor: copy;
+  }
+
+  &--loading {
+    pointer-events: none;
+    opacity: 0.9;
+  }
+
+  &--disabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.7;
+  }
+}
+
+/* Light mode: distinct drop zone so it doesn’t match page or toggle background */
+.light .private-build-dropzone.private-upload-card {
+  background: var(--atlas-bg-tertiary, rgb(247 243 235));
+  border-color: var(--atlas-border);
+  box-shadow: 0 2px 16px rgba(36, 34, 30, 0.06), 0 0 0 1px rgba(73, 70, 63, 0.12);
+
+  &:not(.private-build-dropzone--disabled):not(.private-build-dropzone--loading):hover {
+    background: rgba(217, 210, 196, 0.4);
+    border-color: rgba(73, 70, 63, 0.35);
+  }
+
+  &.is-drag-active,
+  &.private-build-dropzone--active {
+    background: rgba(21, 128, 61, 0.08);
+    border-color: var(--atlas-accent);
+    box-shadow: 0 0 0 2px rgba(21, 128, 61, 0.25);
+  }
+}
+
+.private-upload-dropzone {
+  /* Inner drop area – layout only; dashed border is on .private-upload-card */
+}
+
+.private-build-dropzone__input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.private-build-dropzone__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.private-build-dropzone__title {
+  margin: 0;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 600;
+  color: var(--atlas-text-primary);
+}
+
+.private-build-dropzone__sub {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--atlas-text-secondary);
+}
+
+.private-build-dropzone__micro {
+  margin: 0.5rem 0 0;
+  font-size: 0.75rem;
+  color: var(--atlas-text-muted);
+}
+
+.private-build-dropzone__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #fff;
+  background: var(--atlas-accent);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: opacity 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover:not(:disabled) {
+    opacity: 0.95;
+    box-shadow: 0 4px 12px var(--atlas-accent-glow);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--atlas-accent);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+}
+
+.private-build-dropzone__btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.private-build-dropzone__btn-spinner {
+  animation: private-build-spin 0.8s linear infinite;
+}
+
+/* Filename chip – small pill with × to clear */
+.private-build-dropzone__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+  padding: 0.25rem 0.5rem 0.25rem 0.6rem;
+  font-size: 0.8125rem;
+  color: var(--atlas-text-secondary);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--atlas-border);
+  border-radius: 9999px;
+}
+
+.private-build-dropzone__chip-name {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.private-build-dropzone__chip-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--atlas-text-muted);
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+
+  &:hover {
+    color: var(--atlas-text-primary);
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--atlas-accent);
+  }
+}
+
+.light .private-build-dropzone__chip {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: var(--atlas-border);
+}
+
+.light .private-build-dropzone__chip-clear:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+@keyframes private-build-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

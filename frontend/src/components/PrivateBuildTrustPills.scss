@@ -1,0 +1,90 @@
+/* PrivateBuildTrustPills – trust strip under dropzone on /scan/upload; pills + subtle shimmer */
+
+.private-build-trust-pills {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.private-build-trust-pills__title {
+  margin: 0 0 0.35rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--atlas-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.3;
+}
+
+.private-build-trust-pills__sentence {
+  margin: 0.5rem 0 0.75rem;
+  font-size: clamp(0.8125rem, 1.2vw, 0.875rem);
+  color: var(--atlas-text-muted);
+  line-height: 1.45;
+  max-width: 42ch;
+}
+
+/* Pills row with subtle shimmer (disabled when prefers-reduced-motion) */
+.private-build-trust-pills__pills-wrap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 9999px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 60%;
+    max-width: 280px;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.03) 45%,
+      rgba(255, 255, 255, 0.06) 50%,
+      rgba(255, 255, 255, 0.03) 55%,
+      transparent 100%
+    );
+    pointer-events: none;
+    animation: private-build-trust-shimmer 5s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .private-build-trust-pills__pills-wrap::before {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+@keyframes private-build-trust-shimmer {
+  0%, 100% { transform: translateX(-120%); }
+  50% { transform: translateX(120%); }
+}
+
+.private-build-trust-pills__pills {
+  display: none; /* hidden per design */
+}
+
+.private-build-trust-pills__pill {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--atlas-text-secondary);
+  background: var(--theme-bg-card, rgba(17, 24, 39, 0.4));
+  border: 1px solid var(--theme-border, var(--atlas-border));
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.light .private-build-trust-pills__pill {
+  background: var(--theme-bg-card, rgba(255, 255, 255, 0.7));
+  border-color: var(--theme-border, rgba(39, 39, 42, 0.12));
+  color: var(--atlas-text-secondary);
+}
+

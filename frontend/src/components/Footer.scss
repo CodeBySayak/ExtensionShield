@@ -56,20 +56,14 @@
   }
 }
 
-/* Same as .enterprise-governance-inner: centered, constrained width, horizontal padding */
+/* Centered, constrained width */
 .app-footer__inner {
   max-width: var(--footer-inner-max);
   margin: 0 auto;
-  padding: 0 4rem;
-  padding-top: 0;
+  padding: 0;
   box-sizing: border-box;
   position: relative;
   z-index: 1;
-
-  @media (max-width: 768px) {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-  }
 }
 
 /* Two-column grid – same as .enterprise-governance-grid (gap 2rem 2.5rem) */
@@ -153,9 +147,15 @@
   opacity: 0.85;
 }
 
-/* ========== Right column: link groups (centered in column, not pushed right) ========== */
+/* ========== Right column: link groups ========== */
 .app-footer__links-col {
   min-width: 0;
+  display: flex;
+  justify-content: flex-end;
+
+  @media (max-width: 900px) {
+    justify-content: flex-start;
+  }
 }
 
 .app-footer__groups {
@@ -253,11 +253,6 @@
   .app-footer {
     padding-left: var(--layout-padding-x-narrow, 1.5rem);
     padding-right: var(--layout-padding-x-narrow, 1.5rem);
-  }
-
-  .app-footer__inner {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
   }
 
   .app-footer__logo .shield-logo {

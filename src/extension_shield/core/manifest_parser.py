@@ -294,7 +294,17 @@ class ManifestParser:
         manifest_path = extension_path / "manifest.json"
 
         if not manifest_path.exists():
-            raise FileNotFoundError(f"manifest.json not found in {self.extension_dir}")
+            # extension_dir is under EXTENSION_STORAGE_PATH (extracted_<name>_<pid> or a subdir)
+            try:
+                top = list(extension_path.iterdir())[:15] if extension_path.is_dir() else []
+                top_str = ", ".join(str(p.name) for p in top)
+            except Exception:
+                top_str = "(unable to list)"
+            raise FileNotFoundError(
+                f"manifest.json not found in {self.extension_dir}. "
+                f"Ensure the ZIP contains manifest.json at the root or in a single top-level folder. "
+                f"Top-level contents: [{top_str}]"
+            )
 
         logger.info("Parsing manifest from: %s", manifest_path)
 
