@@ -7,8 +7,6 @@ import { motion, useInView } from "framer-motion";
 import SecurityPipeline from "./SecurityPipeline";
 import "./DevOpenCoreSection.scss";
 
-const SCORE_WEIGHTS = { security: 40, privacy: 35, compliance: 25 };
-
 const PILLS = [
   "VirusTotal",
   "SAST",
@@ -22,7 +20,7 @@ export default function DevOpenCoreSection({ reducedMotion = false }) {
 
   return (
     <section
-      id="how-we-score"
+      id="pro-upload"
       ref={sectionRef}
       className="dev-open-core-section landing-separator"
       aria-labelledby="dev-open-core-heading"
@@ -37,16 +35,11 @@ export default function DevOpenCoreSection({ reducedMotion = false }) {
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             >
               <h2 id="dev-open-core-heading" className="dev-open-core-title">
-                Ship safer Chrome extensions.
+                Developer Gate: audit builds before release
               </h2>
-              <h3 className="dev-open-core-h3">Private CRX/ZIP security audit (Pro)</h3>
+              <h3 className="dev-open-core-h3">Private build audit (Pro)</h3>
               <p className="dev-open-core-subhead">
-                For developers and teams. Upload a private CRX/ZIP build before release for an evidence-backed{" "}
-                <Link to="/scan/upload" className="dev-open-core-how-link">Chrome extension security audit</Link>, vulnerability scanning, and fix suggestions.
-              </p>
-              <p className="dev-open-core-how-calc">
-                How we calculate: Security {SCORE_WEIGHTS.security}% · Privacy {SCORE_WEIGHTS.privacy}% · Governance {SCORE_WEIGHTS.compliance}%.{" "}
-                <Link to="/research/methodology" className="dev-open-core-how-link">Methodology →</Link>
+                Upload a private CRX/ZIP build before release. We flag risky patterns, attach evidence (file + rule), and suggest fixes.
               </p>
               <div className="dev-open-core-pills" role="list">
                 {PILLS.map((label) => (
@@ -57,12 +50,8 @@ export default function DevOpenCoreSection({ reducedMotion = false }) {
                 Private by default — share only if you choose.
               </p>
               <div className="dev-open-core-cta-wrap">
-                <Link to="/scan/upload" className="dev-open-core-cta-btn">Upload CRX/ZIP (Pro)</Link>
+                <Link to="/scan/upload" className="dev-open-core-cta-btn">Upload CRX/ZIP</Link>
               </div>
-              <p className="dev-open-core-enterprise-line">
-                For teams: Monitoring + policy + audit exports.{" "}
-                <Link to="/enterprise" className="dev-open-core-enterprise-link">Enterprise →</Link>
-              </p>
             </motion.div>
           </div>
 
