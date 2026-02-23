@@ -60,7 +60,7 @@ export default function DevModeCta({ className = "" }) {
           onClick={handlePillClick}
           onKeyDown={handleKeyDown}
           aria-label="Switch to Dev Mode (Pro) to upload a private CRX or ZIP"
-          title="Switch to Dev Mode to upload CRX/ZIP (Pro)"
+          title="Switch to Dev Mode to upload CRX/ZIP"
         >
           Dev Mode (Pro)
         </button>{" "}
