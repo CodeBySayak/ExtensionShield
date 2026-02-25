@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../ui/dialog';
+import { CheckCircle, AlertCircle } from 'lucide-react';
 import './LayerModal.scss';
 
 const FACTOR_HUMAN = {
@@ -127,13 +128,20 @@ const LayerModal = ({
   const issueCount = humanised.filter(f => f.statusType === 'issues').length;
   const totalCount = humanised.length;
 
+  const renderStatusIcon = (statusType) =>
+    statusType === 'clear' ? (
+      <CheckCircle className="lm-status-icon" size={16} strokeWidth={2} aria-hidden />
+    ) : (
+      <AlertCircle className="lm-status-icon" size={16} strokeWidth={2} aria-hidden />
+    );
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="lm-content lm-dialog-smooth">
+      <DialogContent className="lm-content lm-dialog-smooth" aria-describedby="lm-summary-or-checks">
         <DialogHeader>
           <DialogTitle className="lm-header">
             <div className="lm-header-left">
-              <span className="lm-icon">{config.icon}</span>
+              <span className="lm-icon" aria-hidden>{config.icon}</span>
               <span className="lm-title">{config.title}</span>
             </div>
             <div className="lm-header-right">
@@ -147,48 +155,53 @@ const LayerModal = ({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="lm-body">
-          {oneLiner && (
-            <p className="lm-summary">{oneLiner}</p>
-          )}
-
-          <div className="lm-stats-row">
-            <span className="lm-stat">
-              <span className="lm-stat-num">{totalCount}</span> checks run
-            </span>
-            {issueCount > 0 ? (
-              <span className="lm-stat lm-stat-issues">
-                <span className="lm-stat-num">{issueCount}</span> with issues
-              </span>
-            ) : (
-              <span className="lm-stat lm-stat-clear">All clear</span>
+        <div className="lm-body" id="lm-summary-or-checks">
+          <div className="lm-body-left">
+            {oneLiner && (
+              <p className="lm-summary">{oneLiner}</p>
             )}
+            <div className="lm-stats-row" aria-live="polite">
+              <span className="lm-stat">
+                <span className="lm-stat-num">{totalCount}</span> checks run
+              </span>
+              {issueCount > 0 ? (
+                <span className="lm-stat lm-stat-issues">
+                  <span className="lm-stat-num">{issueCount}</span> with issues
+                </span>
+              ) : (
+                <span className="lm-stat lm-stat-clear">All clear</span>
+              )}
+            </div>
           </div>
 
           {grouped.length > 0 && (
-            <div className="lm-checks">
-              {grouped.map(([cat, items], catIdx) => (
-                <div key={cat} className="lm-group" style={{ animationDelay: `${catIdx * 40}ms` }}>
-                  <span className="lm-group-label">{CATEGORY_LABELS[cat] || cat}</span>
-                  <div className="lm-group-items">
-                    {items.map((item, idx) => (
-                      <div
-                        key={idx}
-                        className={`lm-check-row lm-check-${item.statusType}`}
-                        style={{ animationDelay: `${(catIdx * 40 + (idx + 1) * 25)}ms` }}
-                      >
-                        <div className="lm-check-info">
+            <div className="lm-body-right">
+              <div className="lm-checks" role="list" aria-label={`${config.title} checks`}>
+                {grouped.map(([cat, items], catIdx) => (
+                  <div key={cat} className="lm-group" style={{ animationDelay: `${catIdx * 40}ms` }} role="group" aria-label={CATEGORY_LABELS[cat] || cat}>
+                    <span className="lm-group-label">{CATEGORY_LABELS[cat] || cat}</span>
+                    <div className="lm-group-items">
+                      {items.map((item, idx) => (
+                        <div
+                          key={idx}
+                          className={`lm-check-card lm-check-${item.statusType}`}
+                          style={{ animationDelay: `${(catIdx * 40 + (idx + 1) * 25)}ms` }}
+                          role="listitem"
+                          title={item.desc}
+                        >
                           <span className="lm-check-name">{item.label}</span>
-                          <span className="lm-check-desc">{item.desc}</span>
+                          <span className="lm-status-wrap">
+                            {renderStatusIcon(item.statusType)}
+                            <span className={`lm-status lm-status-${item.statusType}`}>
+                              {item.status}
+                            </span>
+                          </span>
                         </div>
-                        <span className={`lm-status lm-status-${item.statusType}`}>
-                          {item.status}
-                        </span>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
         </div>
