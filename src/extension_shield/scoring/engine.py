@@ -719,8 +719,8 @@ class ScoringEngine:
         2. Security score < 30 → BLOCK
         3. Overall score < 30 → BLOCK
         4. Any warning gate → NEEDS_REVIEW
-        5. Security score < 60 → NEEDS_REVIEW
-        6. Overall score < 60 → NEEDS_REVIEW
+        5. Security score < 75 → NEEDS_REVIEW
+        6. Overall score < 75 → NEEDS_REVIEW
         7. All pass → ALLOW
         
         Args:
@@ -759,16 +759,16 @@ class ScoringEngine:
             return Decision.NEEDS_REVIEW, reasons
         
         # Priority 5: Low security score
-        if security_score < 60:
+        if security_score < 75:
             reasons.append(f"Security score {security_score}/100 below threshold")
             return Decision.NEEDS_REVIEW, reasons
-        
+
         # Priority 6: Low overall score
-        if overall_score < 60:
+        if overall_score < 75:
             reasons.append(f"Overall score {overall_score}/100 below threshold")
-            if privacy_score < 60:
+            if privacy_score < 75:
                 reasons.append(f"Privacy score {privacy_score}/100 contributing to low overall")
-            if governance_score < 60:
+            if governance_score < 75:
                 reasons.append(f"Governance score {governance_score}/100 contributing to low overall")
             return Decision.NEEDS_REVIEW, reasons
         

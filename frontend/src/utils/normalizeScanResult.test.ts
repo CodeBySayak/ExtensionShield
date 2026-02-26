@@ -249,7 +249,7 @@ describe('normalizeScanResult', () => {
       expect(result.scores.overall.score).toBe(74);
       expect(result.scores.overall.confidence).toBe(0.85);
       expect(result.scores.decision).toBe('ALLOW');
-      // Score 74 < 80, so band is WARN (score-based, not decision-based)
+      // Score 74 in 50-74, so band is WARN (score-based, not decision-based)
       expect(result.scores.overall.band).toBe('WARN');
       
       // Factors
@@ -364,22 +364,22 @@ describe('normalizeScanResult', () => {
 
   describe('band calculation', () => {
     it('should use score-based bands (decision does not affect band)', () => {
-      // Score 50 < 60, so band is BAD regardless of decision
+      // Score 40 in 0-49, so band is BAD regardless of decision
       const allowResult = normalizeScanResult({
         extension_id: 'test',
-        scoring_v2: { decision: 'ALLOW', overall_score: 50 },
+        scoring_v2: { decision: 'ALLOW', overall_score: 40 },
       });
       expect(allowResult.scores.overall.band).toBe('BAD');
       expect(allowResult.scores.decision).toBe('ALLOW'); // Decision is separate
 
-      // Score 70 >= 60 and < 80, so band is WARN
+      // Score 70 in 50-74, so band is WARN
       const warnResult = normalizeScanResult({
         extension_id: 'test',
         scoring_v2: { decision: 'NEEDS_REVIEW', overall_score: 70 },
       });
       expect(warnResult.scores.overall.band).toBe('WARN');
 
-      // Score 80 >= 80, so band is GOOD (even if decision is BLOCK - gate override would apply to layer, not overall)
+      // Score 80 >= 75, so band is GOOD (even if decision is BLOCK - gate override would apply to layer, not overall)
       const blockResult = normalizeScanResult({
         extension_id: 'test',
         scoring_v2: { decision: 'BLOCK', overall_score: 80 },
@@ -490,10 +490,10 @@ describe('normalizeScanResult', () => {
         extension_id: 'test',
         scoring_v2: {
           decision: 'BLOCK',
-          security_score: 75, // Score would normally be WARN (75 >= 60)
+          security_score: 75, // Score would normally be GOOD (75+)
           security_layer: {
             score: 75,
-            risk_level: 'medium', // Would map to WARN
+            risk_level: 'low', // Aligned with 75+ = green
             factors: [],
           },
           privacy_layer: { factors: [] },
@@ -510,7 +510,7 @@ describe('normalizeScanResult', () => {
         },
       });
       
-      // Security tile should be BAD (from gate) even though score is 75 (WARN)
+      // Security tile should be BAD (from gate) even though score is 75 (GOOD)
       expect(result.scores.security.score).toBe(75); // Numeric score unchanged
       expect(result.scores.security.band).toBe('BAD'); // Band overridden by gate
     });

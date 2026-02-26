@@ -63,10 +63,10 @@ class LayerDetailsGenerator:
 
     @staticmethod
     def _get_risk_level_from_score(score: int) -> str:
-        """Map score to risk level."""
-        if score >= 85:
+        """Map score to risk level. Red: 0-49, Yellow: 50-74, Green: 75-100."""
+        if score >= 75:
             return "LOW"
-        elif score >= 60:
+        elif score >= 50:
             return "MEDIUM"
         else:
             return "HIGH"

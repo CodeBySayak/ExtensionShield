@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Dialog,
   DialogContent,
@@ -89,21 +89,15 @@ function bandLabel(band) {
 }
 
 const InfoTooltip = ({ text }) => {
-  const [visible, setVisible] = useState(false);
-
   return (
     <span
       className="lm-info-trigger"
-      onMouseEnter={() => setVisible(true)}
-      onMouseLeave={() => setVisible(false)}
-      onFocus={() => setVisible(true)}
-      onBlur={() => setVisible(false)}
-      tabIndex={0}
       role="button"
       aria-label="More info"
+      tabIndex={0}
     >
       <Info size={13} strokeWidth={2} />
-      {visible && <span className="lm-info-tooltip">{text}</span>}
+      <span className="lm-info-tooltip" role="tooltip">{text}</span>
     </span>
   );
 };

@@ -168,8 +168,8 @@ In `ScoringEngine._determine_decision`:
 2. **Security score < 30** → BLOCK  
 3. **Overall score < 30** → BLOCK  
 4. **Any warning gate** → NEEDS_REVIEW  
-5. **Security score < 60** → NEEDS_REVIEW  
-6. **Overall score < 60** → NEEDS_REVIEW (with optional privacy/governance reasons)  
+5. **Security score < 75** → NEEDS_REVIEW  
+6. **Overall score < 75** → NEEDS_REVIEW (with optional privacy/governance reasons)  
 7. **Else** → ALLOW  
 
 If **SAST coverage is missing** and overall would be >80, overall is **capped at 80** and decision is forced to NEEDS_REVIEW.
@@ -182,9 +182,9 @@ Used by DonutScore, sidebar tiles, and LayerModal. Defined in `frontend/src/cons
 
 | Band  | Score range | Label          | Color (CSS)     |
 |-------|-------------|----------------|-----------------|
-| BAD   | 0–59        | Not safe       | `--risk-bad`    |
-| WARN  | 60–84       | Needs review   | `--risk-warn`   |
-| GOOD  | 85–100      | Safe           | `--risk-good`   |
+| BAD   | 0–49        | Not safe       | `--risk-bad`    |
+| WARN  | 50–74       | Needs review   | `--risk-warn`   |
+| GOOD  | 75–100      | Safe           | `--risk-good`   |
 | NA    | —           | N/A            | `--risk-neutral`|
 
 **Effective band** for a layer = max(score-based band, gate-based band) so that a triggered WARN/BLOCK gate can make the tile show WARN/BAD even if the numeric score would fall in a better band.
@@ -210,7 +210,7 @@ Used by DonutScore, sidebar tiles, and LayerModal. Defined in `frontend/src/cons
   - Publisher: trader status, Website, Support, Privacy, Web Store links (from publisherDisclosures).
 - **DonutScore (same card, right side):**
   - **Props:** `score = scores.overall.score`, `band = scores.overall.band`, `size` (responsive).
-  - **Behavior:** Circular gauge with three zones (red 0–59, amber 60–84, green 85–100); center shows numeric score and band label (“Safe” / “Needs review” / “Not safe”). No score calculation in frontend.
+  - **Behavior:** Circular gauge with three zones (red 0–49, amber 50–74, green 75–100); center shows numeric score and band label (“Safe” / “Needs review” / “Not safe”). No score calculation in frontend.
 
 ### 8.3 DonutScore component
 

@@ -104,13 +104,13 @@ class SecurityScorecard:
     
     @property
     def risk_level(self) -> str:
-        """Overall risk level based on security score."""
+        """Overall risk level based on security score. Red: 0-49, Yellow: 50-74, Green: 75-100."""
         score = self.security_score
         if score < 40:
             return "critical"
-        elif score < 60:
+        elif score < 50:
             return "high"
-        elif score < 80:
+        elif score < 75:
             return "medium"
         return "low"
     

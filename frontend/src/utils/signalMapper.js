@@ -18,16 +18,16 @@ export const SIGNAL_LEVELS = {
 };
 
 // Score thresholds for Security and Privacy layers (0-100 scale)
-// Green: 85-100, Yellow: 60-84, Red: 0-59
+// Red: 0-49, Yellow: 50-74, Green: 75-100 (aligned with riskBands.js and backend)
 const SECURITY_PRIVACY_THRESHOLDS = {
-  HIGH: 59,   // 0-59: HIGH (red) - Critical/Bad
-  WARN: 84    // 60-84: WARN (yellow) - Review/Warning, 85-100: OK (green) - Good/Clean
+  HIGH: 49,   // 0-49: HIGH (red) - Not safe
+  WARN: 74    // 50-74: WARN (yellow) - Needs review, 75-100: OK (green) - Safe
 };
 
 // Score thresholds for Governance layer (same thresholds for consistency)
 const GOVERNANCE_THRESHOLDS = {
-  HIGH: 59,   // 0-59: HIGH (red) - Non-compliant
-  WARN: 84    // 60-84: WARN (yellow) - Review, 85-100: OK (green) - Compliant
+  HIGH: 49,   // 0-49: HIGH (red) - Not safe
+  WARN: 74    // 50-74: WARN (yellow) - Needs review, 75-100: OK (green) - Safe
 };
 
 // Legacy thresholds (for backward compatibility)

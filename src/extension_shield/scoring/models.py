@@ -38,22 +38,22 @@ class RiskLevel(str, Enum):
     def from_score(cls, score: int) -> "RiskLevel":
         """
         Convert score [0-100] to risk level (higher score = safer).
-        
-        Thresholds (aligned with frontend):
-        - Red (HIGH/CRITICAL): 0-59
-        - Yellow (MEDIUM/WARN): 60-84
-        - Green (LOW/NONE): 85-100
+
+        Thresholds (aligned with frontend riskBands.js):
+        - Red (HIGH/CRITICAL): 0-49
+        - Yellow (MEDIUM/WARN): 50-74
+        - Green (LOW/NONE): 75-100
         """
-        if score < 60:
-            # 0-59: Red zone (HIGH or CRITICAL)
+        if score < 50:
+            # 0-49: Red zone (HIGH or CRITICAL)
             if score < 30:
                 return cls.CRITICAL
             return cls.HIGH
-        elif score < 85:
-            # 60-84: Yellow zone (MEDIUM)
+        elif score < 75:
+            # 50-74: Yellow zone (MEDIUM)
             return cls.MEDIUM
         else:
-            # 85-100: Green zone (LOW or NONE)
+            # 75-100: Green zone (LOW or NONE)
             if score >= 95:
                 return cls.NONE
             return cls.LOW
@@ -428,9 +428,9 @@ class ScoringResult(BaseModel):
         elif overall_score < 30:
             decision = Decision.BLOCK
             reasons.append(f"Overall score {overall_score}/100 below BLOCK threshold (30)")
-        elif overall_score < 60:
+        elif overall_score < 75:
             decision = Decision.NEEDS_REVIEW
-            reasons.append(f"Overall score {overall_score}/100 below ALLOW threshold (60)")
+            reasons.append(f"Overall score {overall_score}/100 below ALLOW threshold (75)")
         else:
             reasons.append(f"Overall score {overall_score}/100 - extension passes all checks")
         

@@ -250,12 +250,12 @@ class TestScoringResolution:
         score_range = result_clean.overall_score - result_risky.overall_score
         print(f"Score range: {score_range} points")
         
-        # Expect clean to be high (>85) and risky to be low (<60)
-        assert result_clean.overall_score >= 85, (
-            f"Clean extension should score >=85, got {result_clean.overall_score}"
+        # Expect clean to be high (>=75) and risky to be low (<=50)
+        assert result_clean.overall_score >= 75, (
+            f"Clean extension should score >=75, got {result_clean.overall_score}"
         )
-        assert result_risky.overall_score <= 60, (
-            f"Risky extension should score <=60, got {result_risky.overall_score}"
+        assert result_risky.overall_score <= 50, (
+            f"Risky extension should score <=50, got {result_risky.overall_score}"
         )
         assert score_range >= 30, (
             f"Score range should be at least 30 points, got {score_range}"
