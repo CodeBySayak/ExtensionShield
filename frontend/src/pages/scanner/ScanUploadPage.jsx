@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import SEOHead from "../../components/SEOHead";
 import { useAuth } from "../../context/AuthContext";
 import PrivateBuildDropzone from "../../components/PrivateBuildDropzone";
@@ -16,8 +17,8 @@ export default function ScanUploadPage() {
   return (
     <div className="scan-upload-page">
       <SEOHead
-        title="Upload CRX/ZIP — Chrome Extension Security Audit (Pro) | ExtensionShield"
-        description="Upload a private CRX or ZIP to scan for risky permissions, vulnerabilities, suspicious network calls, and policy risks. Get evidence-linked findings and fix suggestions."
+        title="Chrome Extension Security Audit (CRX/ZIP) — Pre-release Build Scan (Pro) | ExtensionShield"
+        description="Private CRX/ZIP upload for pre-release Chrome extension security audit. Vulnerabilities, evidence per finding, fix guidance. SAST, permissions, policy checks. Private by default."
         pathname="/scan/upload"
       />
       <section className="scan-upload-hero" aria-label="Private build upload">
@@ -40,23 +41,35 @@ export default function ScanUploadPage() {
             </div>
           </nav>
 
-          <p className="scan-upload-kicker">PRIVATE BUILD</p>
-          <h1 className="scan-upload-headline">Chrome extension security audit — scan CRX or ZIP</h1>
+          <p className="scan-upload-kicker">Pro • Private Build Audit</p>
+          <h1 className="scan-upload-headline">Pre-release Chrome Extension Audit (CRX/ZIP)</h1>
           <p className="scan-upload-subhead">
-            Pre-release extension security: upload a private CRX/ZIP for vulnerability scanning, code review signals, and fix suggestions.
+            Find vulnerabilities, risky permissions, policy violations, and suspicious network behavior—each with evidence + fix guidance.
           </p>
 
           <div className="scan-upload-dropzone-wrap">
             {showSignInOverlay && (
               <div className="scan-upload-gate scan-upload-gate--signin">
-                <p className="scan-upload-gate__text">Sign in to upload private builds</p>
+                <p className="scan-upload-gate__text">Sign in to start a Pro audit</p>
                 <button type="button" className="scan-upload-gate__btn" onClick={openSignInModal}>
-                  Sign In
+                  Sign in to start a Pro audit
                 </button>
+                <p className="scan-upload-gate__secondary">
+                  <Link to="/scan">Or run a free extension risk check →</Link>
+                </p>
               </div>
             )}
             <PrivateBuildDropzone disabled={!canUpload} />
           </div>
+
+          <ul className="scan-upload-feature-strip" aria-label="Pro audit includes">
+            <li>SAST checks</li>
+            <li>Permission / host risk</li>
+            <li>Network indicators + reputation</li>
+            <li>Policy & governance checks</li>
+            <li>Evidence attached per finding</li>
+            <li>Private by default</li>
+          </ul>
 
           <PrivateBuildTrustPills />
 

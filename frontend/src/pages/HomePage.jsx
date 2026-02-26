@@ -15,7 +15,7 @@ import "./HomePage.scss";
 const HomePage = () => {
   const navigate = useNavigate();
   const { startScan, setUrl, error: scanError } = useScan();
-  useAuth(); // Auth not required for scanning; used by other components (e.g. header)
+  const { isAuthenticated, openSignInModal } = useAuth();
   const [isVisible, setIsVisible] = useState(false);
   const [scanInput, setScanInput] = useState("");
   // Hero stat: real cumulative usage is 100+ (DB was reset, so live count would show lower). Animation runs immediately on load.
@@ -215,10 +215,11 @@ const HomePage = () => {
 
               {heroAudience === "users" ? (
               <>
-                <p className="hero-tagline">Chrome Extension Scanner</p>
+                <p className="hero-tagline">Extension Risk Check</p>
                 <h1 className="hero-title">
                   Know what your Chrome extensions can access.
                 </h1>
+                <p className="hero-scan-info hero-scan-free">Free public scan by URL or extension ID.</p>
                 <div className="hero-search">
                   <div className="search-container">
                     <span className="search-icon search-icon-chrome" aria-hidden="true">
@@ -280,30 +281,51 @@ const HomePage = () => {
               </>
               ) : (
               <>
-                <p className="hero-tagline">Private Build Audit</p>
+                <p className="hero-tagline">Pro • Private Build Audit</p>
                 <h1 className="hero-title">
-                  Catch risky code <br /> before you ship.
+                  Chrome Extension Security Audit (CRX/ZIP) — before you ship
                 </h1>
                 <p className="hero-dev-body">
-                  Upload a private CRX/ZIP build for an evidence-backed <br /> security review and fix suggestions.
+                  Scan your build for vulnerabilities, risky permissions, policy issues, and suspicious network behavior — with evidence and fix guidance.
                 </p>
-                <p className="hero-dev-helper">Private by default — share only if you choose.</p>
                 <div className="hero-developers-cta">
-                  <button
-                    type="button"
-                    className="hero-pro-upload-btn"
-                    onClick={() => setUploadModalOpen(true)}
-                  >
-                    <span className="hero-pro-upload-btn-icon" aria-hidden>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                        <polyline points="17 8 12 3 7 8" />
-                        <line x1="12" y1="3" x2="12" y2="15" />
-                      </svg>
-                    </span>
-                    <span>Upload CRX/ZIP</span>
-                  </button>
+                  {isAuthenticated ? (
+                    <button
+                      type="button"
+                      className="hero-pro-upload-btn"
+                      onClick={() => navigate("/scan/upload")}
+                    >
+                      <span className="hero-pro-upload-btn-icon" aria-hidden>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                          <polyline points="17 8 12 3 7 8" />
+                          <line x1="12" y1="3" x2="12" y2="15" />
+                        </svg>
+                      </span>
+                      <span>Upload CRX/ZIP</span>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="hero-pro-upload-btn"
+                      onClick={() => openSignInModal()}
+                    >
+                      <span className="hero-pro-upload-btn-icon" aria-hidden>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                      </span>
+                      <span>Sign in to start a Pro audit</span>
+                    </button>
+                  )}
                 </div>
+                <ul className="hero-dev-bullets" aria-label="Pro audit includes">
+                  <li>Vulnerability scan (SAST)</li>
+                  <li>Permissions + host access risk</li>
+                  <li>Chrome Web Store policy checks</li>
+                  <li>Evidence bundle per finding</li>
+                </ul>
+                <p className="hero-dev-helper">Private by default — share only if you choose.</p>
               </>
               )}
             </motion.div>

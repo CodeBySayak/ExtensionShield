@@ -248,12 +248,14 @@ const ScanResultsPageV2 = () => {
   const extensionIdForIcon = viewModel?.meta?.extensionId || scanId;
   const heroIconUrl = extensionIdForIcon ? getExtensionIconUrl(extensionIdForIcon) : null;
 
+  const isPrivateScan = scanId && isUUID(scanId);
+
   // Reset icon visibility when viewing a different extension
   useEffect(() => {
     setShowHeroIcon(true);
   }, [extensionIdForIcon]);
 
-  const noindexHead = (
+  const genericNoindexHead = (
     <SEOHead
       title="Scan results"
       description="Extension scan results."
@@ -266,7 +268,7 @@ const ScanResultsPageV2 = () => {
   if (isLoading || isLoadingRef.current) {
     return (
       <>
-        {noindexHead}
+        {genericNoindexHead}
         <div className="results-v2">
           <div className="results-v2-loading">
             <div className="loading-shield">
@@ -290,7 +292,7 @@ const ScanResultsPageV2 = () => {
     const isUploadScan = scanId && isUUID(scanId);
     return (
       <>
-        {noindexHead}
+        {genericNoindexHead}
         <div className="results-v2">
           <nav className="results-v2-nav">
           <Link to="/scan" className="nav-back">← Back</Link>
@@ -333,7 +335,7 @@ const ScanResultsPageV2 = () => {
   if (!viewModel && normalizationError) {
     return (
       <>
-        {noindexHead}
+        {genericNoindexHead}
         <div className="results-v2">
           <nav className="results-v2-nav">
             <Link to="/scan" className="nav-back">← Back</Link>
@@ -432,7 +434,7 @@ const ScanResultsPageV2 = () => {
   if (!viewModel && scanResults && !normalizationError) {
     return (
       <>
-        {noindexHead}
+        {genericNoindexHead}
         <div className="results-v2">
           <div className="results-v2-loading">
             <div className="loading-shield">
@@ -455,7 +457,7 @@ const ScanResultsPageV2 = () => {
   if (!viewModel && scanResults && normalizationError) {
     return (
       <>
-        {noindexHead}
+        {genericNoindexHead}
         <div className="results-v2">
           <nav className="results-v2-nav">
             <Link to="/scan" className="nav-back">← Back</Link>
@@ -479,9 +481,43 @@ const ScanResultsPageV2 = () => {
   const overallBand = scores?.overall?.band || scores?.security?.band || 'NA';
   const overallScore = scores?.overall?.score ?? scores?.security?.score ?? 0;
 
+  const extensionName = meta?.name || null;
+  const extensionSchema =
+    !isPrivateScan &&
+    extensionName &&
+    typeof overallScore === "number"
+      ? {
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: extensionName,
+          applicationCategory: "BrowserExtension",
+          operatingSystem: "Chrome",
+          ...(scanResults?.manifest?.version && { softwareVersion: scanResults.manifest.version }),
+        }
+      : null;
+
+  const resultsSEOHead = isPrivateScan ? (
+    genericNoindexHead
+  ) : (
+    <SEOHead
+      title={
+        extensionName
+          ? `${extensionName} — Risk Score ${overallScore} Security Report | ExtensionShield`
+          : "Scan results"
+      }
+      description={
+        extensionName
+          ? `Risk score, permissions, network indicators, and Security/Privacy/Governance findings for ${extensionName}.`
+          : "Extension scan results."
+      }
+      pathname={location.pathname}
+      schema={extensionSchema ? [extensionSchema] : undefined}
+    />
+  );
+
   return (
     <>
-      {noindexHead}
+      {resultsSEOHead}
       <div className="results-v2 results-v2-dashboard">
       {/* Navigation Bar - Match screenshot: New scan, Share, Save */}
       <nav className="results-v2-nav">

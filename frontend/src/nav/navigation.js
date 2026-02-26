@@ -19,14 +19,14 @@ export const topNavItems = [
     dropdownItems: [
       {
         icon: "🔍",
-        label: "Scan a Public Extension (URL or ID)",
+        label: "Risk Check (Free)",
         description: "Chrome Web Store URL or ID",
         path: "/scan"
       },
       {
         icon: "📦",
-        label: "Upload CRX/ZIP",
-        description: "Private pre-release audit",
+        label: "Private Build Audit (Pro)",
+        description: "Upload CRX/ZIP for pre-release audit",
         path: "/scan/upload",
         badge: "PRO"
       },
@@ -119,7 +119,7 @@ export function getMobileNavSections() {
 export const userMenuItems = [
   {
     icon: "scan",
-    label: "Scan",
+    label: "Risk Check",
     path: "/scan"
   },
   {
@@ -145,8 +145,8 @@ export const footerConfig = {
     {
       heading: "Product",
       links: [
-        { label: "Scan", path: "/scan" },
-        { label: "Upload CRX/ZIP", path: "/scan/upload" },
+        { label: "Risk Check (Free)", path: "/scan" },
+        { label: "Private Build Audit (Pro)", path: "/scan/upload" },
         { label: "Is extension safe?", path: "/is-this-chrome-extension-safe" },
         { label: "Scan History", path: "/scan/history" }
       ]

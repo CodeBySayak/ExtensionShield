@@ -94,8 +94,8 @@ export const routes = [
     path: "/scan",
     element: <ScannerPage />,
     seo: {
-      title: "Free Chrome Extension Scanner — Risk Score & Security Audit | ExtensionShield",
-      description: "Free Chrome extension scanner and security audit. Scan any extension by URL or ID—get risk score, permissions check, malware scan. For developers: audit extensions before release.",
+      title: "Is This Chrome Extension Safe? Free Extension Risk Check | ExtensionShield",
+      description: "Free extension risk check by URL or ID. Get risk score, permissions, privacy and governance signals. See if a Chrome extension is safe before you install.",
       canonical: "/scan"
     },
     priority: 0.9,
@@ -105,8 +105,8 @@ export const routes = [
     path: "/scan/upload",
     element: <ScanUploadPage />,
     seo: {
-      title: "Upload CRX/ZIP — Chrome Extension Security Audit (Pro) | ExtensionShield",
-      description: "Upload a private CRX or ZIP to scan for risky permissions, vulnerabilities, suspicious network calls, and policy risks. Get evidence-linked findings and fix suggestions.",
+      title: "Chrome Extension Security Audit (CRX/ZIP) — Pre-release Build Scan (Pro) | ExtensionShield",
+      description: "Private CRX/ZIP upload for pre-release Chrome extension security audit. Vulnerabilities, evidence per finding, fix guidance. SAST, permissions, policy checks. Private by default.",
       canonical: "/scan/upload"
     },
     priority: 0.8,
@@ -402,8 +402,8 @@ export const routes = [
     path: "/enterprise",
     element: <EnterprisePage />,
     seo: {
-      title: "Enterprise Extension Security | Browser Extension Allowlist & Compliance",
-      description: "Chrome enterprise extension security: browser extension allowlist policy, extension governance, compliance monitoring, and zero trust browser extension security. Manage chrome extensions in enterprise.",
+      title: "Browser Extension Risk Assessment & Governance (Allowlist, Monitoring) | ExtensionShield",
+      description: "Extension governance: allowlist policies, monitoring, audit exports. Browser extension risk assessment for enterprise. Manage Chrome extensions at scale.",
       canonical: "/enterprise"
     },
     priority: 0.8,

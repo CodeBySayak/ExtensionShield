@@ -225,7 +225,28 @@
   }
 
   .hero-developers-cta {
-    margin-bottom: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-dev-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 0.75rem;
+    font-size: 0.8125rem;
+    color: var(--atlas-text-secondary);
+    line-height: 1.5;
+
+    li {
+      position: relative;
+      padding-left: 1rem;
+      &::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: var(--atlas-accent);
+        font-weight: 600;
+      }
+    }
   }
 
   .hero-pro-upload-btn {
@@ -415,6 +436,13 @@
     flex-shrink: 0;
     color: var(--atlas-accent);
   }
+}
+
+.hero-scan-free {
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+  font-size: 0.8125rem;
+  color: var(--atlas-text-muted);
 }
 
 /* Watch demo link below hero-scan-info (user hero) */

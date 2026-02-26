@@ -20,6 +20,7 @@ import {
   gateIdToLayer,
   extractFindingsByLayer
 } from "../../utils/normalizeScanResult";
+import { isUUID } from "../../utils/extensionId";
 import SEOHead from "../../components/SEOHead";
 import "./ReportDetailPage.scss";
 
@@ -712,6 +713,35 @@ const ReportDetailPage = () => {
     />
   );
 
+  const isPrivateReport = reportId && isUUID(reportId);
+  const reportMeta = uiReportViewModel?.meta || {};
+  const reportScore = uiReportViewModel?.scorecard?.score ?? null;
+  const reportExtensionName = reportMeta?.name || null;
+  const reportSEOHead =
+    !isPrivateReport && reportExtensionName
+      ? (
+          <SEOHead
+            title={`${reportExtensionName} — Risk Score ${reportScore ?? "?"} Security Report | ExtensionShield`}
+            description={`Risk score, permissions, network indicators, and Security/Privacy/Governance findings for ${reportExtensionName}.`}
+            pathname={location.pathname}
+            schema={
+              reportExtensionName
+                ? [
+                    {
+                      "@context": "https://schema.org",
+                      "@type": "SoftwareApplication",
+                      name: reportExtensionName,
+                      applicationCategory: "BrowserExtension",
+                      operatingSystem: "Chrome",
+                      ...(scanResults?.manifest?.version && { softwareVersion: scanResults.manifest.version }),
+                    },
+                  ]
+                : undefined
+            }
+          />
+        )
+      : noindexHead;
+
   // Loading state
   if (isLoading) {
     return (
@@ -733,7 +763,7 @@ const ReportDetailPage = () => {
   if (uiReportViewModel) {
     return (
       <>
-        {noindexHead}
+        {reportSEOHead}
         <ReportViewModelDetail
           report={uiReportViewModel}
           rawScanResult={scanResults}

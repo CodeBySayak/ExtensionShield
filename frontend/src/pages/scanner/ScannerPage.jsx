@@ -522,8 +522,8 @@ const ScannerPage = () => {
   return (
     <>
       <SEOHead
-        title="Free Chrome Extension Scanner — Risk Score & Security Audit | ExtensionShield"
-        description="Free Chrome extension scanner and security audit. Scan any extension by URL or ID—get risk score, permissions check, malware scan. For developers: audit extensions before release."
+        title="Is This Chrome Extension Safe? Free Extension Risk Check | ExtensionShield"
+        description="Free extension risk check by URL or ID. Get risk score, permissions, privacy and governance signals. See if a Chrome extension is safe before you install."
         pathname="/scan"
         ogType="website"
         schema={[faqSchema, softwareAppSchema]}
@@ -534,7 +534,7 @@ const ScannerPage = () => {
         {/* Main Content - Similar to hero layout (tagline, headline, sub, input, features) */}
         <div className="scanner-content">
           <div className="scanner-header">
-            <p className="scanner-tagline">Chrome Extension Scanner</p>
+            <p className="scanner-tagline">Extension Risk Check</p>
             <h1 className="scanner-headline">Know what your Chrome extensions can access.</h1>
           </div>
 

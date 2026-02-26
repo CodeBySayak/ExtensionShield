@@ -117,9 +117,9 @@ export default function UploadModal({ isOpen, onClose }) {
         <div className="upload-modal-dropzone-wrap">
           {showSignInOverlay && (
             <div className="upload-modal-gate">
-              <p className="upload-modal-gate__text">Sign in to upload private builds</p>
+              <p className="upload-modal-gate__text">Sign in to start a Pro audit</p>
               <button type="button" className="upload-modal-gate__btn" onClick={openSignInModal}>
-                Sign In
+                Sign in to start a Pro audit
               </button>
             </div>
           )}
