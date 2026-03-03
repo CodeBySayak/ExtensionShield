@@ -17,7 +17,7 @@ const ResultsSidebarTile = ({
   const getBandLabel = () => {
     switch (band) {
       case 'GOOD': return 'Safe';
-      case 'WARN': return 'Needs review';
+      case 'WARN': return 'Review';
       case 'BAD': return 'Not safe';
       default: return 'N/A';
     }

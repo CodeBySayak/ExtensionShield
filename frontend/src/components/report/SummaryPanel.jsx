@@ -71,7 +71,7 @@ const SummaryPanel = ({
         </div>
         <div className="summary-content">
           <div className="summary-placeholder-wrapper">
-            <p className="summary-placeholder-line">This extension needs review before installing.</p>
+            <p className="summary-placeholder-line">Review this extension before installing.</p>
             <p className="summary-placeholder-line">Avoid on sensitive sites (banking/email).</p>
           </div>
           {(onViewRiskyPermissions || onViewNetworkDomains) && (

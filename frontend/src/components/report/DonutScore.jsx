@@ -85,7 +85,7 @@ const DonutScore = ({ score = 0, band = 'NA', size = 300, label }) => {
 
   const fillLength = (animatedScore / 100) * circumference;
 
-  const ariaLabel = `Risk score ${displayScore} out of 100. ${getStatusLabel()}. Scale: 0 to 49 is high risk, 50 to 74 is needs review, 75 to 100 is low risk.`;
+  const ariaLabel = `Risk score ${displayScore} out of 100. ${getStatusLabel()}. Scale: 0 to 49 is high risk, 50 to 74 is review, 75 to 100 is low risk.`;
 
   const segmentLength = (min, max) => ((max - min) / 100) * circumference;
   const redLen = segmentLength(0, 49);
