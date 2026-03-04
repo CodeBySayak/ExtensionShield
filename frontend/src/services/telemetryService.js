@@ -1,10 +1,16 @@
 // Privacy-first analytics (no PII).
 // Posts a single pageview event per route entry and fails silently if the API is down.
+// Uses same API base as rest of app (VITE_API_URL) so production hits the backend, not static host.
 
 let lastPathSent = null;
 let lastSentAt = 0;
 
 const MIN_INTERVAL_MS = 250;
+
+function getApiBase() {
+  const base = import.meta.env.VITE_API_URL || "";
+  return base ? `${base.replace(/\/$/, "")}/api` : "/api";
+}
 
 export async function trackPageView(pathname) {
   try {
@@ -16,8 +22,7 @@ export async function trackPageView(pathname) {
     lastPathSent = path;
     lastSentAt = now;
 
-    // Use relative URL; Vite proxy routes /api to the backend in dev.
-    await fetch("/api/telemetry/pageview", {
+    await fetch(`${getApiBase()}/telemetry/pageview`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ path }),
@@ -35,7 +40,7 @@ export async function trackPageView(pathname) {
 export async function trackEvent(eventName) {
   if (!eventName || typeof eventName !== "string") return;
   try {
-    await fetch("/api/telemetry/event", {
+    await fetch(`${getApiBase()}/telemetry/event`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ event: eventName.trim() }),

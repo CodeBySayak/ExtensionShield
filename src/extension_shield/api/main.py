@@ -2664,6 +2664,7 @@ async def get_user_karma(http_request: Request):
 
 
 @app.get("/api/recent")
+@app.get("/api/recent/")  # Allow trailing slash (proxies/CDNs sometimes add it)
 async def get_recent_scans(limit: int = 10, search: str = None):
     """
     Get recent scans with summary info including risk and signals mapping.
