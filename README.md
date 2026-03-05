@@ -1,6 +1,6 @@
 <div align="center">
 
-  ![ExtensionShield](extension-shield-logo.svg)
+ <img src="extension-shield-logo.svg" alt="ExtensionShield" width="98" height="98" />
 
   # ExtensionShield
 
