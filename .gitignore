@@ -210,7 +210,6 @@ extensions_storage/
 
 # Contractor / internal only (do not publish)
 contracts/
-docs/
 .railway-deploy
 landing-page-copy.json
 
@@ -236,9 +235,6 @@ supabase/.volumes/
 *.key
 *.p12
 *.pfx
-
-# Private internal docs
-docs/
 
 # Proprietary intel (do not commit contents of data/intel except README and .gitignore)
 /data/intel/*

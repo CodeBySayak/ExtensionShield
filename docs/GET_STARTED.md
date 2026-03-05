@@ -1,6 +1,20 @@
 # Get Started with ExtensionShield
 
-This guide walks you through setup, configuration, and daily commands. For a high-level overview, see [README.md](README.md).
+This guide walks you through setup, configuration, and daily commands. For a high-level overview, see [README](../README.md).
+
+---
+
+## Table of contents
+
+- [Prerequisites](#prerequisites)
+- [Local Development (OSS Mode)](#local-development-oss-mode)
+- [Docker](#docker)
+- [CLI](#cli)
+- [OSS vs Cloud: What Works Where](#oss-vs-cloud-what-works-where)
+- [Enabling Cloud Mode](#enabling-cloud-mode)
+- [Make Commands](#make-commands)
+- [Pre-commit](#pre-commit-recommended)
+- [Next steps](#next-steps)
 
 ---
 
@@ -17,9 +31,10 @@ This guide walks you through setup, configuration, and daily commands. For a hig
 
 ## Local Development (OSS Mode)
 
-No Supabase or cloud account required. You only need an LLM API key for AI summaries.
+> **No Supabase or cloud account required.** You only need an LLM API key for AI summaries.
 
-### 1. Clone and install
+<details open>
+<summary><strong>1. Clone and install</strong></summary>
 
 ```bash
 git clone https://github.com/<your-org>/ExtensionShield.git
@@ -27,8 +42,10 @@ cd ExtensionShield
 make install                    # Python (uv sync)
 cd frontend && npm install      # Frontend dependencies
 ```
+</details>
 
-### 2. Configure environment
+<details>
+<summary><strong>2. Configure environment</strong></summary>
 
 **Backend (project root):**
 
@@ -44,8 +61,10 @@ cp .env.example .env
 cp frontend/.env.example frontend/.env
 # No changes needed for OSS mode
 ```
+</details>
 
-### 3. Start servers (two terminals)
+<details>
+<summary><strong>3. Start servers (two terminals)</strong></summary>
 
 ```bash
 make api      # Terminal 1: API at http://localhost:8007
@@ -53,10 +72,14 @@ make frontend # Terminal 2: UI at http://localhost:5173
 ```
 
 Open the UI at **http://localhost:5173**.
+</details>
 
 ---
 
 ## Docker
+
+<details>
+<summary><strong>Run full stack with Docker</strong></summary>
 
 ```bash
 cp .env.example .env
@@ -64,16 +87,21 @@ cp .env.example .env
 docker compose up --build
 # → API at http://localhost:8007
 ```
+</details>
 
 ---
 
 ## CLI
 
-Analyze an extension from the Chrome Web Store:
+<details>
+<summary><strong>Analyze an extension from the Chrome Web Store</strong></summary>
 
 ```bash
 make analyze URL=https://chromewebstore.google.com/detail/example/abcdef
 ```
+
+Replace the URL with any Chrome Web Store extension detail page.
+</details>
 
 ---
 
@@ -104,7 +132,8 @@ See [OPEN_CORE_BOUNDARIES.md](OPEN_CORE_BOUNDARIES.md) for how the boundary is e
 
 ## Enabling Cloud Mode
 
-To use Supabase, auth, history, and other cloud features:
+<details>
+<summary><strong>Use Supabase, auth, history, and other cloud features</strong></summary>
 
 **In project root `.env`:**
 
@@ -124,6 +153,7 @@ VITE_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY_HERE
 ```
 
 In OSS mode, cloud-only routes return **HTTP 501** with a JSON body indicating the feature is not available. Optional local metrics in OSS: set `OSS_TELEMETRY_ENABLED=true` to store pageview/event in SQLite only (no outbound). Details: [OPEN_CORE_BOUNDARIES.md](OPEN_CORE_BOUNDARIES.md).
+</details>
 
 ---
 
@@ -145,12 +175,16 @@ In OSS mode, cloud-only routes return **HTTP 501** with a JSON body indicating t
 
 ## Pre-commit (recommended)
 
+<details>
+<summary><strong>Install pre-commit hooks</strong></summary>
+
 ```bash
 pip install pre-commit   # or: uv pip install pre-commit
 pre-commit install
 ```
 
 Hooks include Black, Pylint, gitleaks, and basic file checks. Run `make secrets-check` before pushing.
+</details>
 
 ---
 
@@ -159,4 +193,4 @@ Hooks include Black, Pylint, gitleaks, and basic file checks. Run `make secrets-
 - **Contribute:** [CONTRIBUTING.md](CONTRIBUTING.md)
 - **Security:** [SECURITY.md](SECURITY.md)
 - **Open-core details:** [OPEN_CORE_BOUNDARIES.md](OPEN_CORE_BOUNDARIES.md)
-- **Back to overview:** [README.md](README.md)
+- **Back to overview:** [README.md](../README.md)
