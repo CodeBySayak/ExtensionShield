@@ -12,10 +12,13 @@ ExtensionShield incorporates or was inspired by the following:
 
 - ThreatXtension (https://github.com/barvhaim/ThreatXtension)
   We took inspiration from ThreatXtension in the same space (Chrome extension
-  security scanning, VirusTotal integration). Our scanner, SAST, and scoring
-  pipeline are implemented independently. Supabase migration schemas were
-  initially derived from SQLite schema patterns from that project; see
-  supabase/migrations/ and supabase/schemas/ for file-level comments.
+  security scanning, VirusTotal integration). The initial security score
+  aggregation logic (risk points by category) was inspired by ThreatXtension;
+  ExtensionShield's primary scoring is the V2 ScoringEngine (multi-layer,
+  gates, governance) in extension_shield.scoring.engine. Supabase migration
+  schemas were initially derived from SQLite schema patterns from that
+  project; see supabase/migrations/ and supabase/schemas/ for file-level
+  comments.
 
 Other dependencies are governed by their respective licenses; see
 pyproject.toml and frontend/package.json.
