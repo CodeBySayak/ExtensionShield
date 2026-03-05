@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="extension-shield-logo.svg" alt="ExtensionShield" width="98" height="98" />
+  <img src="frontend/public/extension-shield-logo.svg" alt="ExtensionShield" width="98" height="98" />
 
   # ExtensionShield
 </div>
