@@ -3,8 +3,7 @@ Report View Model Builder
 
 Creates a UI-friendly `report_view_model` payload from scan pipeline outputs.
 
-This mirrors the composition used in `scripts/generate_ui_report_payload.py`:
-- meta, scorecard, highlights, impact_cards, privacy_snapshot, evidence, raw
+Structure: meta, scorecard, highlights, impact_cards, privacy_snapshot, evidence, raw.
 
 Design goals:
 - Deterministic and production-safe (no placeholders, safe fallbacks when LLM is unavailable)

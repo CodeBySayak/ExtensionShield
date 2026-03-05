@@ -1,7 +1,5 @@
 <div align="center">
 
-<div align="center">
-
   <img src="extension-shield-logo.svg" alt="ExtensionShield" width="98" height="98" />
 
   # ExtensionShield
@@ -13,7 +11,9 @@
 
 ---
 
-ExtensionShield scans Chrome extensions (from the Web Store or CRX/ZIP uploads), runs security and privacy analysis, and produces risk scores and AI-powered summaries. The **core** (scanner, CLI, local analysis) is **MIT-licensed** and works without any cloud. Optional **cloud** features (auth, history, team monitoring, community queue) are available via [ExtensionShield Cloud](https://extensionshield.com).
+ExtensionShield scans Chrome extensions (from the Web Store or CRX/ZIP uploads), runs security and privacy analysis, and produces risk scores
+and summary reports. The **core** (scanner, CLI, local analysis) is **MIT-licensed** and works without any cloud. Optional **cloud** features
+(auth, history, team monitoring, community queue) are available via [ExtensionShield Cloud](https://extensionshield.com).
 
 - **Security**: [SECURITY.md](docs/SECURITY.md) — Reporting vulnerabilities, secrets policy  
 - **Open-core**: [OPEN_CORE_BOUNDARIES.md](docs/OPEN_CORE_BOUNDARIES.md) — What's OSS vs Cloud and how it's enforced  
@@ -22,46 +22,76 @@ ExtensionShield scans Chrome extensions (from the Web Store or CRX/ZIP uploads),
 
 ## Quick start
 
-<details open>
-<summary><strong>1. Clone and install</strong> — click to expand/collapse</summary>
+Follow these steps in order. You need **two terminals** for running the app (one for the API, one for the frontend).
 
-Clone the repo and install backend + frontend dependencies:
+<details open>
+<summary><strong>Step 1 — Clone and install dependencies</strong></summary>
+
+Clone the repository and install backend (Python) and frontend (Node) dependencies.
 
 ```bash
-git clone https://github.com/<your-org>/ExtensionShield.git
-cd ExtensionShield
-make install && cd frontend && npm install
+git clone git@github.com:Stanzin7/ExtensionShield.git
 ```
 
-> **Tip**: Replace `<your-org>` with your GitHub org or username. Copy the block above and run each line, or run the full snippet in one go.
+```bash
+cd ExtensionShield
+```
+
+```bash
+make install
+```
+Installs Python dependencies (uv sync).
+
+```bash
+cd frontend && npm install
+```
+Installs frontend dependencies.
+
+> **Tip**: Use your own fork URL if you cloned from a fork. Replace `Stanzin7/ExtensionShield` with your GitHub org or username.
 </details>
 
 <details>
-<summary><strong>2. Configure</strong></summary>
+<summary><strong>Step 2 — Configure environment</strong></summary>
 
-Copy environment templates and add your API key for AI summaries:
+Copy the example env files and add your API key for summary reports (OSS mode is the default).
 
 ```bash
 cp .env.example .env
-# Add OPENAI_API_KEY in .env (for AI summaries). OSS mode is the default.
+```
+Edit `.env` and set `OPENAI_API_KEY` (needed for summary reports).
+
+```bash
 cp frontend/.env.example frontend/.env
 ```
+No changes needed for OSS mode; adjust if using Cloud features.
 </details>
 
 <details>
-<summary><strong>3. Run</strong></summary>
+<summary><strong>Step 3 — Run the application</strong></summary>
 
-Start the API and frontend in two terminals:
+Start the **backend** and **frontend** in **two separate terminals**. Each command starts a long-running server.
+
+**Terminal 1 — Backend API**
 
 ```bash
-make api      # Terminal 1 → http://localhost:8007
-make frontend # Terminal 2 → http://localhost:5173
+make api
 ```
+API will be available at **http://localhost:8007**.
 
-Then open **http://localhost:5173** in your browser.
+**Terminal 2 — Frontend UI**
+
+```bash
+make frontend
+```
+UI will be available at **http://localhost:5173**.
+
+Open **http://localhost:5173** in your browser to use ExtensionShield.
+
+> **Note**: Do not run `make api && make frontend` in a single terminal. The API runs until you stop it, so the frontend would never start. Use two terminals.
 </details>
 
-Full setup (Docker, CLI, Cloud mode, Make commands): **[GET_STARTED.md](docs/GET_STARTED.md)**.
+Full setup (Docker, CLI, Cloud mode, Make commands): **[GET_STARTED.md](docs/GET_STARTED.md)**.  
+Deployment and dev scripts (Railway, Supabase, CSP): **[scripts/README.md](scripts/README.md)**.
 
 ---
 
@@ -72,9 +102,9 @@ Full setup (Docker, CLI, Cloud mode, Make commands): **[GET_STARTED.md](docs/GET
 | **Scan** | Extensions from the Chrome Web Store or by uploading CRX/ZIP files |
 | **Analyze** | Permissions, SAST, entropy, and optional VirusTotal integration |
 | **Score** | Security and privacy risk with generated reports |
-| **Summarize** | Findings with an LLM (OpenAI or others) |
+| **Summarize** | Written summary of findings (optional) |
 
-In **OSS mode** (default) you get the full scanner, CLI, local SQLite storage, and report UI—no cloud required. **Cloud mode** adds auth, scan history, telemetry, and enterprise features; see [GET_STARTED.md](docs/GET_STARTED.md#enabling-cloud-mode) and [OPEN_CORE_BOUNDARIES.md](docs/OPEN_CORE_BOUNDARIES.md).
+In **OSS mode** (default) you get the full scanner, CLI, local SQLite storage, and report UI—no cloud required. **Cloud mode** adds auth, scan history, telemetry, and enterprise features; see [GET_STARTED.md#enabling-cloud-mode](docs/GET_STARTED.md#enabling-cloud-mode) and [OPEN_CORE_BOUNDARIES.md](docs/OPEN_CORE_BOUNDARIES.md).
 
 ---
 
@@ -83,6 +113,7 @@ In **OSS mode** (default) you get the full scanner, CLI, local SQLite storage, a
 | Document | Description |
 |----------|-------------|
 | [GET_STARTED.md](docs/GET_STARTED.md) | Setup, config, Docker, CLI, OSS vs Cloud, Make commands |
+| [scripts/README.md](scripts/README.md) | What each script does and when to run it |
 | [OPEN_CORE_BOUNDARIES.md](docs/OPEN_CORE_BOUNDARIES.md) | OSS vs Cloud; enforcement; configuration |
 | [CONTRIBUTING.md](docs/CONTRIBUTING.md) | How to contribute |
 | [SECURITY.md](docs/SECURITY.md) | Reporting vulnerabilities; secrets policy |

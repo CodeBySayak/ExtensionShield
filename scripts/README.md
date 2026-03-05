@@ -1,72 +1,89 @@
-# Scripts Directory
+# Scripts
 
-Essential production and deployment scripts for ExtensionShield.
+Use these when you need to run something outside the usual `make` targets (e.g. deploy, migrations, or one-off tasks). Prefer **Make** when possible: `make api`, `make deploy`, `make migrate`, etc.
 
-## 📋 Current Scripts
+## How to run (Make)
 
-### 🚀 Production & Deployment
-- **`start_api.sh`** - Starts the API server (production)
-- **`deploy.sh`** - Deploys to Railway
-- **`sync_railway_env.sh`** - Syncs local .env to Railway environment
-- **`check_railway_env.sh`** - Validates Railway environment variables (used in Makefile)
+| What you want | Command |
+|---------------|---------|
+| Start API | `make api` |
+| Check Railway env before deploy | `make deploy-check` |
+| Deploy to Railway | `make deploy` |
+| Run Supabase migrations | `make migrate` |
+| Clear all scans (Cloud only) | `make clear-scans` |
+| Check Postgres connection (Cloud) | `make validate-postgres` |
 
-### 🔒 Security & CSP
-- **`setup-production-csp.sh`** - Builds frontend and sets up CSP for production
-- **`verify-csp.sh`** - Comprehensive CSP verification (dev & production)
-- **`security_smoke.sh`** - Security smoke tests
+---
 
-### 🗄️ Database
-- **`supabase_push_env.sh`** - Same link + db push for **staging** and **prod** (run for each environment)
-- **`run_supabase_migrations.py`** - Runs Supabase migrations when Supabase CLI not used (e.g. DATABASE_URL in CI)
-- **`validate_postgres_local.py`** - Validates local dev is reading from Supabase Postgres (`make validate-postgres`)
-- **`lint_migrations.py`** - Validates migration filenames and order
+## What each script does
 
-## 🧹 Cleanup Summary
+**Start / deploy**
 
-**Removed test/experimental scripts:**
-- `test_watson_connection.py` - Test script
-- `test_report_view_model_assertions.py` - Test script
-- `test_validation.py` - Test script
-- `validate_privacy_compliance_context.py` - Test script
-- `generate_ui_report_payload.py` - Test data generator
-- `check_extension_sast.py` - Analysis tool
-- `analyze_extension_patterns.py` - Analysis tool
+- **start_api.sh** — Starts the API (used by Docker). You can run `make api` instead for local dev.
+- **deploy.sh** — Pushes the app to Railway. Same as `make deploy`.
+- **check_railway_env.sh** — Makes sure required env vars are set for Railway. Run before deploying.
+- **sync_railway_env.sh** — Copies env from your `.env` into the Railway project. Handy after adding new keys.
 
-**Removed freelancer management scripts:**
-- `create_freelancer_repo.sh` - Large one-time setup script
-- `merge_freelancer_changes.sh` - Simple git helper
-- `validate_submission.py` - Submission validator
+**Supabase / database**
 
-**Consolidated CSP scripts:**
-- Removed `test-csp-production.sh` (functionality covered by `verify-csp.sh`)
+- **supabase_push_env.sh** — Pushes schema and env to Supabase (staging or prod). Run once per environment when you change migrations.
+- **cloud_only/run_supabase_migrations.py** — Applies SQL migrations (used at startup when Supabase is configured, or in CI).
+- **cloud_only/validate_postgres_local.py** — Checks that local dev is talking to the right Supabase DB. `make validate-postgres`.
+- **cloud_only/lint_migrations.py** — Checks migration file names and order. `make lint-migrations`.
+- **cloud_only/clear_all_scans.py** — Deletes every scan from the DB. Cloud only. `make clear-scans`.
+- **cloud_only/delete_scans_before_extension.py** — Deletes scans for a given extension (admin cleanup). Run with `PYTHONPATH=src python scripts/cloud_only/delete_scans_before_extension.py "Extension Name"`.
 
-## 📝 Usage
+**Security / CSP**
 
-### Start API
+- **setup-production-csp.sh** — Builds the frontend and configures CSP headers for production.
+- **verify-csp.sh** — Checks that CSP is correct (dev or prod). Run after changing headers.
+- **security_smoke.sh** — Quick security checks. Run by hand when you want a sanity check.
+
+**Auth / email (Cloud dev)**
+
+- **send-resend-test-email.mjs** — Sends a test email via Resend. `npm run resend:test` or `node scripts/send-resend-test-email.mjs`.
+- **debug-magic-link.mjs** — Helps debug magic-link sign-in. `node scripts/debug-magic-link.mjs your@email.com`.
+- **supabase-set-smtp.mjs** — Configures SMTP in Supabase for auth emails. Run from project root when setting up a new project.
+
+**Other**
+
+- **generate_hero_snapshot.js** — Regenerates the hero carousel data from the API. Run from root: `node scripts/generate_hero_snapshot.js`. Frontend reads from `frontend/src/data/heroSnapshot.js`.
+- **benchmark_scanners.py** — Benchmarks the scanner against a list of extensions. For performance tuning.
+- **export_qa_scoring_excel.py** — Exports scan results to Excel for QA. From root: `uv run python scripts/export_qa_scoring_excel.py`.
+
+---
+
+## Running scripts directly
+
+Start API (same as Docker):
+
 ```bash
 ./scripts/start_api.sh
 ```
 
-### Supabase (staging & production)
-```bash
-./scripts/supabase_push_env.sh prod
-SUPABASE_STAGING_REF=<staging-ref> ./scripts/supabase_push_env.sh staging
-```
-See [docs/DATABASE_README.md](../docs/DATABASE_README.md) for details.
+Check Railway env:
 
-### Deploy to Railway
-```bash
-./scripts/deploy.sh
-```
-
-### Check Railway Environment
 ```bash
 ./scripts/check_railway_env.sh
 ```
 
-### Setup Production CSP
+Deploy:
+
+```bash
+./scripts/deploy.sh
+```
+
+Supabase schema push (staging vs prod):
+
+```bash
+./scripts/supabase_push_env.sh prod
+# or with staging ref:
+SUPABASE_STAGING_REF=your-ref ./scripts/supabase_push_env.sh staging
+```
+
+CSP (after changing headers):
+
 ```bash
 ./scripts/setup-production-csp.sh
 ./scripts/verify-csp.sh
 ```
-
