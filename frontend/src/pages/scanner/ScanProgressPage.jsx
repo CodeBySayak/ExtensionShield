@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { useScan } from "../../context/ScanContext";
-import { EXTENSION_ICON_PLACEHOLDER, getExtensionIconUrl } from "../../utils/constants";
 import realScanService from "../../services/realScanService";
 import { getScanResultsRoute } from "../../utils/slug";
 import SEOHead from "../../components/SEOHead";
 import { normalizeExtensionId } from "../../utils/extensionId";
 import { logger } from "../../utils/logger";
+import ScanActivityIndicator from "../../components/ScanActivityIndicator";
 import "./ScanProgressPage.scss";
 
 const ScanProgressPage = () => {
@@ -31,63 +31,30 @@ const ScanProgressPage = () => {
     }
   }, [params, rawScanId, scanId]);
   const {
-    isScanning,
     scanStage,
     error,
     setError,
-    scanResults,
     setScanResults,
     setCurrentExtensionId,
-    currentExtensionId,
   } = useScan();
   
-  const [extensionLogo, setExtensionLogo] = useState(EXTENSION_ICON_PLACEHOLDER);
   const [extensionName, setExtensionName] = useState(null);
-  const [scanComplete, setScanComplete] = useState(false);
   const [alreadyScanned, setAlreadyScanned] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [scanProgress, setScanProgress] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
   const hasSeenInProgressRef = useRef(false);
 
-  // Apply extension name/icon from location state immediately (when navigating from scanner with a selected suggestion)
+  // Apply extension name from location state immediately.
   useEffect(() => {
     if (!scanId) return;
     const stateName = location.state?.extensionName;
-    const stateLogo = location.state?.extensionLogoUrl;
     if (stateName != null) setExtensionName(stateName);
-    if (stateLogo != null) setExtensionLogo(stateLogo);
   }, [scanId, location.state]);
 
-  // Detect mobile
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  // Fetch extension logo and name: set icon URL immediately so it shows/loads right away; fallback to placeholder on error.
+  // Fetch extension name when available while the scan is running.
   useEffect(() => {
     if (!scanId) return;
     let cancelled = false;
 
-    const iconUrl = getExtensionIconUrl(scanId);
-    // Set logo URL immediately so the img starts loading (unless we already have one from location state).
-    if (!location.state?.extensionLogoUrl) setExtensionLogo(iconUrl);
-
-    const img = new Image();
-    img.onload = () => {
-      if (!cancelled) setExtensionLogo(iconUrl);
-    };
-    img.onerror = () => {
-      if (!cancelled) setExtensionLogo(EXTENSION_ICON_PLACEHOLDER);
-    };
-    img.src = iconUrl;
-
-    // Fetch extension name from scan results when available (async; may not exist yet while scan is running).
     const fetchExtensionInfo = async () => {
       try {
         const results = await realScanService.getRealScanResults(scanId);
@@ -105,21 +72,6 @@ const ScanProgressPage = () => {
 
     return () => { cancelled = true; };
   }, [scanId]);
-
-  // Calculate scan progress based on stage
-  useEffect(() => {
-    if (!scanStage) return;
-    
-    const stageProgressMap = {
-      extracting: 14,
-      security_scan: 28,
-      building_evidence: 42,
-      applying_rules: 71,
-      generating_report: 100,
-    };
-    
-    setScanProgress(stageProgressMap[scanStage] || 0);
-  }, [scanStage]);
 
   // Poll scan status while on this page (supports direct refresh/back navigation)
   // Stops polling once scan completes or fails to save server resources.
@@ -161,9 +113,7 @@ const ScanProgressPage = () => {
           const wasAlreadyScanned = !hasSeenInProgressRef.current;
           if (wasAlreadyScanned) {
             setAlreadyScanned(true);
-            setScanProgress(100);
           }
-          setScanComplete(true);
 
           // Fetch results then auto-redirect to results page (no "View Results" step).
           try {
@@ -203,7 +153,6 @@ const ScanProgressPage = () => {
   // Reset state when scanId changes or on mount
   useEffect(() => {
     if (scanId) {
-      setScanComplete(false);
       setAlreadyScanned(false);
       hasSeenInProgressRef.current = false;
     }
@@ -299,24 +248,6 @@ const ScanProgressPage = () => {
     setErrorMessage("");
   }, [setError]);
 
-  // Status label: Completed | In progress | Not complete
-  const getScanStatusLabel = () => {
-    if (scanComplete) return alreadyScanned ? "Previously scanned" : "Completed";
-    if (scanProgress > 0 || scanStage) return "In progress";
-    return "Not complete";
-  };
-
-  const getStageLabel = (stage) => {
-    const labels = {
-      extracting: "Extracting extension…",
-      security_scan: "Running security scan…",
-      building_evidence: "Building evidence…",
-      applying_rules: "Applying rules…",
-      generating_report: "Generating report…",
-    };
-    return labels[stage] || "Processing…";
-  };
-
   // Always render something - never show blank page
   // Show error if normalized ID is empty (invalid format or missing)
   if (!scanId) {
@@ -344,6 +275,9 @@ const ScanProgressPage = () => {
   }
 
   const showLoadingScreen = shouldShowLoading;
+  const scanMeta = extensionName
+    ? `${extensionName} · ${alreadyScanned ? "cached result found" : "live scan"}`
+    : `Scan ID ${scanId}`;
 
   return (
     <>
@@ -354,46 +288,16 @@ const ScanProgressPage = () => {
         noindex
       />
       <div className="scan-progress-page">
-      {showLoadingScreen ? (
+        {showLoadingScreen ? (
         <>
-          {/* Minimal centered: icon, name, progress bar, status */}
           <div className="scan-progress-center">
-            <div className="scan-progress-minimal-card">
-              <div className="scan-progress-icon-wrap">
-                <img
-                  src={extensionLogo}
-                  alt=""
-                  className="scan-progress-minimal-icon"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = EXTENSION_ICON_PLACEHOLDER;
-                  }}
-                />
-              </div>
-              <p className="scan-progress-minimal-name">
-                {extensionName || `Extension ${scanId?.substring(0, 8)}...`}
-              </p>
-              {scanStage && (
-                <p className="scan-progress-stage-label">{getStageLabel(scanStage)}</p>
-              )}
-              <div className="scan-progress-minimal-bar-wrap">
-                <div className="scan-progress-minimal-bar">
-                  <div
-                    className={`scan-progress-minimal-fill${alreadyScanned ? " already-scanned" : ""}`}
-                    style={{ width: `${alreadyScanned ? 100 : scanProgress}%` }}
-                  />
-                </div>
-                <div className="scan-progress-minimal-meta">
-                  <span className="scan-progress-minimal-pct">
-                    {alreadyScanned ? "100" : Math.round(scanProgress)}%
-                  </span>
-                  <span className="scan-progress-minimal-label">{getScanStatusLabel()}</span>
-                </div>
-              </div>
-            </div>
+            <ScanActivityIndicator
+              title="Scan in progress"
+              stage={scanStage}
+              meta={scanMeta}
+            />
           </div>
 
-          {/* Inline error (no overlay) */}
           {errorMessage && (
             <div className="scan-progress-inline-error">
               <h3>Something went wrong</h3>
@@ -410,74 +314,9 @@ const ScanProgressPage = () => {
           )}
         </>
       ) : (
-        <div className="progress-container">
-          {/* Header */}
-          <div className="progress-header">
-            <Link to="/scan" className="back-link">
-              ← Back to Scanner
-            </Link>
-            <div className="extension-header">
-              <img 
-                src={extensionLogo} 
-                alt="Extension icon" 
-                className="extension-logo"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = EXTENSION_ICON_PLACEHOLDER;
-                }}
-              />
-              <div className="extension-header-text">
-                <h1 className="progress-title">Scan Status</h1>
-                <p className="progress-subtitle">
-                  Extension ID: <code>{scanId}</code>
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Error State */}
-          {error && (
-            <div className="error-state">
-              <div className="error-icon">❌</div>
-              <h2>Scan Failed</h2>
-              <p className="error-message">{error}</p>
-              <div className="error-actions">
-                <Button onClick={() => setError(null)} variant="outline">
-                  Dismiss
-                </Button>
-                <Button onClick={() => navigate("/scan")}>
-                  Try Again
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {/* No Active Scan State */}
-          {!shouldShowLoading && !error && (
-            <div className="no-scan-state">
-              <div className="no-scan-icon">🔍</div>
-              <h2>No Active Scan</h2>
-              <p>
-                There's no active scan for extension ID: <code>{scanId}</code>
-                <br />
-                The scan may have completed, or you can start a new scan.
-              </p>
-              <div className="no-scan-actions">
-                <Button onClick={() => navigate(`/scan/results/${scanId}`)} variant="default">
-                  Check Results
-                </Button>
-                <Button onClick={() => navigate("/scan")} variant="outline">
-                  Start New Scan
-                </Button>
-                <Button onClick={() => navigate("/scan/history")} variant="outline">
-                  View History
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
+        <div className="progress-container" />
       )}
-    </div>
+      </div>
     </>
   );
 };

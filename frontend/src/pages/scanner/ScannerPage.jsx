@@ -15,6 +15,7 @@ import { EXTENSION_ICON_PLACEHOLDER, getExtensionIconUrl } from "../../utils/con
 import { getScanResultsRoute } from "../../utils/slug";
 import SEOHead from "../../components/SEOHead";
 import DemoModal from "../../components/DemoModal";
+import ScanActivityIndicator from "../../components/ScanActivityIndicator";
 import "./ScannerPage.scss";
 
 // Tooltip component for signal chips
@@ -666,7 +667,13 @@ const ScannerPage = () => {
                 title={scanDisabledDueToLimit ? scanDisabledTooltip : "Scan extension"}
                 aria-label="Scan extension"
               >
-                {isScanning ? <span className="scanner-spinner" aria-hidden /> : (
+                {isScanning ? (
+                  <ScanActivityIndicator
+                    variant="button"
+                    title="Scan in progress"
+                    hideText
+                  />
+                ) : (
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                     <circle cx="11" cy="11" r="8" />
                     <path d="M21 21l-4.35-4.35" />

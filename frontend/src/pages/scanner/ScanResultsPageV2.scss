@@ -567,87 +567,10 @@
   min-height: 70vh;
   text-align: center;
   animation: resultsEnter 0.3s ease-out both;
-  
-  h2 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.9);
-    margin: 2rem 0 0.5rem;
-    letter-spacing: -0.01em;
-  }
-  
-  p {
-    color: rgba(255, 255, 255, 0.45);
-    font-size: 0.875rem;
-    margin-bottom: 1rem;
-  }
 }
 
-.loading-shield {
-  position: relative;
-  width: 80px;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.loading-shield-icon {
-  font-size: 2rem;
-  z-index: 1;
-  animation: shieldFloat 2s ease-in-out infinite;
-}
-
-.loading-shield-ring {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  border-top-color: #3B82F6;
-  border-right-color: #8B5CF6;
-  animation: shieldSpin 1.2s linear infinite;
-}
-
-.loading-shield-ring-outer {
-  position: absolute;
-  inset: -6px;
-  border-radius: 50%;
-  border: 1px solid transparent;
-  border-bottom-color: rgba(59, 130, 246, 0.3);
-  border-left-color: rgba(139, 92, 246, 0.2);
-  animation: shieldSpin 2s linear infinite reverse;
-}
-
-.loading-progress-bar {
-  width: 200px;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 2px;
-  overflow: hidden;
-  margin-top: 0.5rem;
-}
-
-.loading-progress-fill {
-  height: 100%;
-  border-radius: 2px;
-  background: linear-gradient(90deg, #3B82F6, #8B5CF6, #3B82F6);
-  background-size: 200% 100%;
-  animation: progressSlide 1.5s ease-in-out infinite;
-}
-
-@keyframes shieldFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-}
-
-@keyframes shieldSpin {
-  to { transform: rotate(360deg); }
-}
-
-@keyframes progressSlide {
-  0% { width: 15%; background-position: 0% 0%; }
-  50% { width: 70%; background-position: 100% 0%; }
-  100% { width: 15%; background-position: 0% 0%; }
+.results-v2-loading .scan-activity-indicator {
+  max-width: 420px;
 }
 
 /* Empty State */
@@ -922,18 +845,9 @@
 
   /* results-v2-loading – black titles (task 2) */
   .results-v2-loading {
-    h2 {
+    .scan-activity-indicator__title {
       color: #000;
-      font-weight: 700;
     }
-
-    p {
-      color: var(--extensionshield-text-muted);
-    }
-  }
-
-  .loading-progress-bar {
-    background: var(--extensionshield-border);
   }
 
   /* Summary panel (quick summary + top findings) – visible background and text, card hover */

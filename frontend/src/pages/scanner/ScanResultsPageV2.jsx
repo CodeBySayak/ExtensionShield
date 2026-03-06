@@ -13,6 +13,7 @@ import {
 import FileViewerModal from "../../components/FileViewerModal";
 import StatusMessage from "../../components/StatusMessage";
 import SEOHead from "../../components/SEOHead";
+import ScanActivityIndicator from "../../components/ScanActivityIndicator";
 import { useScan } from "../../context/ScanContext";
 import realScanService from "../../services/realScanService";
 import { normalizeScanResultSafe, validateEvidenceIntegrity, gateIdToLayer, extractFindingsByLayer } from "../../utils/normalizeScanResult";
@@ -271,16 +272,15 @@ const ScanResultsPageV2 = () => {
         {genericNoindexHead}
         <div className="results-v2">
           <div className="results-v2-loading">
-            <div className="loading-shield">
-              <span className="loading-shield-icon">🛡️</span>
-              <div className="loading-shield-ring" />
-              <div className="loading-shield-ring-outer" />
-            </div>
-            <h2>Analyzing Extension</h2>
-            <p>Loading security report...</p>
-            <div className="loading-progress-bar">
-              <div className="loading-progress-fill" />
-            </div>
+            <ScanActivityIndicator
+              title="Scan in progress"
+              messages={[
+                "Security report loading in progress",
+                "Evidence hydration in progress",
+                "Dashboard preparation in progress",
+              ]}
+              meta="Preparing your results view"
+            />
           </div>
         </div>
       </>
@@ -437,16 +437,15 @@ const ScanResultsPageV2 = () => {
         {genericNoindexHead}
         <div className="results-v2">
           <div className="results-v2-loading">
-            <div className="loading-shield">
-              <span className="loading-shield-icon">🛡️</span>
-              <div className="loading-shield-ring" />
-              <div className="loading-shield-ring-outer" />
-            </div>
-            <h2>Preparing Report</h2>
-            <p>Formatting security analysis...</p>
-            <div className="loading-progress-bar">
-              <div className="loading-progress-fill" />
-            </div>
+            <ScanActivityIndicator
+              title="Scan in progress"
+              messages={[
+                "Report formatting in progress",
+                "Evidence rendering in progress",
+                "Results preparation in progress",
+              ]}
+              meta="Preparing your results view"
+            />
           </div>
         </div>
       </>

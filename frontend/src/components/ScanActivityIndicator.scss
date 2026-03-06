@@ -1,0 +1,275 @@
+.scan-activity-indicator {
+  --scan-indicator-accent: #ff5a36;
+  --scan-indicator-accent-soft: rgba(255, 90, 54, 0.24);
+  --scan-indicator-ring: rgba(255, 90, 54, 0.58);
+  --scan-indicator-ring-soft: rgba(255, 90, 54, 0.14);
+  --scan-indicator-title: var(--extensionshield-text-primary, #f8fafc);
+  --scan-indicator-text: var(--extensionshield-text-secondary, rgba(255, 255, 255, 0.72));
+  --scan-indicator-muted: var(--extensionshield-text-muted, rgba(255, 255, 255, 0.5));
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+.scan-activity-indicator--page {
+  flex-direction: column;
+  text-align: center;
+}
+
+.scan-activity-indicator--inline {
+  gap: 0.875rem;
+}
+
+.scan-activity-indicator--button {
+  gap: 0;
+}
+
+.scan-activity-indicator__visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+}
+
+.scan-activity-indicator--page .scan-activity-indicator__visual {
+  width: 152px;
+  height: 152px;
+}
+
+.scan-activity-indicator--inline .scan-activity-indicator__visual {
+  width: 58px;
+  height: 58px;
+}
+
+.scan-activity-indicator--button .scan-activity-indicator__visual {
+  width: 24px;
+  height: 24px;
+}
+
+.scan-activity-indicator__glow,
+.scan-activity-indicator__ring,
+.scan-activity-indicator__core {
+  position: absolute;
+  inset: 0;
+}
+
+.scan-activity-indicator__glow {
+  inset: 18%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(255, 128, 96, 0.48) 0%, rgba(255, 90, 54, 0.22) 38%, rgba(255, 90, 54, 0) 75%);
+  filter: blur(10px);
+  animation: scanIndicatorGlow 2.8s ease-in-out infinite;
+}
+
+.scan-activity-indicator__ring {
+  border-radius: 50%;
+}
+
+.scan-activity-indicator__ring--outer {
+  border: 2px solid transparent;
+  border-top-color: var(--scan-indicator-accent);
+  border-right-color: rgba(255, 130, 90, 0.88);
+  animation: scanIndicatorSpin 1.1s linear infinite;
+}
+
+.scan-activity-indicator__ring--middle {
+  inset: 10px;
+  border: 1px solid transparent;
+  border-bottom-color: var(--scan-indicator-ring);
+  border-left-color: rgba(255, 145, 110, 0.5);
+  animation: scanIndicatorSpinReverse 1.85s linear infinite;
+}
+
+.scan-activity-indicator__ring--inner {
+  inset: 22px;
+  border: 1px solid var(--scan-indicator-ring-soft);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.02) inset,
+    0 0 18px rgba(255, 90, 54, 0.12);
+  animation: scanIndicatorPulse 1.8s ease-in-out infinite;
+}
+
+.scan-activity-indicator__core {
+  inset: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 152, 121, 0.36), rgba(36, 18, 18, 0.96) 62%),
+    rgba(17, 12, 16, 0.94);
+  border: 1px solid rgba(255, 130, 90, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 28px rgba(255, 90, 54, 0.16);
+}
+
+.scan-activity-indicator--inline .scan-activity-indicator__core {
+  inset: 10px;
+}
+
+.scan-activity-indicator--button .scan-activity-indicator__core {
+  inset: 3px;
+  border-width: 1px;
+  box-shadow: 0 0 10px rgba(255, 90, 54, 0.12);
+}
+
+.scan-activity-indicator__shield {
+  filter: drop-shadow(0 0 12px rgba(255, 90, 54, 0.22));
+}
+
+.scan-activity-indicator__shield .shield-main {
+  animation:
+    shieldPulse 3s ease-in-out infinite,
+    scanIndicatorShieldFloat 2.2s ease-in-out infinite;
+}
+
+.scan-activity-indicator__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-width: 420px;
+}
+
+.scan-activity-indicator__eyebrow,
+.scan-activity-indicator__title,
+.scan-activity-indicator__status,
+.scan-activity-indicator__meta {
+  margin: 0;
+}
+
+.scan-activity-indicator__eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--scan-indicator-accent);
+}
+
+.scan-activity-indicator__title {
+  font-size: clamp(1.4rem, 2vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--scan-indicator-title);
+}
+
+.scan-activity-indicator__status {
+  min-height: 1.5em;
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: var(--scan-indicator-text);
+}
+
+.scan-activity-indicator__meta {
+  font-size: 0.84rem;
+  color: var(--scan-indicator-muted);
+}
+
+.scan-activity-indicator--inline .scan-activity-indicator__eyebrow {
+  font-size: 0.62rem;
+}
+
+.scan-activity-indicator--inline .scan-activity-indicator__title {
+  font-size: 1rem;
+}
+
+.scan-activity-indicator--inline .scan-activity-indicator__status {
+  font-size: 0.82rem;
+}
+
+.scan-activity-indicator--button .scan-activity-indicator__shield {
+  filter: none;
+}
+
+.light .scan-activity-indicator {
+  --scan-indicator-accent-soft: rgba(255, 90, 54, 0.16);
+  --scan-indicator-ring-soft: rgba(255, 90, 54, 0.12);
+  --scan-indicator-title: var(--extensionshield-text-primary);
+  --scan-indicator-text: var(--extensionshield-text-secondary);
+  --scan-indicator-muted: var(--extensionshield-text-muted);
+}
+
+.light .scan-activity-indicator__glow {
+  background:
+    radial-gradient(circle, rgba(255, 121, 86, 0.32) 0%, rgba(255, 90, 54, 0.12) 42%, rgba(255, 90, 54, 0) 76%);
+}
+
+.light .scan-activity-indicator__core {
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 166, 139, 0.45), rgba(255, 245, 240, 0.98) 62%),
+    rgba(255, 250, 247, 0.98);
+  border-color: rgba(255, 90, 54, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 10px 30px rgba(255, 90, 54, 0.1);
+}
+
+@keyframes scanIndicatorSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes scanIndicatorSpinReverse {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes scanIndicatorPulse {
+  0%,
+  100% {
+    transform: scale(0.98);
+    opacity: 0.65;
+  }
+
+  50% {
+    transform: scale(1.02);
+    opacity: 1;
+  }
+}
+
+@keyframes scanIndicatorGlow {
+  0%,
+  100% {
+    transform: scale(0.92);
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: scale(1.04);
+    opacity: 1;
+  }
+}
+
+@keyframes scanIndicatorShieldFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@media (max-width: 768px) {
+  .scan-activity-indicator--page .scan-activity-indicator__visual {
+    width: 132px;
+    height: 132px;
+  }
+
+  .scan-activity-indicator--page .scan-activity-indicator__content {
+    max-width: 320px;
+  }
+
+  .scan-activity-indicator__title {
+    font-size: 1.3rem;
+  }
+
+  .scan-activity-indicator__status {
+    font-size: 0.92rem;
+  }
+}

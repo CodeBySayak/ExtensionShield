@@ -4,6 +4,7 @@
  */
 import React, { useState, useRef, useCallback } from "react";
 import { useExtensionUpload } from "../hooks/useExtensionUpload";
+import ScanActivityIndicator from "./ScanActivityIndicator";
 import "./PrivateBuildDropzone.scss";
 
 const ACCEPT = ".crx,.zip";
@@ -126,9 +127,9 @@ export default function PrivateBuildDropzone({ disabled = false }) {
       />
       <div className="private-build-dropzone__content private-upload-dropzone">
         <h3 className="private-build-dropzone__title">
-          {isDragActive ? "Release to upload" : isUploading ? "Uploading…" : "Drop CRX/ZIP here"}
+          {isDragActive ? "Release to upload" : isUploading ? "Scan in progress" : "Drop CRX/ZIP here"}
         </h3>
-        <p className="private-build-dropzone__sub">{isUploading ? "Analyzing…" : "or choose file"}</p>
+        <p className="private-build-dropzone__sub">{isUploading ? "Secure upload in progress" : "or choose file"}</p>
         <p className="private-build-dropzone__micro">Max {MAX_SIZE_MB}MB • Private by default</p>
         <button
           type="button"
@@ -139,10 +140,7 @@ export default function PrivateBuildDropzone({ disabled = false }) {
         >
           <span className="private-build-dropzone__btn-icon" aria-hidden>
             {isUploading ? (
-              <svg className="private-build-dropzone__btn-spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
-                <path d="M12 2a10 10 0 0 1 10 10" />
-              </svg>
+              <ScanActivityIndicator variant="button" title="Scan in progress" hideText />
             ) : (
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -151,7 +149,7 @@ export default function PrivateBuildDropzone({ disabled = false }) {
               </svg>
             )}
           </span>
-          <span>{isUploading ? "Uploading…" : "Choose file"}</span>
+          <span>{isUploading ? "Scan in progress" : "Choose file"}</span>
         </button>
         {selectedFileName && (
           <div className="private-build-dropzone__chip">
