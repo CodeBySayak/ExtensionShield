@@ -187,6 +187,10 @@ export const ScanProvider = ({ children }) => {
       // Fetch-first: if extension was already scanned, use cached results and skip trigger (minimal delay).
       const existingResults = await realScanService.getRealScanResults(extId);
       if (existingResults) {
+        const syncCachedScanPromise = isAuthenticated
+          ? realScanService.triggerScan(urlToScan).catch(() => null)
+          : Promise.resolve(null);
+
         navigate(`/scan/progress/${extId}`, {
           state: {
             extensionName: options.extensionName ?? undefined,
@@ -197,7 +201,9 @@ export const ScanProvider = ({ children }) => {
         setError("");
         setScanStage(null);
         setIsScanning(false);
-        void Promise.all([loadScanHistory(), loadDashboardStats()]);
+        void syncCachedScanPromise.then(() =>
+          Promise.all([loadScanHistory(), loadDashboardStats()])
+        );
         return;
       }
 
@@ -544,4 +550,3 @@ export const ScanProvider = ({ children }) => {
 };
 
 export default ScanContext;
-
