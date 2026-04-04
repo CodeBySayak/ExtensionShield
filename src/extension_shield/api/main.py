@@ -362,7 +362,12 @@ else:
 app.add_middleware(CSPMiddleware, is_dev=_is_dev)
 
 # Trust X-Forwarded-Proto / X-Forwarded-For from Railway/Cloudflare so request.url.scheme is correct
-app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
+TRUSTED_PROXIES = [
+    "173.245.48.0/20",
+    "103.21.244.0/22",
+    "10.0.0.0/8",
+]
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts=TRUSTED_PROXIES)
 
 # In-memory state lives in shared.py; import references here so existing
 # code in this file (and tests) can continue using module-level names.
@@ -408,24 +413,11 @@ def _get_client_ip(request: Request) -> str:
     """
     Get the client's IP address for rate limiting anonymous users.
     
-    Handles proxied requests via X-Forwarded-For and X-Real-IP headers.
-    Falls back to client host if no headers present.
+    Relies on ProxyHeadersMiddleware to properly set request.client.host
+    based on trusted reverse proxies, preventing header spoofing.
     """
-    # Check X-Forwarded-For header (from reverse proxy/load balancer)
-    x_forwarded_for = request.headers.get("x-forwarded-for")
-    if x_forwarded_for:
-        # Take the first IP (original client)
-        return x_forwarded_for.split(",")[0].strip()
-    
-    # Check X-Real-IP header (from nginx)
-    x_real_ip = request.headers.get("x-real-ip")
-    if x_real_ip:
-        return x_real_ip.strip()
-    
-    # Fall back to direct client IP
-    if request.client:
+    if request.client and request.client.host:
         return request.client.host
-    
     return "unknown"
 
 
