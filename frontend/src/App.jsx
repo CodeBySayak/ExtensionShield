@@ -528,10 +528,7 @@ function AppContent() {
   const routeSegment = getRouteSegment(location.pathname);
 //Scroll to top on route change
   useLayoutEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
+    window.scrollTo(0, 0);
   }, [location.pathname]);
   return (
     <div className="extensionshield-app" data-route={routeSegment}>
